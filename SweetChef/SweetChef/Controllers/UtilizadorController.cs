@@ -15,18 +15,27 @@ namespace SweetChef.Controllers
         private readonly UtilizadorContext _context;
 
         // TODO: Corrigir erro
-        /*
+        
         public UtilizadorController(UtilizadorContext context)
         {
             _context = context;
         }
-        */
 
         // GET: api/Utilizador
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Utilizador> Get()
         {
-            return new string[] { "value1", "value2" };
+            return null;
+            /*
+            try
+            {
+                return _context.utilizadores.ToArray();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+            */
         }
 
         // GET: api/Utilizador/5

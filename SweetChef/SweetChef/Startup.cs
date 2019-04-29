@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SweetChef.Models;
 
 namespace SweetChef
 {
@@ -24,6 +26,9 @@ namespace SweetChef
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connection = @"Server=XPTO;Database=aspNetCoreWorkshop2019;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<UtilizadorContext>(options => options.UseSqlServer(connection));
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
