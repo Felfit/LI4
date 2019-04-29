@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs
+/SweetChef/.vs
+/SweetChef/SweetChef/bin/Debug/netcoreapp2.1
+/SweetChef/SweetChef/obj/Debug/netcoreapp2.1/Razor/Views/Home
+/SweetChef/SweetChef/obj/Debug/netcoreapp2.1/Razor/Views/Shared
