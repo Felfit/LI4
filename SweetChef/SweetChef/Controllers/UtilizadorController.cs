@@ -21,46 +21,44 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-        // GET: api/Utilizador
         [HttpGet]
-        public IEnumerable<Utilizador> Get()
+        public Utilizador[] Get()
         {
-            return null;
-            /*
-            try
+            return _context.Utilizadores.ToArray();
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult Get(int id)
+        {
+            var utilizador = _context.Utilizadores.Find(id);
+
+            if (utilizador == null)
             {
-                return _context.utilizadores.ToArray();
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
+                return NotFound();
             }
-            */
+            return Ok(utilizador);
         }
 
-        // GET: api/Utilizador/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Utilizador
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Add([FromBody] Utilizador utilizador)
         {
+            _context.Utilizadores.Add(utilizador);
+            _context.SaveChanges();
+            return new CreatedResult($"/api/utilizador/{utilizador.UtilizadorId}", utilizador);
         }
 
-        // PUT: api/Utilizador/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpDelete]
+        public IActionResult Delete([FromQuery] int id)
         {
-        }
+            var utilizador = _context.Utilizadores.Find(id);
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (utilizador == null)
+            {
+                return NotFound();
+            }
+            _context.Utilizadores.Remove(utilizador);
+            _context.SaveChanges();
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +56,16 @@ namespace SweetChef.Models
                 .WithMany(u => u.Passos)
                 .HasForeignKey(t => t.ReceitaId);
                 //.HasConstraintName("ForeignKey_Receita_Passo");
+        }
+    }
+    public class CozinhadoContextFactory : IDesignTimeDbContextFactory<CozinhadoContext>
+    {
+        public CozinhadoContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<CozinhadoContext>();
+            optionsBuilder.UseSqlServer<CozinhadoContext>("Server = desktop-dql09f3; Database = li4; Trusted_Connection = True; MultipleActiveResultSets = true"); ;
+
+            return new CozinhadoContext(optionsBuilder.Options);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace SweetChef.Models
     public class Unidade
     {
         [Key]
-        public int Id { set; get; }
+        public int UnidadeId { set; get; }
         [Required]
         public string Nome { set; get; }
     }

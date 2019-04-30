@@ -10,7 +10,7 @@ namespace SweetChef.Models
     public class Receita
     {   
         [Key]
-        public int Id { set; get; }
+        public int ReceitaId { set; get; }
         [Required]
         public string Nutricao { set; get; }
         [Required]
