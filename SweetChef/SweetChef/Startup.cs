@@ -26,7 +26,7 @@ namespace SweetChef
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = @"Server=XPTO;Database=aspNetCoreWorkshop2019;Trusted_Connection=True;ConnectRetryCount=0";
+            var connection = @"Server=localhost;Database=master;Trusted_Connection=True;";
             services.AddDbContext<UtilizadorContext>(options => options.UseSqlServer(connection));
 
             services.Configure<CookiePolicyOptions>(options =>

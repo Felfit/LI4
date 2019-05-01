@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SweetChef.Models;
+using System.Web.Http;
 
 namespace SweetChef.Controllers
 {
@@ -23,43 +24,81 @@ namespace SweetChef.Controllers
 
         // GET: api/Utilizador
         [HttpGet]
-        public IEnumerable<Utilizador> Get()
+        public ActionResult Get()
         {
-            return null;
-            /*
             try
             {
-                return _context.utilizadores.ToArray();
+                return Ok(_context.utilizadores.ToArray());
             } catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
-                return null;
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            */
         }
 
         // GET: api/Utilizador/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public ActionResult Get(int id)
         {
-            return "value";
+            try
+            {
+                var user = _context.utilizadores.Find(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            } catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+           
         }
 
         // POST: api/Utilizador
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Utilizador utilizador)
         {
+            try
+            {
+                _context.utilizadores.Add(utilizador);
+                _context.SaveChanges();
+                return new CreatedResult($"/api/user/{utilizador}", utilizador);
+            }  catch(Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        // DELETE: api/Utilizador?5
+        [HttpDelete]
+        public IActionResult Delete([FromQuery] int codigo)
+        {
+            try
+            {
+                var user = _context.utilizadores.Find(codigo);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                _context.utilizadores.Remove(user);
+                _context.SaveChanges();
+                return NoContent();
+            } catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // PUT: api/Utilizador/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }
