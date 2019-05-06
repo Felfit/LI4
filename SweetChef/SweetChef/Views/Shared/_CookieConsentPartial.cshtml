@@ -8,27 +8,16 @@
 
 @if (showBanner)
 {
-    <nav id="cookieConsent" class="navbar navbar-default navbar-fixed-top" role="alert">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse">
-                    <span class="sr-only">Toggle cookie consent banner</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></span>
-            </div>
-            <div class="collapse navbar-collapse">
-                <p class="navbar-text">
-                    Use this space to summarize your privacy and cookie use policy.
-                </p>
-                <div class="navbar-right">
-                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-info navbar-btn">Learn More</a>
-                    <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">Accept</button>
-                </div>
-            </div>
+    <nav id="cookieConsent" class="navbar navbar-expand-lg navbar-light bg-warning fixed-bottom py-1" role="alert">
+        <div class="navbar-nav mr-auto my-2">
+            <span>
+                Este sítio utiliza tecnologias, como os cookies, para personalizarmos os conteúdos e proporcionarmos funcionalidades personalizadas.
+            </span>
         </div>
+        <form class="form-inline my-2 my-lg-0">
+            <a class="btn btn-info m-2" href="/Home/Privacy">Ler mais</a>
+            <button type="button" class="btn btn-success m-2"  data-cookie-string="@cookieString">Aceitar</button>
+        </form>
     </nav>
     <script>
         (function () {

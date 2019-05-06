@@ -28,7 +28,11 @@ namespace SweetChef.Controllers
         {
             try
             {
-                return Ok(_context.utilizadores.ToArray());
+                Utilizador utilizador = new Utilizador();
+                utilizador.Email = "Daniel";
+                utilizador.Pass = "Daniel";
+                return Ok(utilizador);
+                //return Ok(_context.Utilizadores.ToArray());
             } catch (Exception e)
             {
                 System.Diagnostics.Debug.Print(e.ToString());
@@ -42,7 +46,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var user = _context.utilizadores.Find(id);
+                var user = _context.Utilizadores.Find(id);
                 if (user == null)
                 {
                     return NotFound();
@@ -54,17 +58,17 @@ namespace SweetChef.Controllers
                 System.Diagnostics.Debug.Print(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-           
         }
 
         // POST: api/Utilizador
         [HttpPost]
-        public IActionResult Post([FromBody] Utilizador utilizador)
+        public IActionResult Post([FromForm] Utilizador utilizador)
         {
+            return Ok(utilizador);
+            /*
             try
             {
-                _context.utilizadores.Add(utilizador);
+                _context.Utilizadores.Add(utilizador);
                 _context.SaveChanges();
                 return new CreatedResult($"/api/user/{utilizador}", utilizador);
             }  catch(Exception e)
@@ -72,6 +76,7 @@ namespace SweetChef.Controllers
                 System.Diagnostics.Debug.Print(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+            */
         }
 
         // DELETE: api/Utilizador?5
@@ -80,13 +85,13 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var user = _context.utilizadores.Find(codigo);
+                var user = _context.Utilizadores.Find(codigo);
 
                 if (user == null)
                 {
                     return NotFound();
                 }
-                _context.utilizadores.Remove(user);
+                _context.Utilizadores.Remove(user);
                 _context.SaveChanges();
                 return NoContent();
             } catch (Exception e)
