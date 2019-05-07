@@ -28,11 +28,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                Utilizador utilizador = new Utilizador();
-                utilizador.Email = "Daniel";
-                utilizador.Pass = "Daniel";
-                return Ok(utilizador);
-                //return Ok(_context.Utilizadores.ToArray());
+                return Ok(_context.Utilizadores.ToArray());
             } catch (Exception e)
             {
                 System.Diagnostics.Debug.Print(e.ToString());
@@ -64,19 +60,17 @@ namespace SweetChef.Controllers
         [HttpPost]
         public IActionResult Post([FromForm] Utilizador utilizador)
         {
-            return Ok(utilizador);
-            /*
             try
             {
                 _context.Utilizadores.Add(utilizador);
                 _context.SaveChanges();
-                return new CreatedResult($"/api/user/{utilizador}", utilizador);
+                System.Diagnostics.Debug.Print(utilizador.Password);
+                return new CreatedResult($"/api/utilizador/{utilizador}", utilizador);
             }  catch(Exception e)
             {
                 System.Diagnostics.Debug.Print(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            */
         }
 
         // DELETE: api/Utilizador?5

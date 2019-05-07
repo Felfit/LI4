@@ -1,7 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    html, body {
+        background-color: transparent;
+        height: 100%;
+    }
 
+    .container {
+        height: 100%;
+    }
+</style>
 <!--
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
@@ -55,65 +64,72 @@
 </div>
 -->
 
-<div class="row justify-content-center" class="mt-2">
+<div class="row justify-content-center align-items-center h-100" id="entrar">
     <div class="col-md-4 bg-light p-3 rounded">
         <h1>Entrar</h1>
         <form method="post" action="/api/utilizador">
             <div class="form-group">
-                <label for="exampleInputEmail1">E-mail</label>
-                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Introduza e-mail">
-                <small id="emailHelp" class="form-text text-muted">O seu e-mail não será partilhado</small>
+                <label for="emailLogin">E-mail</label>
+                <input type="email" name="email" class="form-control" id="emailLogin" placeholder="Introduza e-mail">
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" name="pass" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <label for="passwordLogin">Password</label>
+                <input type="password" name="password" class="form-control" id="passwordLogin" placeholder="Password">
             </div>
-            <!--
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <div class="form-group">
+                <a href="#registar">Não tem conta?</a>
             </div>
-            -->
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Entrar</button>
         </form>
     </div>
-    <!--
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
-    </div>
-        -->
 </div>
+
+
+<div class="row justify-content-center align-items-center h-100 d-none" id="registar">
+    <div class="col-md-4 bg-light p-3 rounded">
+        <h1>Registar</h1>
+        <form method="post" action="/api/utilizador">
+            <div class="form-group">
+                <label for="nomeRegisto">Nome</label>
+                <input type="text" name="nome" class="form-control" id="nomeRegisto" placeholder="Introduza o seu nome">
+            </div>
+            <div class="form-group">
+                <label for="emailRegisto">E-mail</label>
+                <input type="email" name="email" class="form-control" id="emailRegisto" placeholder="Introduza o seu e-mail">
+            </div>
+            <div class="form-group">
+                <label for="dataNascimentoRegisto">Data de nascimento</label>
+                <input type="date" name="dataNascimento" class="form-control" id="dataNascimentoRegisto" placeholder="Introduza o seu e-mail">
+            </div>
+            <div class="form-group">
+                <label for="passwordRegisto">Password</label>
+                <input type="password" name="password" class="form-control" id="passwordRegisto" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <a href="#entrar">Já tem conta?</a>
+            </div>
+            <button type="submit" class="btn btn-primary">Registar</button>
+        </form>
+    </div>
+</div>
+
+<noscript>
+    <style>
+        #registar {
+            display: flex !important;
+            margin-bottom: 50px;
+        }
+    </style>
+</noscript>
+
+<script>
+    $(window).on('load hashchange', (e) => {
+        if (location.hash == "#registar") {
+            $("#registar").removeClass("d-none");
+            $("#entrar").addClass("d-none")
+        } else if (location.hash == "#entrar") {
+            $("#entrar").removeClass("d-none");
+            $("#registar").addClass("d-none");
+        }
+    });
+</script>
