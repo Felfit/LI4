@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SweetChef.ModelsNew
@@ -16,9 +17,14 @@ namespace SweetChef.ModelsNew
         public int Unidadeid { get; set; }
         public string Nome { get; set; }
 
+        
         public Unidade Unidade { get; set; }
+
+        [JsonIgnore]
         public ICollection<PassoIngrediente> PassoIngrediente { get; set; }
+        [JsonIgnore]
         public ICollection<ReceitaIngrediente> ReceitaIngrediente { get; set; }
+        [JsonIgnore]
         public ICollection<RestricoesAlimentares> RestricoesAlimentares { get; set; }
     }
 }
