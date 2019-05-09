@@ -8,15 +8,15 @@
 
 @if (showBanner)
 {
-    <nav id="cookieConsent" class="navbar navbar-expand-lg navbar-light bg-warning fixed-bottom py-1" role="alert">
+    <nav id="cookieConsent" class="navbar navbar-expand-lg navbar-light bg-warning fixed-bottom py-1 collapse show" role="alert">
         <div class="navbar-nav mr-auto my-2">
             <span>
                 Este sítio utiliza tecnologias, como os cookies, para personalizarmos os conteúdos e proporcionarmos funcionalidades personalizadas.
             </span>
         </div>
         <form class="form-inline my-2 my-lg-0">
-            <a class="btn btn-info m-2" href="/Home/Privacy">Ler mais</a>
-            <button type="button" class="btn btn-success m-2"  data-cookie-string="@cookieString">Aceitar</button>
+            <a asp-area="" asp-controller="Home" asp-action="Privacidade" class="btn btn-info m-2">Ler mais</a>
+            <button type="button" class="btn btn-success m-2" data-cookie-string="@cookieString" data-toggle="collapse" data-target="#cookieConsent">Aceitar</button>
         </form>
     </nav>
     <script>

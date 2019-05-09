@@ -15,21 +15,29 @@ namespace SweetChef.Controllers
             return View();
         }
 
-        public IActionResult About()
+
+        public IActionResult Cozinhar()
+        {
+            ViewData["Message"] = "Bom trabalho Daniel.";
+
+            return View();
+        }
+
+        public IActionResult EmentaSemanal()
         {
             ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult SobreCozinhados()
         {
             ViewData["Message"] = "Your contact page.";
 
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacidade()
         {
             return View();
         }
