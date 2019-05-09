@@ -64,12 +64,38 @@ namespace SweetChef.Controllers
             {
                 _context.Utilizadores.Add(utilizador);
                 _context.SaveChanges();
-                System.Diagnostics.Debug.Print(utilizador.Password);
                 return new CreatedResult($"/api/utilizador/{utilizador}", utilizador);
-            }  catch(Exception e)
+            }  catch
             {
-                System.Diagnostics.Debug.Print(e.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        // POST: api/Utilizador/autenticar
+        [HttpPost]
+        [Route("autenticar")]
+        public IActionResult Post([FromForm] string email, [FromForm] string password)
+        {
+            if(email == null || password == null)
+            {
+                return BadRequest(new
+                {
+                    emailMissing = email == null,
+                    passwordMissing = password == null
+                });
+            }
+            Utilizador utilizador = new Utilizador();
+            utilizador.Email = email;
+            utilizador.Password = password;
+            try
+            {
+                // Ainda não está bem, password não bate certo ainda
+                utilizador = _context.Utilizadores.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
+                return Ok(utilizador);
+            }
+            catch (Exception e)
+            {
+                return NotFound(email);
             }
         }
 

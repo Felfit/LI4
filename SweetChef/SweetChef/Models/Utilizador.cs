@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -23,6 +25,7 @@ namespace SweetChef.Models
         [DataType(DataType.EmailAddress)]
         public string Email { set; get; }
         [Required]
+        [IgnoreDataMember]
         [DataType(DataType.Password)]
         public string Password {
             set
