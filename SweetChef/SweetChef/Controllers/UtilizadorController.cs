@@ -93,10 +93,10 @@ namespace SweetChef.Controllers
             try
             {
                 // Ainda não está bem, password não bate certo ainda
-                utilizador = _context.Utilizadores.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
+                utilizador = _context.Utilizador.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
                 return Ok(utilizador);
             }
-            catch (Exception e)
+            catch
             {
                 return NotFound(email);
             }
