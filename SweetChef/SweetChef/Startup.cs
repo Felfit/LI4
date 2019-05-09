@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SweetChef.Models;
+using SweetChef.ModelsNew;
 
 namespace SweetChef
 {
@@ -26,8 +26,8 @@ namespace SweetChef
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = @"Server=(localdb)\MSSQLLocalDB;Database=aspNetCoreWorkshop2019;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<UtilizadorContext>(options => options.UseSqlServer(connection));
+            var connection = @"Server=(localdb)\MSSQLLocalDB;Database=Sweet;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<SweetContext>(options => options.UseSqlServer(connection));
 
             services.Configure<CookiePolicyOptions>(options =>
             {

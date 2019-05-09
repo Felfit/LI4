@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SweetChef.Models;
 using System.Web.Http;
+using SweetChef.ModelsNew;
 
 namespace SweetChef.Controllers
 {
@@ -13,14 +13,17 @@ namespace SweetChef.Controllers
     [ApiController]
     public class UtilizadorController : ControllerBase
     {
-        private readonly UtilizadorContext _context;
+        //private readonly UtilizadorContext _contexts;
+
+        private readonly SweetContext _context;
 
         // TODO: Corrigir erro
         
-        public UtilizadorController(UtilizadorContext context)
+        public UtilizadorController(SweetContext context)
         {
             _context = context;
         }
+
 
         // GET: api/Utilizador
         [HttpGet]
@@ -28,7 +31,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                return Ok(_context.Utilizadores.ToArray());
+                return Ok(_context.Utilizador.ToArray());
             } catch (Exception e)
             {
                 System.Diagnostics.Debug.Print(e.ToString());
@@ -42,7 +45,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var user = _context.Utilizadores.Find(id);
+                var user = _context.Utilizador.Find(id);
                 if (user == null)
                 {
                     return NotFound();
@@ -62,7 +65,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                _context.Utilizadores.Add(utilizador);
+                _context.Utilizador.Add(utilizador);
                 _context.SaveChanges();
                 return new CreatedResult($"/api/utilizador/{utilizador}", utilizador);
             }  catch
@@ -105,13 +108,13 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var user = _context.Utilizadores.Find(codigo);
+                var user = _context.Utilizador.Find(codigo);
 
                 if (user == null)
                 {
                     return NotFound();
                 }
-                _context.Utilizadores.Remove(user);
+                _context.Utilizador.Remove(user);
                 _context.SaveChanges();
                 return NoContent();
             } catch (Exception e)
