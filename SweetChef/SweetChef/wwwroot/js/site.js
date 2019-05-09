@@ -2,3 +2,8 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+$(function () {
+    $(".dropdown-placeholder + .dropdown-menu .dropdown-item").on("click", function () {
+        $(this).parent().prev(".dropdown-placeholder").text($(this).text())
+    })
+});

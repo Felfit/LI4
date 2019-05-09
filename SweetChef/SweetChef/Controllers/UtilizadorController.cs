@@ -87,12 +87,15 @@ namespace SweetChef.Controllers
                     passwordMissing = password == null
                 });
             }
-            Utilizador utilizador = new Utilizador();
-            utilizador.Email = email;
-            utilizador.Password = password;
+
+            Utilizador utilizador = new Utilizador()
+            {
+                Email = email,
+                Password = password
+            };
+
             try
             {
-                // Ainda não está bem, password não bate certo ainda
                 utilizador = _context.Utilizador.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
                 return Ok(utilizador);
             }

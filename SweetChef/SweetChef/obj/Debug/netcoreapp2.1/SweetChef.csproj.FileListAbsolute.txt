@@ -14,10 +14,7 @@ C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcore
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\SweetChef.TagHelpers.input.cache
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\SweetChef.TagHelpers.output.cache
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\SweetChef.RazorCoreGenerate.cache
-C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\About.g.cshtml.cs
-C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Contact.g.cshtml.cs
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.g.cshtml.cs
-C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacy.g.cshtml.cs
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Shared\Error.g.cshtml.cs
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_CookieConsentPartial.g.cshtml.cs
 C:\Users\Daniel\Source\Repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_Layout.g.cshtml.cs
@@ -63,3 +60,8 @@ C:\Users\cpac2\Projects\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor
 C:\Users\cpac2\Projects\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\SobreCozinhados.g.cshtml.cs
 C:\Users\cpac2\Projects\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Cozinhar.g.cshtml.cs
 C:\Users\cpac2\Projects\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacidade.g.cshtml.cs
+C:\Users\Daniel\source\repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Cozinhar.g.cshtml.cs
+C:\Users\Daniel\source\repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\EmentaSemanal.g.cshtml.cs
+C:\Users\Daniel\source\repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacidade.g.cshtml.cs
+C:\Users\Daniel\source\repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\SobreCozinhados.g.cshtml.cs
+C:\Users\Daniel\source\repos\Felfit\LI4-re\SweetChef\SweetChef\obj\Debug\netcoreapp2.1\Razor\Views\Home\Receita.g.cshtml.cs
