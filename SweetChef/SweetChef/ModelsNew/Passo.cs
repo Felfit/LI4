@@ -23,9 +23,13 @@ namespace SweetChef.ModelsNew
         public string LinkExterno { get; set; }
         [JsonIgnore]
         public Receita Receita { get; set; }
+        [JsonIgnore]
         public ICollection<PassoDúvida> PassoDúvida { get; set; }
+        [JsonIgnore]
         public ICollection<PassoIngrediente> PassoIngrediente { get; set; }
+        [JsonIgnore]
         public ICollection<UtensilioPasso> UtensilioPasso { get; set; }
+        [JsonIgnore]
         public ICollection<UtilizadorPasso> UtilizadorPasso { get; set; }
     }
 }
