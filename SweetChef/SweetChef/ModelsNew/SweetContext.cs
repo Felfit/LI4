@@ -8,7 +8,6 @@ namespace SweetChef.ModelsNew
     {
         public SweetContext()
         {
-            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public SweetContext(DbContextOptions<SweetContext> options)
