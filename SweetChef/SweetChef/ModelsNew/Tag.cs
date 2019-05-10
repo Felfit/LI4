@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SweetChef.ModelsNew
@@ -14,9 +15,11 @@ namespace SweetChef.ModelsNew
 
         public int Id { get; set; }
         public string Tag1 { get; set; }
-
+        [JsonIgnore]
         public ICollection<Dislikes> Dislikes { get; set; }
+        [JsonIgnore]
         public ICollection<Likes> Likes { get; set; }
+        [JsonIgnore]
         public ICollection<TagReceita> TagReceita { get; set; }
     }
 }
