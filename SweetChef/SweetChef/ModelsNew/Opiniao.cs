@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SweetChef.ModelsNew
@@ -10,8 +11,9 @@ namespace SweetChef.ModelsNew
         public bool Favorito { get; set; }
         public short? Rating { get; set; }
         public bool Blacklist { get; set; }
-
+        [JsonIgnore]
         public Receita Receita { get; set; }
+        [JsonIgnore]
         public Utilizador Utilizador { get; set; }
     }
 }

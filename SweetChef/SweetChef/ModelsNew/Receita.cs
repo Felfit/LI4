@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SweetChef.ModelsNew
@@ -27,12 +28,19 @@ namespace SweetChef.ModelsNew
         public DateTime Tempodepreparacao { get; set; }
         public DateTime Tempodeespera { get; set; }
 
+        [JsonIgnore]
         public ICollection<EmentaSemanal> EmentaSemanal { get; set; }
+        [JsonIgnore]
         public ICollection<Execucao> Execucao { get; set; }
+        [JsonIgnore]
         public ICollection<Opiniao> Opiniao { get; set; }
+        [JsonIgnore]
         public ICollection<Passo> Passo { get; set; }
+        [JsonIgnore]
         public ICollection<ReceitaIngrediente> ReceitaIngrediente { get; set; }
+        [JsonIgnore]
         public ICollection<TagReceita> TagReceita { get; set; }
+        [JsonIgnore]
         public ICollection<UtensilioReceita> UtensilioReceita { get; set; }
     }
 }

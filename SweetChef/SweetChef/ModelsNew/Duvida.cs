@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SweetChef.ModelsNew
@@ -16,7 +17,7 @@ namespace SweetChef.ModelsNew
         public string ImagemLink { get; set; }
         public string Linkexterno { get; set; }
         public string Explicacao { get; set; }
-
+        [JsonIgnore]
         public ICollection<PassoDúvida> PassoDúvida { get; set; }
     }
 }
