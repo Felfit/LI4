@@ -21,7 +21,7 @@ namespace SweetChef.Controllers
         }
 
         // GET: Passo
-        [HttpGet("{idReceita}/{idPasso}/getDuvidas")]
+        [HttpGet("{idReceita}/{idPasso}/duvidas")]
         public ActionResult getDuvidas(int idPasso, int idReceita)
         {
             try
