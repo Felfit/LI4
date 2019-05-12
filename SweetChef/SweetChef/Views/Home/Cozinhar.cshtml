@@ -4,6 +4,12 @@
 <h2>@ViewData["Title"]</h2>
 
 <style>
+    .dropdown-placeholder.dropdown-toggle::after {
+        position: absolute;
+        margin: 0.655em;
+        right: 0;
+    }
+
     .card-img-top {
         height: 150px;
     }
@@ -18,9 +24,15 @@
         padding-left: 15px;
     }
 
-        .receita > .card {
-            width: 250px;
-        }
+    .receita > .card {
+        width: 250px;
+    }
+
+    .fav-icon {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
 
     .horizontal-scroll::-webkit-scrollbar {
         width: 5px;
@@ -38,13 +50,13 @@
         border-radius: 50px;
     }
 
-        .horizontal-scroll::-webkit-scrollbar-thumb:hover {
-            background: #666;
-        }
+    .horizontal-scroll::-webkit-scrollbar-thumb:hover {
+        background: #666;
+    }
 
-        .horizontal-scroll::-webkit-scrollbar-thumb:active {
-            background: #666;
-        }
+    .horizontal-scroll::-webkit-scrollbar-thumb:active {
+        background: #666;
+    }
 
     .horizontal-scroll::-webkit-scrollbar-track {
         background: transparent;
@@ -52,13 +64,13 @@
         border-radius: 50px;
     }
 
-        .horizontal-scroll::-webkit-scrollbar-track:hover {
-            background: transparent;
-        }
+    .horizontal-scroll::-webkit-scrollbar-track:hover {
+        background: transparent;
+    }
 
-        .horizontal-scroll::-webkit-scrollbar-track:active {
-            background: #ddd;
-        }
+    .horizontal-scroll::-webkit-scrollbar-track:active {
+        background: #ddd;
+    }
 
     .horizontal-scroll::-webkit-scrollbar-corner {
         background: transparent;
@@ -105,6 +117,7 @@
         <div class="receita">
             <div class="card">
                 <img class="card-img-top" src="https://pt.rc-cdn.community.thermomix.com/recipeimage/wfyc82g5-5b66a-158943-cfcd2-d8ynfdz2/b71b90ce-4969-416a-ac17-d57400a577b9/main/bolo-de-arroz.jpg" alt="Bolo de arroz">
+                <i class="fas fa-star text-warning fav-icon"></i>
                 <div class="card-body">
                     <h5 class="card-title text-center text-truncate">Bolo de arroz</h5>
                     <div class="row text-black-50 text-center">
@@ -116,7 +129,7 @@
                             <i class="far fa-clock"></i>
                             <span>30 min</span>
                         </div>
-                        <a href="#" class="stretched-link"></a>
+                        <a asp-controller="Home" asp-action="Receita" asp-route-id="1" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
@@ -135,7 +148,7 @@
                             <i class="far fa-clock"></i>
                             <span>30 min</span>
                         </div>
-                        <a href="#" class="stretched-link"></a>
+                        <a asp-controller="Home" asp-action="Receita" asp-route-id="2" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
@@ -154,7 +167,7 @@
                             <i class="far fa-clock"></i>
                             <span>30 min</span>
                         </div>
-                        <a href="#" class="stretched-link"></a>
+                        <a asp-controller="Home" asp-action="Receita" asp-route-id="3" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
@@ -169,6 +182,7 @@
                 <img class="card-img-top" src="https://pt.rc-cdn.community.thermomix.com/recipeimage/wfyc82g5-5b66a-158943-cfcd2-d8ynfdz2/b71b90ce-4969-416a-ac17-d57400a577b9/main/bolo-de-arroz.jpg" alt="Bolo de arroz">
                 <div class="card-body">
                     <h5 class="card-title text-center text-truncate">Bolo de arroz</h5>
+                    <i class="fas fa-star text-warning fav-icon"></i>
                     <div class="row text-black-50 text-center">
                         <div class="col text-success">
                             <i class="fas fa-signal"></i>
@@ -178,45 +192,7 @@
                             <i class="far fa-clock"></i>
                             <span>30 min</span>
                         </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="receita">
-            <div class="card">
-                <img class="card-img-top" src="https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/salted_dark_chocolate_16338_16x9.jpg" alt="Bolo de chocolate">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-truncate">Bolo de chocolate</h5>
-                    <div class="row text-black-50 text-center">
-                        <div class="col text-warning">
-                            <i class="fas fa-signal"></i>
-                            <span>Médio</span>
-                        </div>
-                        <div class="col">
-                            <i class="far fa-clock"></i>
-                            <span>30 min</span>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="receita">
-            <div class="card">
-                <img class="card-img-top" src="https://images-gmi-pmc.edge-generalmills.com/817d708a-33e6-46f7-b985-0360b6c55cf4.jpg" alt="Brownies">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-truncate">Brownies</h5>
-                    <div class="row text-black-50 text-center">
-                        <div class="col text-danger">
-                            <i class="fas fa-signal"></i>
-                            <span>Díficil</span>
-                        </div>
-                        <div class="col">
-                            <i class="far fa-clock"></i>
-                            <span>30 min</span>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
+                        <a asp-controller="Home" asp-action="Receita" asp-route-id="1" class="stretched-link"></a>
                     </div>
                 </div>
             </div>

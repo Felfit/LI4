@@ -1,0 +1,255 @@
+﻿@{ 
+    ViewData["Title"] = ViewData["ReceitaNome"];
+}
+
+<style>
+    @@media (min-width: 1200px) {
+        body {
+            height: 100vh !important;
+        }
+
+        .container {
+            height: 100% !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+    }
+
+    #passoContainer {
+        height: calc(100% - 6em);
+    }
+
+    .vertical-scroll {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .vertical-scroll::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-thumb {
+        background: #e1e1e1;
+        border: 0px none #000;
+        border-radius: 50px;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-thumb:hover {
+        background: #666;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-thumb:active {
+        background: #666;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-track {
+        background: transparent;
+        border: 0px none #000;
+        border-radius: 50px;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-track:hover {
+        background: transparent;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-track:active {
+        background: #ddd;
+    }
+
+    .vertical-scroll::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    .progress-dots {
+        position: absolute;
+        margin-top: -0.625em;
+        margin-left: -0.625em;
+        z-index: 1;
+        height: 2.5em;
+        width: 2.5em;
+        border-radius: 50%;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 2.25em;
+        color: white;
+    }
+
+    .collapse-header {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    passo = 0;
+    numPassos = 5;
+
+    function inicializarProgressBar() {
+        for (let i = 0; i <= numPassos; i++) {
+            $("<div class='progress-dots'></div>")
+                .attr("style", `left: calc(${100 * (i / numPassos)}% - ${3 * (i / numPassos)}em)`)
+                .html(i < numPassos ? (i + 1) : "<i class='fas fa-flag-checkered'></i>")
+                .appendTo("#progresso-do-cozinhado");
+        }
+        atualizaProgressBar(0);
+    }
+
+    function atualizaProgressBar(tempo) {
+        let classes = ["bg-success", "bg-secondary", "bg-primary"]
+        for (let i = 0; i <= numPassos; i++) {
+            let elem = $(".progress-dots").eq(i).delay(tempo).queue(function (next) {
+                if (i < passo) {
+                    $(this).removeClass(classes).addClass("bg-success");
+                } else if (i > passo) {
+                    $(this).removeClass(classes).addClass("bg-secondary");
+                } else {
+                    $(this).removeClass(classes).addClass("bg-primary");
+                }
+                next();
+            });
+        }
+        $("#progresso-do-cozinhado-barra-realizado").css(
+            {
+                "width": `${100 * ((passo - 1) / numPassos)}%`,
+            });
+        $("#progresso-do-cozinhado-barra-atual").css(
+            {
+                "width": `${passo > numPassos || passo <= 0 ? 0 : 100 / numPassos}%`,
+            });
+    }
+
+    Number.prototype.clamp = function (min, max) {
+        return this <= min ? min : this >= max ? max : this;
+    };
+
+    $(function () {
+        // Progress Bar
+        inicializarProgressBar();
+        $("#continuar").click(() => { passo = (passo + 1).clamp(0, numPassos + 1); atualizaProgressBar(400) });
+        $("#retroceder").click(() => { passo = (passo - 1).clamp(0, numPassos + 1); atualizaProgressBar(0) });
+
+        //Collapse
+        if ($(window).width() >= 1200) {
+            $(".collapse-header").each((_, elem) => $($(elem).data("target")).addClass("show"));
+        }
+    });
+</script>
+
+<h1>@ViewData["ReceitaNome"]</h1>
+<div class="row" id="passoContainer">
+    <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
+        <img class="img-fluid rounded mx-auto d-block" src="https://img.itdg.com.br/tdg/images/blog/uploads/2018/04/bolo-forno.jpg" alt="Bolo no forno" />
+        <p>
+            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
+        </p>
+        <p>
+            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
+        </p>
+        <p>
+            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
+        </p>
+    </div>
+    <div class="col-xl-3 order-xl-3 h-100">
+        <div class="row flex-column mx-0 h-100">
+            <div class="h-25 py-2 order-xl-1">
+                <div class="row no-gutters">
+                    <div class="col-xl-6 order-xl-0 col-4">
+                        <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
+                    </div>
+                    <div class="col order-xl-2 pt-xl-1">
+                        <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
+                    </div>
+                    <div class="col order-xl-2 pt-xl-1">
+                        <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
+                    </div>
+                    <div class="col-xl-6 order-xl-1 col-4">
+                        <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="h-75 vertical-scroll order-xl-0">
+                <h4 data-toggle="collapse" data-target="#lista-ajudas" class="collapse-header">Ajudas</h4>
+                <ul id="lista-ajudas" class="list-group list-group-flush mb-1 collapse">
+                    <li class="list-group-item px-2 py-1"><a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel">O que é pré-aquecer?</a></li>
+                    <li class="list-group-item px-2 py-1">Como untar?</li>
+                    <li class="list-group-item px-2 py-1">Como forrar com papel vegetal?</li>
+                    <li class="list-group-item px-2 py-1">O que ser vida?</li>
+                    <li class="list-group-item px-2 py-1 active">Temporizador de 30 minutos <i class='fas fa-hourglass-start'></i></li>
+                    <!---->
+                    <li class="list-group-item px-2 py-1">Forno</li>
+                    <li class="list-group-item px-2 py-1">Colher de pau</li>
+                    <li class="list-group-item px-2 py-1">Batedeira</li>
+                    <li class="list-group-item px-2 py-1">Taça</li>
+                    <li class="list-group-item px-2 py-1 active">Forno</li>
+                    <li class="list-group-item px-2 py-1">Colher de pau</li>
+                    <li class="list-group-item px-2 py-1">Batedeira</li>
+                    <li class="list-group-item px-2 py-1">Taça</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 order-xl-1 h-100 vertical-scroll">
+        <h4 data-toggle="collapse" data-target="#lista-ingredientes" class="collapse-header">Ingredientes</h4>
+        <ul id="lista-ingredientes" class="list-group list-group-flush mb-1 collapse">
+            <li class="list-group-item px-2 py-1 active">Açúcar <small>100 g</small></li>
+            <li class="list-group-item px-2 py-1">Leite <small>3 l</small></li>
+            <li class="list-group-item px-2 py-1 active">Farinha <small>5 mg</small></li>
+            <li class="list-group-item px-2 py-1">Chocolate em pó <small>10 cm<sup>3</sup></small></li>
+            <li class="list-group-item px-2 py-1">Raspa de limão <small>1 unidade</small></li>
+            <!---->
+            <li class="list-group-item px-2 py-1 active">Açúcar <small>100 g</small></li>
+            <li class="list-group-item px-2 py-1">Leite <small>3 l</small></li>
+            <li class="list-group-item px-2 py-1 active">Farinha <small>5 mg</small></li>
+            <li class="list-group-item px-2 py-1">Chocolate em pó <small>10 cm<sup>3</sup></small></li>
+            <li class="list-group-item px-2 py-1">Raspa de limão <small>1 unidade</small></li>
+        </ul>
+        <h4 data-toggle="collapse" data-target="#lista-utensilios" class="collapse-header">Utensílios</h4>
+        <ul id="lista-utensilios" class="list-group list-group-flush mb-1 collapse">
+            <li class="list-group-item px-2 py-1 active">Forno</li>
+            <li class="list-group-item px-2 py-1">Colher de pau</li>
+            <li class="list-group-item px-2 py-1">Batedeira</li>
+            <li class="list-group-item px-2 py-1">Taça</li>
+            <!---->
+            <li class="list-group-item px-2 py-1 active">Forno</li>
+            <li class="list-group-item px-2 py-1">Colher de pau</li>
+            <li class="list-group-item px-2 py-1">Batedeira</li>
+            <li class="list-group-item px-2 py-1">Taça</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row my-2">
+    <div class="col my-3 mx-5">
+        <div class="progress" id="progresso-do-cozinhado">
+            <div class="progress-bar progress-bar-success bg-success" id="progresso-do-cozinhado-barra-realizado"></div>
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progresso-do-cozinhado-barra-atual"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Ajudas -->
+<div class="modal fade" id="ajudaModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">O que ser vida?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid rounded mx-auto d-block" src="https://www.dictionary.com/e/wp-content/uploads/2018/03/42.jpg" alt="Bolo no forno" />
+                A resposta está presente no número 42
+            </div>
+            <div class="modal-footer">
+                <a href="http://www.google.com/search?q=O+que+ser+vida?" target="_blank" class="btn btn-danger">Procurar</a>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Entendi</button>
+            </div>
+        </div>
+    </div>
+</div>

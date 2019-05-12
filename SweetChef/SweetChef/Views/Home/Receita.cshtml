@@ -1,4 +1,8 @@
-﻿<h2>@ViewData["ReceitaNome"]</h2>
-<h3></h3>
+﻿@{
+    ViewData["Title"] = ViewData["ReceitaNome"];
+}
+
+<h2>@ViewData["ReceitaNome"]</h2>
+<h3>@ViewData["ReceitaId"]</h3>
 
 <p>Use this area to provide additional information.</p>

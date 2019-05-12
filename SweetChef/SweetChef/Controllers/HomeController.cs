@@ -51,6 +51,15 @@ namespace SweetChef.Controllers
             return View();
         }
 
+        public IActionResult PassoAPasso(int id)
+        {
+            //TODO: Perguntar à base de dados os dados da receita com este id
+            ViewData["ReceitaId"] = id;
+            ViewData["ReceitaNome"] = "Bolo de arroz";
+
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
