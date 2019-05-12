@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
 using SweetChef.ModelsNew;
+using Microsoft.EntityFrameworkCore;
 
 namespace SweetChef.Controllers
 {
@@ -22,6 +23,36 @@ namespace SweetChef.Controllers
         public UtilizadorController(SweetContext context)
         {
             _context = context;
+        }
+
+
+        [HttpGet("{id}/favoritas")]
+        public ActionResult getReceitasFavoritas(int id)
+        {
+            try
+            {
+                var utilizador = _context.Utilizador.
+                                                Include("Opiniao.Receita").
+                                                Where(p => p.Id == id).
+                                                FirstOrDefault();
+                                                
+                if (utilizador == null)
+                {
+                    return NotFound();
+                }
+
+                var receitas = utilizador.Opiniao
+                               .Where(o => o.Favorito == true)
+                               .Select(o => new { o.Receita })
+                               .ToArray();
+
+                return Ok(receitas);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
 
