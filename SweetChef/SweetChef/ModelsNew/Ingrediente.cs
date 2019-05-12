@@ -14,6 +14,7 @@ namespace SweetChef.ModelsNew
         }
 
         public int Id { get; set; }
+        [JsonIgnore]
         public int Unidadeid { get; set; }
         public string Nome { get; set; }
 

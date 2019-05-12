@@ -34,6 +34,7 @@ namespace SweetChef.ModelsNew
         public ICollection<Execucao> Execucao { get; set; }
         [JsonIgnore]
         public ICollection<Opiniao> Opiniao { get; set; }
+        [JsonIgnore]
         public ICollection<Passo> Passo { get; set; }
         [JsonIgnore]
         public ICollection<ReceitaIngrediente> ReceitaIngrediente { get; set; }

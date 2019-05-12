@@ -13,6 +13,7 @@ namespace SweetChef.ModelsNew
         public SweetContext(DbContextOptions<SweetContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<Dislikes> Dislikes { get; set; }

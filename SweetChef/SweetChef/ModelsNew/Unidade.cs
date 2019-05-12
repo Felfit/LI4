@@ -10,7 +10,7 @@ namespace SweetChef.ModelsNew
         {
             Ingrediente = new HashSet<Ingrediente>();
         }
-
+        
         public int Id { get; set; }
         public string Nome { get; set; }
 
