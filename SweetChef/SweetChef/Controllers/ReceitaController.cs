@@ -68,7 +68,7 @@ namespace SweetChef.Controllers
                     return NotFound();
                 }
                 var ingredientes = receita.ReceitaIngrediente.
-                        Select(ri => new { ri.Ingrediente.Id,ri.Ingrediente.Nome,unidade = ri.Ingrediente.Unidade.Nome}).
+                        Select(ri => new { ri.Ingrediente.Id,ri.Ingrediente.Nome,ri.Quantidade,unidade = ri.Ingrediente.Unidade.Nome}).
                         ToList();
                 var utensilios = receita.UtensilioReceita.
                         Select(ur => new { ur.Utensilio.Id, ur.Utensilio.Nome }).
@@ -76,7 +76,7 @@ namespace SweetChef.Controllers
                 List<object> passos = new List<object>();
                 foreach(Passo p in receita.Passo){
                     var ings = p.PassoIngrediente.
-                            Select(ri => new {ri.Ingrediente.Id,ri.Ingrediente.Nome,unidade = ri.Ingrediente.Unidade.Nome}).
+                            Select(ri => new {ri.Ingrediente.Id,ri.Ingrediente.Nome,ri.Quantidade,unidade = ri.Ingrediente.Unidade.Nome}).
                             ToList();
                     var ut = p.UtensilioPasso.
                             Select(up => new { up.Utensilio.Id, up.Utensilio.Nome }).
