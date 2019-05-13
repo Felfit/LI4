@@ -16,7 +16,7 @@ namespace SweetChef.ModelsNew
 
         public int Numero { get; set; }
         public int Receitaid { get; set; }
-        public DateTime Duracao { get; set; }
+        public int Duracao { get; set; }
         public string Descricao { get; set; }
         public string ImagemLink { get; set; }
         public string VideoLink { get; set; }

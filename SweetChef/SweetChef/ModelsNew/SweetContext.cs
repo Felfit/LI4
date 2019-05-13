@@ -213,7 +213,7 @@ namespace SweetChef.ModelsNew
 
                 entity.Property(e => e.Duracao)
                     .HasColumnName("duracao")
-                    .HasColumnType("datetime");
+                    .HasColumnType("int");
 
                 entity.Property(e => e.ImagemLink)
                     .HasColumnName("imagemLink")
@@ -316,12 +316,10 @@ namespace SweetChef.ModelsNew
                 entity.Property(e => e.Porcoes).HasColumnName("porcoes");
 
                 entity.Property(e => e.Tempodeespera)
-                    .HasColumnName("tempodeespera")
-                    .HasColumnType("datetime");
+                    .HasColumnName("tempodeespera");
 
                 entity.Property(e => e.Tempodepreparacao)
-                    .HasColumnName("tempodepreparacao")
-                    .HasColumnType("datetime");
+                    .HasColumnName("tempodepreparacao");
 
                 entity.Property(e => e.VideoLink)
                     .IsRequired()
