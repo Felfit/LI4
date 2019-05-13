@@ -46,7 +46,6 @@ namespace SweetChef.Controllers
         {
             //TODO: Perguntar à base de dados os dados da receita com este id
             ViewData["ReceitaId"] = id;
-            ViewData["ReceitaNome"] = "Bolo de arroz";
 
             return View();
         }
@@ -55,7 +54,6 @@ namespace SweetChef.Controllers
         {
             //TODO: Perguntar à base de dados os dados da receita com este id
             ViewData["ReceitaId"] = id;
-            ViewData["ReceitaNome"] = "Bolo de arroz";
 
             return View();
         }

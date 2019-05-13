@@ -1,8 +1,4 @@
-﻿@{ 
-    ViewData["Title"] = ViewData["ReceitaNome"];
-}
-
-<style>
+﻿<style>
     @@media (min-width: 1200px) {
         body {
             height: 100vh !important;
@@ -24,47 +20,47 @@
         overflow-y: auto;
     }
 
-    .vertical-scroll::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
-    }
+        .vertical-scroll::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
 
-    .vertical-scroll::-webkit-scrollbar-button {
-        width: 0px;
-        height: 0px;
-    }
+        .vertical-scroll::-webkit-scrollbar-button {
+            width: 0px;
+            height: 0px;
+        }
 
-    .vertical-scroll::-webkit-scrollbar-thumb {
-        background: #e1e1e1;
-        border: 0px none #000;
-        border-radius: 50px;
-    }
+        .vertical-scroll::-webkit-scrollbar-thumb {
+            background: #e1e1e1;
+            border: 0px none #000;
+            border-radius: 50px;
+        }
 
-    .vertical-scroll::-webkit-scrollbar-thumb:hover {
-        background: #666;
-    }
+            .vertical-scroll::-webkit-scrollbar-thumb:hover {
+                background: #666;
+            }
 
-    .vertical-scroll::-webkit-scrollbar-thumb:active {
-        background: #666;
-    }
+            .vertical-scroll::-webkit-scrollbar-thumb:active {
+                background: #666;
+            }
 
-    .vertical-scroll::-webkit-scrollbar-track {
-        background: transparent;
-        border: 0px none #000;
-        border-radius: 50px;
-    }
+        .vertical-scroll::-webkit-scrollbar-track {
+            background: transparent;
+            border: 0px none #000;
+            border-radius: 50px;
+        }
 
-    .vertical-scroll::-webkit-scrollbar-track:hover {
-        background: transparent;
-    }
+            .vertical-scroll::-webkit-scrollbar-track:hover {
+                background: transparent;
+            }
 
-    .vertical-scroll::-webkit-scrollbar-track:active {
-        background: #ddd;
-    }
+            .vertical-scroll::-webkit-scrollbar-track:active {
+                background: #ddd;
+            }
 
-    .vertical-scroll::-webkit-scrollbar-corner {
-        background: transparent;
-    }
+        .vertical-scroll::-webkit-scrollbar-corner {
+            background: transparent;
+        }
 
     .progress-dots {
         position: absolute;
@@ -86,26 +82,47 @@
 </style>
 
 <script>
-    passo = 0;
-    numPassos = 5;
+    class Receita {
+        constructor(receita) {
+            this.info = receita.info;
+            this.ingredientes = receita.ingredientes;
+            this.utensilios = receita.utensilios;
+            this.passos = receita.passos;
+            this.passoAtualIndice = 0;
+            this.numPassos = receita.passos.length;
+            this.passoAtual = this.passos[this.passoAtualIndice];
+        }
+
+        continuar() {
+            this.passoAtualIndice = (this.passo + 1).clamp(0, this.numPassos + 1);
+            this.passoAtual = this.passos[this.passoAtualIndice];
+        }
+
+        retroceder() {
+            this.passoAtualIndice = (this.passo - 1).clamp(0, this.numPassos + 1);
+            this.passoAtual = this.passos[this.passoAtualIndice];
+        }
+    }
 
     function inicializarProgressBar() {
-        for (let i = 0; i <= numPassos; i++) {
+        if (receita == null) throw "Receita não definida";
+        for (let i = 0; i <= receita.numPassos; i++) {
             $("<div class='progress-dots'></div>")
-                .attr("style", `left: calc(${100 * (i / numPassos)}% - ${3 * (i / numPassos)}em)`)
-                .html(i < numPassos ? (i + 1) : "<i class='fas fa-flag-checkered'></i>")
+                .attr("style", `left: calc(${100 * (i / receita.numPassos)}% - ${3 * (i / receita.numPassos)}em)`)
+                .html(i < receita.numPassos ? (i + 1) : "<i class='fas fa-flag-checkered'></i>")
                 .appendTo("#progresso-do-cozinhado");
         }
         atualizaProgressBar(0);
     }
 
     function atualizaProgressBar(tempo) {
+        if (receita == null) throw "Receita não definida";
         let classes = ["bg-success", "bg-secondary", "bg-primary"]
-        for (let i = 0; i <= numPassos; i++) {
+        for (let i = 0; i <= receita.numPassos; i++) {
             let elem = $(".progress-dots").eq(i).delay(tempo).queue(function (next) {
-                if (i < passo) {
+                if (i < receita.passoAtualIndice) {
                     $(this).removeClass(classes).addClass("bg-success");
-                } else if (i > passo) {
+                } else if (i > receita.passo) {
                     $(this).removeClass(classes).addClass("bg-secondary");
                 } else {
                     $(this).removeClass(classes).addClass("bg-primary");
@@ -115,11 +132,11 @@
         }
         $("#progresso-do-cozinhado-barra-realizado").css(
             {
-                "width": `${100 * ((passo - 1) / numPassos)}%`,
+                "width": `${100 * ((receita.passoAtualIndice - 1) / receita.numPassos)}%`,
             });
         $("#progresso-do-cozinhado-barra-atual").css(
             {
-                "width": `${passo > numPassos || passo <= 0 ? 0 : 100 / numPassos}%`,
+                "width": `${receita.passoAtualIndice > receita.numPassos || receita.passo <= 0 ? 0 : 100 / receita.numPassos}%`,
             });
     }
 
@@ -127,11 +144,42 @@
         return this <= min ? min : this >= max ? max : this;
     };
 
+    function inicializarPagina() {
+        $("#nomeReceita").text(receita.info.nome);
+        if (receita.passoAtual.info.imagemLink) {
+            $("#passoImagem").attr("src", receita.passoAtual.info.imagemLink);
+        } else {
+            $("#passoImage").hide();
+        }
+        if (receita.passoAtual.info.videoLink) {
+            $("#passoVideo").attr("src", receita.passoAtual.info.videoLink);
+        } else {
+            $("#passoVideo").hide();
+        }
+        $("#passoDescricao").text(receita.passoAtual.info.descricao);
+        for (utensilio of receita.utensilios) {
+            $('<li class="list-group-item px-2 py-1"></li>')
+                .text(utensilio.nome)
+                .appendTo("#utensilios");
+        }
+        for (ingrediente of receita.ingredientes) {
+            $('<li class="list-group-item px-2 py-1"></li>')
+                .text(ingrediente.nome)
+                .append($("<small></small>").text(" " + "100" + " " + ingrediente.unidade))
+                .appendTo("#ingredientes");
+        }
+    }
+
     $(function () {
+        $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
+            window.receita = new Receita(data);
+            inicializarPagina();
+            inicializarProgressBar();
+            console.log(receita);
+        }).fail(console.log);
         // Progress Bar
-        inicializarProgressBar();
-        $("#continuar").click(() => { passo = (passo + 1).clamp(0, numPassos + 1); atualizaProgressBar(400) });
-        $("#retroceder").click(() => { passo = (passo - 1).clamp(0, numPassos + 1); atualizaProgressBar(0) });
+        $("#continuar").click(() => { receita.continuar(); atualizaProgressBar(400) });
+        $("#retroceder").click(() => { receita.retroceder(); atualizaProgressBar(0) });
 
         //Collapse
         if ($(window).width() >= 1200) {
@@ -140,18 +188,30 @@
     });
 </script>
 
-<h1>@ViewData["ReceitaNome"]</h1>
-<div class="row" id="passoContainer">
+<h1 id="nomeReceita"><!--receita.info.nome--></h1>
+<div class="row" id="passoContainer" ng-app>
     <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
-        <img class="img-fluid rounded mx-auto d-block" src="https://img.itdg.com.br/tdg/images/blog/uploads/2018/04/bolo-forno.jpg" alt="Bolo no forno" />
-        <p>
-            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
-        </p>
-        <p>
-            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
-        </p>
-        <p>
-            <a href="#">Pré-aqueça</a> o forno a 180º, <a href="#">unte</a> forminhas e <a href="#">forre-as</a> com uma capa de papel vegetal.
+        <!--src = receita.passoAtual.info.imagemLink-->
+        <div id="passoMedia" style="height:335px" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="img-fluid rounded mx-auto d-block" id="passoImagem" />
+                </div>
+                <div class="carousel-item">
+                    <iframe id="passoVideo" class="rounded" width="100%" height="335px"frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#passoMedia" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#passoMedia" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <p id="passoDescricao">
+            <!--receita.passoAtual.info.descricao-->
         </p>
     </div>
     <div class="col-xl-3 order-xl-3 h-100">
@@ -173,53 +233,24 @@
                 </div>
             </div>
             <div class="h-75 vertical-scroll order-xl-0">
-                <h4 data-toggle="collapse" data-target="#lista-ajudas" class="collapse-header">Ajudas</h4>
-                <ul id="lista-ajudas" class="list-group list-group-flush mb-1 collapse">
+                <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
+                <ul id="ajudas" class="list-group list-group-flush mb-1 collapse">
+                    <!--for(ajuda of receita.passoAtual.ajudas){-->
                     <li class="list-group-item px-2 py-1"><a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel">O que é pré-aquecer?</a></li>
                     <li class="list-group-item px-2 py-1">Como untar?</li>
                     <li class="list-group-item px-2 py-1">Como forrar com papel vegetal?</li>
                     <li class="list-group-item px-2 py-1">O que ser vida?</li>
                     <li class="list-group-item px-2 py-1 active">Temporizador de 30 minutos <i class='fas fa-hourglass-start'></i></li>
-                    <!---->
-                    <li class="list-group-item px-2 py-1">Forno</li>
-                    <li class="list-group-item px-2 py-1">Colher de pau</li>
-                    <li class="list-group-item px-2 py-1">Batedeira</li>
-                    <li class="list-group-item px-2 py-1">Taça</li>
-                    <li class="list-group-item px-2 py-1 active">Forno</li>
-                    <li class="list-group-item px-2 py-1">Colher de pau</li>
-                    <li class="list-group-item px-2 py-1">Batedeira</li>
-                    <li class="list-group-item px-2 py-1">Taça</li>
+                    <!--}-->
                 </ul>
             </div>
         </div>
     </div>
     <div class="col-xl-3 order-xl-1 h-100 vertical-scroll">
-        <h4 data-toggle="collapse" data-target="#lista-ingredientes" class="collapse-header">Ingredientes</h4>
-        <ul id="lista-ingredientes" class="list-group list-group-flush mb-1 collapse">
-            <li class="list-group-item px-2 py-1 active">Açúcar <small>100 g</small></li>
-            <li class="list-group-item px-2 py-1">Leite <small>3 l</small></li>
-            <li class="list-group-item px-2 py-1 active">Farinha <small>5 mg</small></li>
-            <li class="list-group-item px-2 py-1">Chocolate em pó <small>10 cm<sup>3</sup></small></li>
-            <li class="list-group-item px-2 py-1">Raspa de limão <small>1 unidade</small></li>
-            <!---->
-            <li class="list-group-item px-2 py-1 active">Açúcar <small>100 g</small></li>
-            <li class="list-group-item px-2 py-1">Leite <small>3 l</small></li>
-            <li class="list-group-item px-2 py-1 active">Farinha <small>5 mg</small></li>
-            <li class="list-group-item px-2 py-1">Chocolate em pó <small>10 cm<sup>3</sup></small></li>
-            <li class="list-group-item px-2 py-1">Raspa de limão <small>1 unidade</small></li>
-        </ul>
-        <h4 data-toggle="collapse" data-target="#lista-utensilios" class="collapse-header">Utensílios</h4>
-        <ul id="lista-utensilios" class="list-group list-group-flush mb-1 collapse">
-            <li class="list-group-item px-2 py-1 active">Forno</li>
-            <li class="list-group-item px-2 py-1">Colher de pau</li>
-            <li class="list-group-item px-2 py-1">Batedeira</li>
-            <li class="list-group-item px-2 py-1">Taça</li>
-            <!---->
-            <li class="list-group-item px-2 py-1 active">Forno</li>
-            <li class="list-group-item px-2 py-1">Colher de pau</li>
-            <li class="list-group-item px-2 py-1">Batedeira</li>
-            <li class="list-group-item px-2 py-1">Taça</li>
-        </ul>
+        <h4 data-toggle="collapse" data-target="#ingredientes" class="collapse-header">Ingredientes</h4>
+        <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse"></ul>
+        <h4 data-toggle="collapse" data-target="#utensilios" class="collapse-header">Utensílios</h4>
+        <ul id="utensilios" class="list-group list-group-flush mb-1 collapse"></ul>
     </div>
 </div>
 
