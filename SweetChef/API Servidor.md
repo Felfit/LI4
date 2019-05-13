@@ -15,7 +15,8 @@
       * Info
       * Ingredientes
       * Utensilios
-  
+* api/Receita/recomendadas/{idUtilizador}
+  * Retorna as informações de todas receitas exceto as receitas das restrições alimentares
 
 ##Utilizador
 

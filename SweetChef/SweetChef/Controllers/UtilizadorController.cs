@@ -55,21 +55,6 @@ namespace SweetChef.Controllers
             }
         }
 
-
-        // GET: api/Utilizador
-        [HttpGet]
-        public ActionResult Get()
-        {
-            try
-            {
-                return Ok(_context.Utilizador.ToArray());
-            } catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
         // GET: api/Utilizador/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult Get(int id)

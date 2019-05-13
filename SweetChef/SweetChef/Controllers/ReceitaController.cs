@@ -37,6 +37,19 @@ namespace SweetChef.Controllers
         }
 
 
+        [HttpGet("recomendadas/{idUtilizador}")]
+        public ActionResult getReceitasRecomendadas(int idUtilizador)
+        {
+            var restricoes = _context.RestricoesAlimentares.
+                Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
+                SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
+                Select(ri => ri.Receita).  //Recolhe apenas as receitas.
+                ToList();
+            //Seleciona todas as receitas exceto as restritas
+            var receitas = _context.Receita.Except(restricoes).ToList();
+            return Ok(receitas);
+        }
+
         // Get: api/Receita/id
         [HttpGet("{id}", Name = "GetReceita")]
         public ActionResult GetReceitaEPassos(int id)
