@@ -31,14 +31,34 @@
   * Retorna as receitas favoritas do utilizador
 * api/Utilizador/{id}
   * Retorna as informações do utilizador.
+* api/Utilizador/{idUt}/opiniao/{idReceita}
+  * Retorna a opiniao correspondente a uma receita 
+* api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/
+  * Retorna o feedback do utilizador relativo a um passo
 
 ###POST
 * api/utilizador
   * TO BE EXPLAINED
 * api/Utilizador/autenticar
   * TO BE EXPLAINED
+* api/Utilizador/{idUt}/opiniao/{idReceita}/?arguments
+  * Chamar Put para criar opinião. se não existir
+    * bool favorito
+    * (Optional) short rating
+    * bool blacklisted
+* api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/?argumentos
+    * (Opcional) int dificuldade
+    * string comentario 
 
-
+###PUT
+* api/Utilizador/{idUt}/opiniao/{idReceita}/?arguments
+  * Chamar Post para atualizar um campo. Precisa de existir
+    * (Optional) bool favorito
+    * (Optional) short rating
+    * (Optional) bool blacklisted
+* api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/?argumentos
+    * (Opcional) int dificuldade
+    * (Opcional) string comentario 
 ##Duvida
 
 ###GET
