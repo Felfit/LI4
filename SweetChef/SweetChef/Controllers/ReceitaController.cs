@@ -76,9 +76,26 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpGet("favoritas/{idUtilizador}")]
+        public ActionResult GetReceitasFavoritas(int idUtilizador)
+        {
+            try
+            {
+                var favoritas = _context.Opiniao.
+                    Where(o => o.Utilizadorid == idUtilizador && o.Favorito).
+                    Select(o => o.Receita).
+                    ToList();
+                return Ok(favoritas);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         [HttpGet("recomendadas/{idUtilizador}")]
-        public ActionResult getReceitasRecomendadas(int idUtilizador)
+        public ActionResult GetReceitasRecomendadas(int idUtilizador)
         {
             var restricoes = _context.RestricoesAlimentares.
                 Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
@@ -88,6 +105,9 @@ namespace SweetChef.Controllers
                 Where(d => d.Utilizadorid == idUtilizador).
                 SelectMany(d => d.Tag.TagReceita).
                 Select(tr => tr.Receita);
+            var blacklisted = _context.Opiniao.
+                Where(o => o.Utilizadorid == idUtilizador && o.Blacklist == true).
+                Select(o => o.Receita);
             //Seleciona todas as receitas exceto as restritas
             var receitas = _context.Likes.
                 Where(l => l.Utilizadorid == idUtilizador).
@@ -95,6 +115,7 @@ namespace SweetChef.Controllers
                 Select(tr => tr.Receita).
                 Except(restricoes).
                 Except(disliked).
+                Except(blacklisted).
                 ToList(); 
             return Ok(receitas);
         }
