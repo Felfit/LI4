@@ -55,6 +55,152 @@ namespace SweetChef.Controllers
             }
         }
 
+
+        //Create Opinion
+        [HttpPost("{idUt}/opiniao/{idReceita}")]
+        public ActionResult PutOpinion(int idUt, int idReceita, [FromQuery] bool favorito, [FromQuery] short? rating, [FromQuery] bool blacklisted)
+        {
+            try
+            {
+                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                if (o != null)
+                {
+                    return Created("Object Already Exists",null);
+                }
+                o = new Opiniao();
+                o.Favorito = favorito;
+                o.Rating = rating;
+                o.Blacklist = blacklisted;
+                _context.Opiniao.Add(o);
+                return Ok("Succeds");
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Get Opinion
+        [HttpGet("{idUt}/opiniao/{idReceita}")]
+        public ActionResult GetOpinion(int idUt, int idReceita)
+        {
+            try
+            {
+                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                if (o == null)
+                {
+                    return NotFound();
+                }
+                return Ok(o);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Update Opinion
+        [HttpPut("{idUt}/opiniao/{idReceita}")]
+        public ActionResult PutOpinion(int idUt, int idReceita, [FromQuery] bool? favorito, [FromQuery] short? rating, [FromQuery] bool? blacklisted)
+        {
+            try
+            {
+                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                if (o == null)
+                {
+                    return NotFound();
+                }
+                if (favorito.HasValue)
+                    o.Favorito = (bool)favorito;
+                if (rating.HasValue)
+                    o.Rating = rating;
+                if (blacklisted.HasValue)
+                    o.Blacklist = (bool)blacklisted;
+                _context.Opiniao.Update(o);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Get PassoFeedback
+        [HttpGet("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult GetPassoComment(int idUt, int idReceita,int idPasso)
+        {
+            try
+            {
+                UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt,idPasso,idReceita);
+                if (u == null)
+                {
+                    return NotFound();
+                }
+                return Ok(u);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Put PassoFeedback
+        [HttpPost("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult PostPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] int? dificuldade, [FromQuery] string comentario)
+        {
+            try
+            {
+                UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
+                if (u != null)
+                {
+                    return Created("Ja foi criado antes usa o pust",null);
+                }
+                u = new UtilizadorPasso();
+                u.Utilizadorid = idUt;
+                u.PassoReceitaid = idReceita;
+                u.Passoid = idPasso;
+                u.Dificuldade = dificuldade;
+                u.Comentario = comentario;
+                _context.UtilizadorPasso.Add(u);
+                return Ok(u);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Post PassoFeedback
+        [HttpPut("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult PutPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] int? dificuldade, [FromQuery] string comentario)
+        {
+            try
+            {
+                UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
+                if (u == null)
+                {
+                    return Created("Ja foi criado antes usa o pust", null);
+                }
+                if(dificuldade.HasValue)
+                    u.Dificuldade = dificuldade;
+                if(comentario != null)
+                    u.Comentario = comentario;
+                _context.UtilizadorPasso.Update(u);
+                return Ok(u);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
         // GET: api/Utilizador/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult Get(int id)
