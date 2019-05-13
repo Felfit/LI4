@@ -25,8 +25,8 @@ namespace SweetChef.ModelsNew
         public string Nome { get; set; }
         public int Dificuldade { get; set; }
         public int Porcoes { get; set; }
-        public DateTime Tempodepreparacao { get; set; }
-        public DateTime Tempodeespera { get; set; }
+        public int Tempodepreparacao { get; set; }
+        public int Tempodeespera { get; set; }
 
         [JsonIgnore]
         public ICollection<EmentaSemanal> EmentaSemanal { get; set; }
@@ -42,5 +42,12 @@ namespace SweetChef.ModelsNew
         public ICollection<TagReceita> TagReceita { get; set; }
         [JsonIgnore]
         public ICollection<UtensilioReceita> UtensilioReceita { get; set; }
-    }
+
+        public override bool Equals(object obj)
+        {
+            var receita = obj as Receita;
+            return receita != null &&
+                   Id == receita.Id;
+        }
+    } 
 }

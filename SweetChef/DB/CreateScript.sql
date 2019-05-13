@@ -1,14 +1,14 @@
 ﻿CREATE TABLE RestricoesAlimentares (Utilizadorid int NOT NULL, Ingredienteid int NOT NULL, PRIMARY KEY (Utilizadorid, Ingredienteid));
-CREATE TABLE Utilizador (id int IDENTITY NOT NULL, Nome varchar(60) NOT NULL, email char(50) NOT NULL UNIQUE, password varchar(16) NOT NULL UNIQUE, dataNascimento datetime NOT NULL, PRIMARY KEY (id));
+CREATE TABLE Utilizador (id int IDENTITY NOT NULL, Nome varchar(60) NOT NULL, email varchar(50) NOT NULL UNIQUE, password varchar(16) NOT NULL UNIQUE, dataNascimento datetime NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Ingrediente (id int IDENTITY NOT NULL, Unidadeid int NOT NULL, nome varchar(20) NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Unidade (id int IDENTITY NOT NULL, nome varchar(255) NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Dislikes (Utilizadorid int NOT NULL, Tagid int NOT NULL, PRIMARY KEY (Utilizadorid, Tagid));
 CREATE TABLE [Tag] (id int IDENTITY NOT NULL, [tag] varchar(255) NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Likes (Utilizadorid int NOT NULL, Tagid int NOT NULL, PRIMARY KEY (Utilizadorid, Tagid));
 CREATE TABLE Tag_Receita (Receitaid int NOT NULL, Tagid int NOT NULL, PRIMARY KEY (Receitaid, Tagid));
-CREATE TABLE Receita (id int IDENTITY NOT NULL, nutricao varchar(20) NOT NULL, imagemLink varchar(255) NOT NULL, videoLink varchar(255) NOT NULL, descricao varchar(255) NOT NULL, nome varchar(60) NOT NULL, dificuldade int NOT NULL, porcoes int NOT NULL, tempodepreparacao datetime NOT NULL, tempodeespera datetime NOT NULL, PRIMARY KEY (id));
+CREATE TABLE Receita (id int IDENTITY NOT NULL, nutricao varchar(20) NOT NULL, imagemLink varchar(255) NOT NULL, videoLink varchar(255) NOT NULL, descricao varchar(255) NOT NULL, nome varchar(60) NOT NULL, dificuldade int NOT NULL, porcoes int NOT NULL, tempodepreparacao int NOT NULL, tempodeespera int NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Utilizador_Passo (Utilizadorid int NOT NULL, Passoid int NOT NULL, PassoReceitaid int NOT NULL, dificuldade int NULL, comentario varchar(255) NOT NULL, PRIMARY KEY (Utilizadorid, Passoid, PassoReceitaid));
-CREATE TABLE Passo (numero int NOT NULL, Receitaid int NOT NULL, duracao datetime NOT NULL, descricao varchar(255) NOT NULL, imagemLink varchar(255) NULL, videoLink varchar(255) NULL, linkExterno varchar(255) NULL, PRIMARY KEY (numero, Receitaid));
+CREATE TABLE Passo (numero int NOT NULL, Receitaid int NOT NULL, duracao int NOT NULL, descricao varchar(255) NOT NULL, imagemLink varchar(255) NULL, videoLink varchar(255) NULL, linkExterno varchar(255) NULL, PRIMARY KEY (numero, Receitaid));
 CREATE TABLE Execucao (Receitaid int NOT NULL, Utilizadorid int NOT NULL, Data datetime NOT NULL, duracaoTotal datetime NOT NULL, PRIMARY KEY (Receitaid, Utilizadorid, Data));
 CREATE TABLE Utensilio_Receita (Receitaid int NOT NULL, Utensilioid int NOT NULL, PRIMARY KEY (Receitaid, Utensilioid));
 CREATE TABLE Utensilio (id int IDENTITY NOT NULL, nome varchar(255) NOT NULL, PRIMARY KEY (id));

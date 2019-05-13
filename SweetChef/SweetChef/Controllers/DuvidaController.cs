@@ -11,18 +11,18 @@ namespace SweetChef.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PassoController : Controller
+    public class DuvidaController : Controller
     {
         private readonly SweetContext _context;
 
-        public PassoController(SweetContext context)
+        public DuvidaController(SweetContext context)
         {
             _context = context;
         }
 
         // GET: Passo
-        [HttpGet("{idReceita}/{idPasso}/duvidas")]
-        public ActionResult getDuvidas(int idPasso, int idReceita)
+        [HttpGet("{idReceita}/{idPasso}")]
+        public ActionResult getDuvidasFromPasso(int idPasso, int idReceita)
         {
             try
             {
