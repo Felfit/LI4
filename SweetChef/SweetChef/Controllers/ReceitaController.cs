@@ -43,10 +43,19 @@ namespace SweetChef.Controllers
             var restricoes = _context.RestricoesAlimentares.
                 Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
                 SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
-                Select(ri => ri.Receita).  //Recolhe apenas as receitas.
-                ToList();
+                Select(ri => ri.Receita);  //Recolhe apenas as receitas.
+            var disliked = _context.Dislikes.
+                Where(d => d.Utilizadorid == idUtilizador).
+                SelectMany(d => d.Tag.TagReceita).
+                Select(tr => tr.Receita);
             //Seleciona todas as receitas exceto as restritas
-            var receitas = _context.Receita.Except(restricoes).ToList();
+            var receitas = _context.Likes.
+                Where(l => l.Utilizadorid == idUtilizador).
+                SelectMany(l => l.Tag.TagReceita).
+                Select(tr => tr.Receita).
+                Except(restricoes).
+                Except(disliked).
+                ToList(); 
             return Ok(receitas);
         }
 
