@@ -42,5 +42,12 @@ namespace SweetChef.ModelsNew
         public ICollection<TagReceita> TagReceita { get; set; }
         [JsonIgnore]
         public ICollection<UtensilioReceita> UtensilioReceita { get; set; }
-    }
+
+        public override bool Equals(object obj)
+        {
+            var receita = obj as Receita;
+            return receita != null &&
+                   Id == receita.Id;
+        }
+    } 
 }
