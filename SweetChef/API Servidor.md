@@ -17,6 +17,9 @@
       * Utensilios
 * api/Receita/recomendadas/{idUtilizador}
   * Retorna as informações de todas receitas exceto as receitas das restrições alimentares
+* api/Receita/filtradas?dif=...&dur=...&tags=...&tags
+  *Retorna receitas filtradas. Todos os campos são opcionais. Tags é uma lista.
+
 
 ##Utilizador
 

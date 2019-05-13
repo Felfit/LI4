@@ -45,8 +45,10 @@ namespace SweetChef.Controllers
                                .Where(o => o.Favorito == true)
                                .Select(o => new { o.Receita })
                                .ToArray();
-
-                return Ok(receitas);
+                if (receitas.Length == 0)
+                    return NotFound();
+                else
+                    return Ok(receitas);
             }
             catch (Exception e)
             {
@@ -54,6 +56,7 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
 
         // GET: api/Utilizador/5
         [HttpGet("{id}", Name = "Get")]

@@ -35,6 +35,46 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        //Todas as tags tem de estar presentes na receita
+        private bool ContainsTag(ICollection<TagReceita> tagR, List<int> tags)
+        {
+            if (tagR == null) return false;
+
+            int count = 0;
+            foreach (int id in tags)
+            {
+                foreach (TagReceita t in tagR)
+                {
+                    if (t.Tag.Id == id)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+                    
+            }
+            return (count == tags.Count);
+        }
+
+        [HttpGet("filtradas")]
+        public ActionResult GetReceitasFiltradas([FromQuery] int? dif, [FromQuery]int? dur, [FromQuery] List<int> tags)
+        {
+            try
+            {
+                var receitas = _context.Receita.
+                                Include("TagReceita.Tag").ToList().
+                                Where(x => (!dur.HasValue || x.Tempodepreparacao + x.Tempodeespera <= dur.Value)
+                                           && (!dif.HasValue || x.Dificuldade == dif.Value)
+                                           && (tags.Count == 0 || ContainsTag(x.TagReceita, tags)));
+     
+                return Ok(receitas);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
 
         [HttpGet("recomendadas/{idUtilizador}")]
