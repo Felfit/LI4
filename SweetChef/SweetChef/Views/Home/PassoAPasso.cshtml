@@ -198,7 +198,7 @@
             $("#passoMedia").hide();
         }
         $("#ajudas").html("");
-        $.getJSON(`/api/duvida/9/${receita.passoAtualIndice + 1}`, (duvidas) => {
+        $.getJSON(`/api/duvida/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}`, (duvidas) => {
             let indiceDuvida = 0;
             for (const duvida of duvidas) {
                 $('<li class="list-group-item px-2 py-1"></li>')
