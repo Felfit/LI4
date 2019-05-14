@@ -94,13 +94,17 @@
         }
 
         continuar() {
-            this.passoAtualIndice = (this.passo + 1).clamp(0, this.numPassos + 1);
-            this.passoAtual = this.passos[this.passoAtualIndice];
+            this.passoAtualIndice = (this.passoAtualIndice + 1).clamp(0, this.numPassos);
+            if (this.passoAtualIndice < this.numPassos) {
+                this.passoAtual = this.passos[this.passoAtualIndice];
+            }
         }
 
         retroceder() {
-            this.passoAtualIndice = (this.passo - 1).clamp(0, this.numPassos + 1);
-            this.passoAtual = this.passos[this.passoAtualIndice];
+            this.passoAtualIndice = (this.passoAtualIndice - 1).clamp(0, this.numPassos);
+            if (this.passoAtualIndice < this.numPassos) {
+                this.passoAtual = this.passos[this.passoAtualIndice];
+            }
         }
     }
 
@@ -119,10 +123,10 @@
         if (receita == null) throw "Receita não definida";
         let classes = ["bg-success", "bg-secondary", "bg-primary"]
         for (let i = 0; i <= receita.numPassos; i++) {
-            let elem = $(".progress-dots").eq(i).delay(tempo).queue(function (next) {
-                if (i < receita.passoAtualIndice) {
+            let elem = $(".progress-dots").eq(i).delay(i == receita.passoAtualIndice ? tempo : 0).queue(function (next) {
+                if (i < receita.passoAtualIndice || receita.passoAtualIndice == receita.numPassos) {
                     $(this).removeClass(classes).addClass("bg-success");
-                } else if (i > receita.passo) {
+                } else if (i > receita.passoAtualIndice) {
                     $(this).removeClass(classes).addClass("bg-secondary");
                 } else {
                     $(this).removeClass(classes).addClass("bg-primary");
@@ -132,11 +136,11 @@
         }
         $("#progresso-do-cozinhado-barra-realizado").css(
             {
-                "width": `${100 * ((receita.passoAtualIndice - 1) / receita.numPassos)}%`,
+                "width": `${100 * (receita.passoAtualIndice / receita.numPassos)}%`,
             });
         $("#progresso-do-cozinhado-barra-atual").css(
             {
-                "width": `${receita.passoAtualIndice > receita.numPassos || receita.passo <= 0 ? 0 : 100 / receita.numPassos}%`,
+                "width": `${receita.passoAtualIndice >= receita.numPassos || receita.passo <= 0 ? 0 : 100 / receita.numPassos}%`,
             });
     }
 
@@ -146,28 +150,113 @@
 
     function inicializarPagina() {
         $("#nomeReceita").text(receita.info.nome);
-        if (receita.passoAtual.info.imagemLink) {
-            $("#passoImagem").attr("src", receita.passoAtual.info.imagemLink);
-        } else {
-            $("#passoImage").hide();
-        }
-        if (receita.passoAtual.info.videoLink) {
-            $("#passoVideo").attr("src", receita.passoAtual.info.videoLink);
-        } else {
-            $("#passoVideo").hide();
-        }
-        $("#passoDescricao").text(receita.passoAtual.info.descricao);
-        for (utensilio of receita.utensilios) {
+        for (const utensilio of receita.utensilios) {
             $('<li class="list-group-item px-2 py-1"></li>')
                 .text(utensilio.nome)
                 .appendTo("#utensilios");
         }
-        for (ingrediente of receita.ingredientes) {
+        for (const ingrediente of receita.ingredientes) {
             $('<li class="list-group-item px-2 py-1"></li>')
                 .text(ingrediente.nome)
                 .append($("<small></small>").text(" " + "100" + " " + ingrediente.unidade))
                 .appendTo("#ingredientes");
         }
+        inicializarPasso();
+    }
+
+    function inicializarPasso() {
+        $("#passoDescricao").text(receita.passoAtual.info.descricao);
+        if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
+            $("#passoMedia").show();
+            if (receita.passoAtual.info.imagemLink && receita.passoAtual.info.videoLink) {
+                $("#passoCarouselControls").show();
+            } else {
+                $("#passoCarouselControls").hide();
+            }
+            if (receita.passoAtual.info.imagemLink) {
+                $("#passoImagem").attr("src", receita.passoAtual.info.imagemLink);
+                $("#passoImagemItem").addClass("active");
+                $("#passoVideoItem").removeClass("active");
+            } else {
+                $("#passoImagemItem").removeClass("active");
+                $("#passoImage").hide();
+            }
+            if (receita.passoAtual.info.videoLink) {
+                $("#passoVideo").attr("src", receita.passoAtual.info.videoLink);
+                if (receita.passoAtual.info.imagemLink) {
+                    $("#passoCarouselControls").show();
+                } else {
+                    $("#passoImagemItem").removeClass("active");
+                    $("#passoVideoItem").addClass("active");
+                    $("#passoCarouselControls").hide();
+                }
+            } else {
+                $("#passoVideo").hide();
+                $("#passoCarouselControls").hide();
+            }
+        } else {
+            $("#passoMedia").hide();
+        }
+        $("#ajudas").html("");
+        $.getJSON(`/api/duvida/9/${receita.passoAtualIndice + 1}`, (duvidas) => {
+            let indiceDuvida = 0;
+            for (const duvida of duvidas) {
+                $('<li class="list-group-item px-2 py-1"></li>')
+                    .append(
+                        $(`<a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel" onclick="atualizarDuvida(${indiceDuvida})"></a>`)
+                            .text(duvida.questao))
+                    .appendTo("#ajudas");
+                indiceDuvida++;
+            }
+            receita.passoAtual.ajudas = duvidas.map(k => k["dúvida"]);
+        });
+    }
+
+    function atualizarDuvida(indice) {
+        const ajuda = receita.passoAtual.ajudas[indice];
+        $("#ajudaTitulo").text(ajuda.titulo);
+        $("#ajudaExplicacao").text(ajuda.explicacao);
+        if (ajuda.imagemLink || ajuda.videoLink) {
+            $("#ajudaMedia").show();
+            if (ajuda.imagemLink && ajuda.videoLink) {
+                $("#ajudaCarouselControls").show();
+            } else {
+                $("#ajudaCarouselControls").hide();
+            }
+            if (ajuda.imagemLink) {
+                $("#ajudaImagem").attr("src", ajuda.imagemLink);
+                $("#ajudaImagemItem").addClass("active");
+                $("#ajudaVideoItem").removeClass("active");
+            } else {
+                $("#ajudaImagemItem").removeClass("active");
+                $("#ajudaImage").hide();
+            }
+            if (ajuda.videoLink) {
+                $("#ajudaVideo").attr("src", ajuda.videoLink);
+                if (ajuda.imagemLink) {
+                    $("#ajudaCarouselControls").show();
+                } else {
+                    $("#ajudaImagemItem").removeClass("active");
+                    $("#ajudaVideoItem").addClass("active");
+                    $("#ajudaCarouselControls").hide();
+                }
+            } else {
+                $("#ajudaVideo").hide();
+                $("#ajudaCarouselControls").hide();
+            }
+        } else {
+            $("#ajudaMedia").hide();
+        }
+        if (ajuda.linkexterno) {
+            $("#ajudaLinkExterno").attr("href", ajuda.linkexterno).show();
+        } else {
+            $("#ajudaLinkExterno").hide();
+        }
+    }
+
+    function trocarConteudo() {
+        $("#conteudoPlaceholder").hide();
+        $("#conteudo").show();
     }
 
     $(function () {
@@ -175,11 +264,11 @@
             window.receita = new Receita(data);
             inicializarPagina();
             inicializarProgressBar();
-            console.log(receita);
+            trocarConteudo();
         }).fail(console.log);
-        // Progress Bar
-        $("#continuar").click(() => { receita.continuar(); atualizaProgressBar(400) });
-        $("#retroceder").click(() => { receita.retroceder(); atualizaProgressBar(0) });
+        // Controlo do passo
+        $("#continuar").click(() => { receita.continuar(); inicializarPasso(); atualizaProgressBar(400) });
+        $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(0) });
 
         //Collapse
         if ($(window).width() >= 1200) {
@@ -188,98 +277,124 @@
     });
 </script>
 
-<h1 id="nomeReceita"><!--receita.info.nome--></h1>
-<div class="row" id="passoContainer" ng-app>
-    <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
-        <!--src = receita.passoAtual.info.imagemLink-->
-        <div id="passoMedia" style="height:335px" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="img-fluid rounded mx-auto d-block" id="passoImagem" />
-                </div>
-                <div class="carousel-item">
-                    <iframe id="passoVideo" class="rounded" width="100%" height="335px"frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#passoMedia" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#passoMedia" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <p id="passoDescricao">
-            <!--receita.passoAtual.info.descricao-->
-        </p>
-    </div>
-    <div class="col-xl-3 order-xl-3 h-100">
-        <div class="row flex-column mx-0 h-100">
-            <div class="h-25 py-2 order-xl-1">
-                <div class="row no-gutters">
-                    <div class="col-xl-6 order-xl-0 col-4">
-                        <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
-                    </div>
-                    <div class="col order-xl-2 pt-xl-1">
-                        <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
-                    </div>
-                    <div class="col order-xl-2 pt-xl-1">
-                        <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
-                    </div>
-                    <div class="col-xl-6 order-xl-1 col-4">
-                        <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="h-75 vertical-scroll order-xl-0">
-                <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
-                <ul id="ajudas" class="list-group list-group-flush mb-1 collapse">
-                    <!--for(ajuda of receita.passoAtual.ajudas){-->
-                    <li class="list-group-item px-2 py-1"><a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel">O que é pré-aquecer?</a></li>
-                    <li class="list-group-item px-2 py-1">Como untar?</li>
-                    <li class="list-group-item px-2 py-1">Como forrar com papel vegetal?</li>
-                    <li class="list-group-item px-2 py-1">O que ser vida?</li>
-                    <li class="list-group-item px-2 py-1 active">Temporizador de 30 minutos <i class='fas fa-hourglass-start'></i></li>
-                    <!--}-->
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 order-xl-1 h-100 vertical-scroll">
-        <h4 data-toggle="collapse" data-target="#ingredientes" class="collapse-header">Ingredientes</h4>
-        <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse"></ul>
-        <h4 data-toggle="collapse" data-target="#utensilios" class="collapse-header">Utensílios</h4>
-        <ul id="utensilios" class="list-group list-group-flush mb-1 collapse"></ul>
-    </div>
+<div id="conteudoPlaceholder" class="h-100">
+    <h1 class="m-auto d-table">A carregar a receita...</h1>
 </div>
-
-<div class="row my-2">
-    <div class="col my-3 mx-5">
-        <div class="progress" id="progresso-do-cozinhado">
-            <div class="progress-bar progress-bar-success bg-success" id="progresso-do-cozinhado-barra-realizado"></div>
-            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progresso-do-cozinhado-barra-atual"></div>
+<div class="h-100" id="conteudo" style="display: none">
+    <h1 id="nomeReceita"><!--receita.info.nome--></h1>
+    <div class="row" id="passoContainer">
+        <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
+            <!--src = receita.passoAtual.info.imagemLink-->
+            <div id="passoMedia" style="height:335px" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" id="passoImagemItem">
+                        <img class="img-fluid rounded mx-auto d-block" id="passoImagem" />
+                    </div>
+                    <div class="carousel-item" id="passoVideoItem">
+                        <iframe id="passoVideo" class="rounded" style="width: 100%; height=335px" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div id="passoCarouselControls">
+                    <a class="carousel-control-prev" href="#passoMedia" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#passoMedia" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+            <p id="passoDescricao">
+                <!--receita.passoAtual.info.descricao-->
+            </p>
+        </div>
+        <div class="col-xl-3 order-xl-3 h-100">
+            <div class="row flex-column mx-0 h-100">
+                <div class="h-25 py-2 order-xl-1">
+                    <div class="row no-gutters">
+                        <div class="col-xl-6 order-xl-0 col-4">
+                            <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
+                        </div>
+                        <div class="col order-xl-2 pt-xl-1">
+                            <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
+                        </div>
+                        <div class="col order-xl-2 pt-xl-1">
+                            <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
+                        </div>
+                        <div class="col-xl-6 order-xl-1 col-4">
+                            <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-75 vertical-scroll order-xl-0">
+                    <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
+                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse">
+                        <!--for(ajuda of receita.passoAtual.ajudas){-->
+                        <li class="list-group-item px-2 py-1"><a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel">O que é pré-aquecer?</a></li>
+                        <li class="list-group-item px-2 py-1">Como untar?</li>
+                        <li class="list-group-item px-2 py-1">Como forrar com papel vegetal?</li>
+                        <li class="list-group-item px-2 py-1">O que ser vida?</li>
+                        <li class="list-group-item px-2 py-1 active">Temporizador de 30 minutos <i class='fas fa-hourglass-start'></i></li>
+                        <!--}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 order-xl-1 h-100 vertical-scroll">
+            <h4 data-toggle="collapse" data-target="#ingredientes" class="collapse-header">Ingredientes</h4>
+            <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse"></ul>
+            <h4 data-toggle="collapse" data-target="#utensilios" class="collapse-header">Utensílios</h4>
+            <ul id="utensilios" class="list-group list-group-flush mb-1 collapse"></ul>
         </div>
     </div>
-</div>
 
-<!-- Ajudas -->
-<div class="modal fade" id="ajudaModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">O que ser vida?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="row my-2">
+        <div class="col my-3 mx-5">
+            <div class="progress" id="progresso-do-cozinhado">
+                <div class="progress-bar progress-bar-success bg-success" id="progresso-do-cozinhado-barra-realizado"></div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" id="progresso-do-cozinhado-barra-atual"></div>
             </div>
-            <div class="modal-body">
-                <img class="img-fluid rounded mx-auto d-block" src="https://www.dictionary.com/e/wp-content/uploads/2018/03/42.jpg" alt="Bolo no forno" />
-                A resposta está presente no número 42
-            </div>
-            <div class="modal-footer">
-                <a href="http://www.google.com/search?q=O+que+ser+vida?" target="_blank" class="btn btn-danger">Procurar</a>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Entendi</button>
+        </div>
+    </div>
+
+    <!-- Ajudas -->
+    <div class="modal fade" id="ajudaModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajudaTitulo">O que ser vida?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="ajudaMedia" style="height:335px" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" id="ajudaImagemItem">
+                                <img class="img-fluid rounded mx-auto d-block" id="ajudaImagem" />
+                            </div>
+                            <div class="carousel-item" id="ajudaVideoItem">
+                                <iframe id="ajudaVideo" class="rounded" style="width: 100%; height=335px" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div id="ajudaCarouselControls">
+                            <a class="carousel-control-prev" href="#ajudaMedia" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#ajudaMedia" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <p id="ajudaExplicacao"></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="" id="ajudaLinkExterno" target="_blank" class="btn btn-warning">Mais informações</a>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Entendi</button>
+                </div>
             </div>
         </div>
     </div>
