@@ -25,7 +25,7 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-
+        //Get receitas favoritas
         [HttpGet("{id}/favoritas")]
         public ActionResult getReceitasFavoritas(int id)
         {
@@ -57,13 +57,13 @@ namespace SweetChef.Controllers
             }
         }
         //Create Execução
-        [HttpPost("execucao")]
+        [HttpPost("restricaoAlimentar")]
         public ActionResult PostExecucao([FromForm] int idUt, [FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
         {
             try
             {
                 Execucao e = _context.Execucao.Find(idUt, idReceita, data);
-                if(e != null)
+                if (e != null)
                 {
                     return Created("Object Already Exists", null);
                 }
@@ -74,7 +74,113 @@ namespace SweetChef.Controllers
                 e.DuracaoTotal = duracao;
                 _context.Execucao.Add(e);
                 _context.SaveChanges();
-                return Ok(e);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Adiciona uma receita à ementa
+        [HttpPost("ementa")]
+        public ActionResult PostReceitaEmenta([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
+        {
+            try
+            {
+                EmentaSemanal em = _context.EmentaSemanal.Find(idUt, idRec);
+                if(em != null)
+                {
+                    return Created("Object Already Exists", null);
+                }
+                em = new EmentaSemanal();
+                em.Utilizadorid = idUt;
+                em.Receitaid = idRec;
+                em.Data = data;
+                _context.EmentaSemanal.Add(em);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //Remove uma receita da ementa
+        [HttpDelete("ementa")]
+        public IActionResult Delete([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
+        {
+            try
+            {
+                //TODO ver se a ordem está correta 
+                var ementa = _context.EmentaSemanal.Find(idUt, idRec, data);
+
+                if (ementa == null)
+                {
+                    return NotFound();
+                }
+                _context.EmentaSemanal.Remove(ementa);
+                _context.SaveChanges();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        //Update à configuração.
+        //Remove todas as entradas daquele utilizador nas tabelas respetivas e adiciona as novas.
+        //Basicamente se não me passa a lista quer dizer que não quer cenas
+        [HttpPut("configuracao")]
+        public ActionResult UpdateConfiguracao([FromForm] int idUt, [FromForm] List<int> restricoes, [FromForm] List<int> likes, [FromForm] List<int> dislikes)
+        {
+            try
+            {
+                _context.RemoveRange(_context.RestricoesAlimentares.Where(x => x.Utilizadorid == idUt));
+                if (restricoes.Count != 0)
+                {
+                    foreach (int id in restricoes)
+                    {
+                        RestricoesAlimentares ra = new RestricoesAlimentares();
+                        ra.Utilizadorid = idUt;
+                        ra.Ingredienteid = id;
+                        _context.RestricoesAlimentares.Add(ra);
+                       
+                    }
+                }
+
+                _context.RemoveRange(_context.Likes.Where(x => x.Utilizadorid == idUt));
+                if (likes.Count != 0)
+                 {
+                     foreach (int id in likes)
+                     {
+                         Likes l = new Likes();
+                         l.Utilizadorid = idUt;
+                         l.Tagid = id;
+                         _context.Likes.Add(l);
+                     }
+                 }
+
+                _context.RemoveRange(_context.Dislikes.Where(x => x.Utilizadorid == idUt));
+                if (dislikes.Count != 0)
+                 { 
+                     foreach (int id in dislikes)
+                     {
+                         Dislikes dl = new Dislikes();
+                         dl.Utilizadorid = idUt;
+                         dl.Tagid = id;
+                         _context.Dislikes.Add(dl);
+                     }
+                 }
+                _context.SaveChanges();
+
+                return Ok("Chages where made");
             }
             catch (Exception e)
             {
@@ -133,7 +239,7 @@ namespace SweetChef.Controllers
 
         //Update Opinion
         [HttpPut("{idUt}/opiniao/{idReceita}")]
-        public ActionResult PutOpinion(int idUt, int idReceita, [FromQuery] bool? favorito, [FromQuery] short? rating, [FromQuery] bool? blacklisted)
+        public ActionResult PutOpinion(int idUt, int idReceita, [FromForm] bool? favorito, [FromForm] short? rating, [FromForm] bool? blacklisted)
         {
             try
             {
