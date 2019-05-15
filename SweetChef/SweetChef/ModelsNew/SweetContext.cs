@@ -122,8 +122,7 @@ namespace SweetChef.ModelsNew
                 entity.Property(e => e.Data).HasColumnType("datetime");
 
                 entity.Property(e => e.DuracaoTotal)
-                    .HasColumnName("duracaoTotal")
-                    .HasColumnType("datetime");
+                    .HasColumnName("duracaoTotal");
 
                 entity.HasOne(d => d.Receita)
                     .WithMany(p => p.Execucao)
