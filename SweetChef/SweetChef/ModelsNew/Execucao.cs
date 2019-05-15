@@ -9,7 +9,7 @@ namespace SweetChef.ModelsNew
         public int Receitaid { get; set; }
         public int Utilizadorid { get; set; }
         public DateTime Data { get; set; }
-        public DateTime DuracaoTotal { get; set; }
+        public int DuracaoTotal { get; set; }
         [JsonIgnore]
         public Receita Receita { get; set; }
         [JsonIgnore]
