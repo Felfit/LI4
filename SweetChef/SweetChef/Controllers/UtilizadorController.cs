@@ -56,11 +56,36 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+        //Create Execução
+        [HttpPost("execucao")]
+        public ActionResult PostExecucao([FromForm] int idUt, [FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
+        {
+            try
+            {
+                Execucao e = _context.Execucao.Find(idUt, idReceita, data);
+                if(e != null)
+                {
+                    return Created("Object Already Exists", null);
+                }
+                e = new Execucao();
+                e.Utilizadorid = idUt;
+                e.Receitaid = idReceita;
+                e.Data = data;
+                e.DuracaoTotal = duracao;
+                _context.Execucao.Add(e);
+                _context.SaveChanges();
+                return Ok(e);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         //Create Opinion
-        [HttpPost("{idUt}/opiniao/{idReceita}")]
-        public ActionResult PutOpinion(int idUt, int idReceita, [FromQuery] bool favorito, [FromQuery] short? rating, [FromQuery] bool blacklisted)
+        [HttpPost("opiniao")]
+        public ActionResult PutOpinion([FromForm] int idUt, [FromForm] int idReceita, [FromForm] bool favorito, [FromForm] short? rating, [FromForm] bool blacklisted)
         {
             try
             {
@@ -70,10 +95,13 @@ namespace SweetChef.Controllers
                     return Created("Object Already Exists",null);
                 }
                 o = new Opiniao();
+                o.Receitaid = idReceita;
+                o.Utilizadorid = idUt;
                 o.Favorito = favorito;
                 o.Rating = rating;
                 o.Blacklist = blacklisted;
                 _context.Opiniao.Add(o);
+                _context.SaveChanges();
                 return Ok("Succeds");
             }
             catch (Exception e)
