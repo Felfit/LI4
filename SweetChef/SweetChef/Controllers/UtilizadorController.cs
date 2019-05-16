@@ -336,7 +336,7 @@ namespace SweetChef.Controllers
             }
         }
 
-
+        [HttpGet("{idUt}/receitasExecutadas")]
         public ActionResult GetExecutados(int idUt) {
             var user = _context.Utilizador.Find(idUt);
             if (user == null)
@@ -351,6 +351,7 @@ namespace SweetChef.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{idUt}/estatisticas/temposMédios")]
         public ActionResult GetTemposTotalMediosExecucaoPorReceita(int idUt) {
             var user = _context.Utilizador.Find(idUt);
             if (user == null)
@@ -365,6 +366,7 @@ namespace SweetChef.Controllers
             return Ok(restult);
         }
 
+        [HttpGet("{idUt}/ingredientesUsados")]
         public ActionResult GetIngredientesUsados(int idUt) {
             var user = _context.Utilizador.Find(idUt);
             if (user == null)
@@ -379,6 +381,27 @@ namespace SweetChef.Controllers
                                     numerodeVezes = cri.Count(),
                                     ingrediente = cri.FirstOrDefault().Ingrediente,
                                     unidade = cri.FirstOrDefault().Ingrediente.Unidade.Nome
+                }).
+                ToList();
+            return Ok(result);
+        }
+
+        //Gera lista de compras para os próximos sete dias
+        [HttpGet("{idUt}/listaCompras")]
+        public ActionResult GetListaDeCompras(int idUt) {
+            var user = _context.Utilizador.Find(idUt);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var result = _context.EmentaSemanal.
+                Where(es => es.Data >= DateTime.Today && es.Data < DateTime.Today.AddDays(7)).
+                SelectMany(es => es.Receita.ReceitaIngrediente).
+                GroupBy(ri => ri.Ingredienteid).
+                Select(cri => new {
+                    quantidade = cri.Sum(s => s.Quantidade),
+                    ingrediente = cri.FirstOrDefault().Ingrediente,
+                    unidade = cri.FirstOrDefault().Ingrediente.Unidade.Nome
                 }).
                 ToList();
             return Ok(result);
