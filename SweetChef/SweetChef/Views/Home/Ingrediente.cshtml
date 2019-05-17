@@ -1,0 +1,37 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Nome"] - SweetChef</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    </environment>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+</head>
+<body class="container">
+    <h1>@ViewData["Nome"]</h1>
+    <a class="btn btn-primary mb-2" href="https://www.continente.pt/pt-pt/public/Pages/searchresults.aspx?k=@ViewData["Nome"]" target="_blank">Encomendar</a>
+    <div class="row">
+        <div class="col-lg-4">
+            <img class="img-fluid" src="~/images/ingrediente/@(ViewData["Id"]).jpg"/>
+        </div>
+        <div class="col-lg-8">
+            <h3>Onde posso comprar?</h3>
+            <iframe src="~/map.html" class="embed-responsive" style="height: 75vh" frameborder="0"></iframe>
+        </div>
+    </div>
+</body>
+</html>

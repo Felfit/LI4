@@ -5,11 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SweetChef.Models;
+using SweetChef.ModelsNew;
 
 namespace SweetChef.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly SweetContext _context;
+
+        public HomeController(SweetContext context)
+        {
+            _context = context;
+        }
+
+
         public IActionResult Index()
         {
             return View();
@@ -18,8 +27,6 @@ namespace SweetChef.Controllers
 
         public IActionResult Cozinhar()
         {
-            ViewData["Message"] = "Bom trabalho Daniel.";
-
             return View();
         }
 
@@ -44,16 +51,39 @@ namespace SweetChef.Controllers
         
         public IActionResult Receita(int id)
         {
-            //TODO: Perguntar à base de dados os dados da receita com este id
+            Receita receita = _context.Find<Receita>(id);
+            if (receita == null)
+            {
+                return NotFound();
+            }
             ViewData["ReceitaId"] = id;
+            ViewData["ReceitaNome"] = receita.Nome;
+
+            return View();
+        }
+
+        public IActionResult Ingrediente(int id)
+        {
+            Ingrediente ingrediente = _context.Find<Ingrediente>(id);
+            if (ingrediente == null)
+            {
+                return NotFound();
+            }
+            ViewData["Id"] = id;
+            ViewData["Nome"] = ingrediente.Nome;
 
             return View();
         }
 
         public IActionResult PassoAPasso(int id)
         {
-            //TODO: Perguntar à base de dados os dados da receita com este id
+            Receita receita = _context.Find<Receita>(id);
+            if(receita == null)
+            {
+                return NotFound();
+            }
             ViewData["ReceitaId"] = id;
+            ViewData["ReceitaNome"] = receita.Nome;
 
             return View();
         }

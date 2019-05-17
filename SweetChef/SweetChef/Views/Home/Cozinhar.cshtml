@@ -97,6 +97,7 @@
                 receitaElement.appendTo("#popularRow");
                 console.log(receitaElement);
             }
+            $(".receitasPlaceholder").remove();
         });
     });
 </script>
@@ -160,6 +161,25 @@
                 </div>
             </div>
         </template>
+        <div class="receitasPlaceholder">
+            <div class="receita">
+                <div class="card">
+                    <img class="card-img-top receitaImagem bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                        <div class="row text-black-50 text-center">
+                            <div class="col receitaDificuldade">
+                                <i class="fas fa-signal"></i>
+                            </div>
+                            <div class="col">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <a class="stretched-link receitaLink"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!--

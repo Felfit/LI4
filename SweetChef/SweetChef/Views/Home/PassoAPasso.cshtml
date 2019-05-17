@@ -83,7 +83,7 @@
 
 <script>
     class Receita {
-        constructor(receita) {
+        constructor(receita, tempo) {
             this.info = receita.info;
             this.ingredientes = receita.ingredientes;
             this.utensilios = receita.utensilios;
@@ -91,6 +91,7 @@
             this.passoAtualIndice = 0;
             this.numPassos = receita.passos.length;
             this.passoAtual = this.passos[this.passoAtualIndice];
+            this.tempo = tempo === undefined ? Date.now() - tempo : Date.now();
         }
 
         continuar() {
@@ -148,6 +149,10 @@
         return this <= min ? min : this >= max ? max : this;
     };
 
+    Location.prototype.arguments = function () {
+        return Object.fromEntries((this.href.split("?")[1] || "").split("&").map(v => v.split("=")));
+    };
+
     function inicializarPagina() {
         $("#nomeReceita").text(receita.info.nome);
         for (const utensilio of receita.utensilios) {
@@ -165,6 +170,9 @@
     }
 
     function inicializarPasso() {
+        if (receita.passoAtualIndice == receita.numPassos) {
+            location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })&tempo=" + (Date.now() - receita.tempo);
+        }
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
         if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
             $("#passoMedia").show();
@@ -209,7 +217,9 @@
                 indiceDuvida++;
             }
             receita.passoAtual.ajudas = duvidas.map(k => k["dúvida"]);
-        });
+        }).fail((err) => {
+            alert("Não foi possível obter a dúvida");
+        });;
     }
 
     function atualizarDuvida(indice) {
@@ -261,11 +271,14 @@
 
     $(function () {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-            window.receita = new Receita(data);
+            window.receita = new Receita(data, location.arguments()["tempo"]);
             inicializarPagina();
             inicializarProgressBar();
             trocarConteudo();
-        }).fail(console.log);
+        }).fail((err) => {
+            alert("Não foi possível obter a receita");
+            history.back();
+        });
         // Controlo do passo
         $("#continuar").click(() => { receita.continuar(); inicializarPasso(); atualizaProgressBar(400) });
         $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(0) });
@@ -281,7 +294,7 @@
     <h1 class="m-auto d-table">A carregar a receita...</h1>
 </div>
 <div class="h-100" id="conteudo" style="display: none">
-    <h1 id="nomeReceita"><!--receita.info.nome--></h1>
+    <h1 id="nomeReceita">@ViewData["ReceitaNome"]</h1>
     <div class="row" id="passoContainer">
         <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
             <!--src = receita.passoAtual.info.imagemLink-->
@@ -291,7 +304,7 @@
                         <img class="img-fluid rounded mx-auto d-block" id="passoImagem" />
                     </div>
                     <div class="carousel-item" id="passoVideoItem">
-                        <iframe id="passoVideo" class="rounded" style="width: 100%; height=335px" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="passoVideo" class="rounded" style="width: 100%;" height="335" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
                 <div id="passoCarouselControls">
@@ -374,8 +387,8 @@
                             <div class="carousel-item active" id="ajudaImagemItem">
                                 <img class="img-fluid rounded mx-auto d-block" id="ajudaImagem" />
                             </div>
-                            <div class="carousel-item" id="ajudaVideoItem">
-                                <iframe id="ajudaVideo" class="rounded" style="width: 100%; height=335px" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <div class="carousel-item embed-responsive embed-responsive-16by9" id="ajudaVideoItem">
+                                <iframe id="ajudaVideo" class="rounded embed-responsive-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </div>
                         <div id="ajudaCarouselControls">
