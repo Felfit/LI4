@@ -35,6 +35,14 @@
   * Retorna a opiniao correspondente a uma receita 
 * api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/
   * Retorna o feedback do utilizador relativo a um passo
+* api/Utilizador/{idUt}/receitasExecutadas
+  * Retorna as receitas executadas pelo utilizador, número de vezes que foram feitas e data da ultima execução 
+* api/Utilizador/{idUt}/estatisticas/temposMédios
+  * Retorna Receitas executadas com os tempos médios de execução do utilizador
+* api/Utilizador/{idUt}/ingredientesUsados
+  * Retorna lista de Ingredientes usados com número de vezes e quantidade utilizada
+* api/Utilizador/{idUt}/listaCompras
+  * Retorna a lista de Ingredientes necessários para os próximos 7 dias da semana
 
 ###POST
 * api/utilizador
