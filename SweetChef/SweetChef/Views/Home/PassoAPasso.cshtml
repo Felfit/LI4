@@ -91,7 +91,7 @@
             this.passoAtualIndice = 0;
             this.numPassos = receita.passos.length;
             this.passoAtual = this.passos[this.passoAtualIndice];
-            this.tempo = tempo === undefined ? Date.now() - tempo : Date.now();
+            this.tempo = tempo === undefined ? Date.now() : Date.now() - tempo;
         }
 
         continuar() {
@@ -156,16 +156,22 @@
     function inicializarPagina() {
         $("#nomeReceita").text(receita.info.nome);
         for (const utensilio of receita.utensilios) {
-            $('<li class="list-group-item px-2 py-1"></li>')
+            $(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${utensilio.id}" data-tipo="utensilio" data-nome="${utensilio.nome}"></li>`)
                 .text(utensilio.nome)
                 .appendTo("#utensilios");
         }
         for (const ingrediente of receita.ingredientes) {
-            $('<li class="list-group-item px-2 py-1"></li>')
+            $(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}"></li>`)
                 .text(ingrediente.nome)
-                .append($("<small></small>").text(" " + "100" + " " + ingrediente.unidade))
+                .append($("<small></small>").text(" " + ingrediente.quantidade + " " + ingrediente.unidade))
                 .appendTo("#ingredientes");
         }
+        $("[data-target='#produto']").on("click", function () {
+            $("#produtoTitle").text($(this).data("nome"));
+            $("#produtoIframe").css("opacity","0").attr("src", `/Home/${$(this).data("tipo")}/${$(this).data("id")}`).on("load", function () {
+                $(this).css("opacity", "1");
+            });
+        });
         inicializarPasso();
     }
 
@@ -407,6 +413,23 @@
                 <div class="modal-footer">
                     <a href="" id="ajudaLinkExterno" target="_blank" class="btn btn-warning">Mais informações</a>
                     <button type="button" class="btn btn-success" data-dismiss="modal">Entendi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produto -->
+    <div class="modal fade" id="produto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered mw-100 w-75" role="document">
+            <div class="modal-content" style="height: 75vh">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="produtoTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="produtoIframe" class="embed-responsive h-100" frameborder="0"></iframe>
                 </div>
             </div>
         </div>

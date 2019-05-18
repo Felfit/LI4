@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = ViewData["ReceitaNome"];
+}
+<h2>@ViewData["ReceitaNome"]</h2>
+<script>
+    $.getJSON
+</script>
+<p>Duração esperada: <span id="esperada"></span></p>
+<p>Duração efetiva: <span id="efetiva"></span></p>
+<br />
+<form method="put" action="">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="favorito">
+            Avaliação
+        </label>
+        <input class="col-sm-2" type="number" name="rating" id="rating" max="5" min="1">
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="favorito" id="favorito" value="option1">
+        <label class="form-check-label" for="favorito">
+            Adicionar aos favoritos
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="blacklist" id="blacklist" value="option2">
+        <label class="form-check-label" for="blacklist">
+            Não quero ver mais esta receita
+        </label>
+    </div>
+</form>

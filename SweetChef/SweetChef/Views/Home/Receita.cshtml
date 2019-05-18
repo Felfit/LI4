@@ -34,7 +34,9 @@
             }
             $("[data-target='#produto']").on("click", function () {
                 $("#produtoTitle").text($(this).data("nome"));
-                $("#produtoIframe").attr("src", `/Home/${$(this).data("tipo")}/${$(this).data("id")}`);
+                $("#produtoIframe").css("opacity", "0").attr("src", `/Home/${$(this).data("tipo")}/${$(this).data("id")}`).on("load", function () {
+                    $(this).css("opacity", "1");
+                });
             });
         });
     });
@@ -117,7 +119,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Produto -->
 <div class="modal fade" id="produto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-100 w-75" role="document">
         <div class="modal-content" style="height: 75vh">

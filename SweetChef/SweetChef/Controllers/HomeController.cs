@@ -75,10 +75,36 @@ namespace SweetChef.Controllers
             return View();
         }
 
+        public IActionResult Utensilio(int id)
+        {
+            Utensilio utensilio = _context.Find<Utensilio>(id);
+            if (utensilio == null)
+            {
+                return NotFound();
+            }
+            ViewData["Id"] = id;
+            ViewData["Nome"] = utensilio.Nome;
+
+            return View();
+        }
+
         public IActionResult PassoAPasso(int id)
         {
             Receita receita = _context.Find<Receita>(id);
             if(receita == null)
+            {
+                return NotFound();
+            }
+            ViewData["ReceitaId"] = id;
+            ViewData["ReceitaNome"] = receita.Nome;
+
+            return View();
+        }
+
+        public IActionResult Feedback(int id)
+        {
+            Receita receita = _context.Find<Receita>(id);
+            if (receita == null)
             {
                 return NotFound();
             }
