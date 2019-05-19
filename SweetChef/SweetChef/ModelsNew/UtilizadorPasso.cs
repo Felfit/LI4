@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,6 @@ namespace SweetChef.ModelsNew
         public int Utilizadorid { get; set; }
         public int Passoid { get; set; }
         public int PassoReceitaid { get; set; }
-        public int? Dificuldade { get; set; }
         public string Comentario { get; set; }
         [JsonIgnore]
         public Passo Passo { get; set; }

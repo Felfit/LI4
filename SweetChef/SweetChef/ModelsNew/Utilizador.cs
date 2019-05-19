@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +8,7 @@ namespace SweetChef.ModelsNew
     {
         public Utilizador()
         {
+            CookieAuth = new HashSet<CookieAuth>();
             Dislikes = new HashSet<Dislikes>();
             EmentaSemanal = new HashSet<EmentaSemanal>();
             Execucao = new HashSet<Execucao>();
@@ -23,7 +24,8 @@ namespace SweetChef.ModelsNew
         [JsonIgnore]
         public string Password { get; set; }
         public DateTime DataNascimento { get; set; }
-
+        [JsonIgnore]
+        public ICollection<CookieAuth> CookieAuth { get; set; }
         [JsonIgnore]
         public ICollection<Dislikes> Dislikes { get; set; }
         [JsonIgnore]

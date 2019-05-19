@@ -13,15 +13,17 @@ namespace SweetChef.ModelsNew
         public SweetContext(DbContextOptions<SweetContext> options)
             : base(options)
         {
-            
         }
 
+        public virtual DbSet<CookieAuth> CookieAuth { get; set; }
         public virtual DbSet<Dislikes> Dislikes { get; set; }
         public virtual DbSet<Duvida> Duvida { get; set; }
         public virtual DbSet<EmentaSemanal> EmentaSemanal { get; set; }
         public virtual DbSet<Execucao> Execucao { get; set; }
         public virtual DbSet<Ingrediente> Ingrediente { get; set; }
         public virtual DbSet<Likes> Likes { get; set; }
+        public virtual DbSet<Lojas> Lojas { get; set; }
+        public virtual DbSet<Nutricao> Nutricao { get; set; }
         public virtual DbSet<Opiniao> Opiniao { get; set; }
         public virtual DbSet<Passo> Passo { get; set; }
         public virtual DbSet<PassoDúvida> PassoDúvida { get; set; }
@@ -42,12 +44,26 @@ namespace SweetChef.ModelsNew
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=Sweet;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\ProjectsV13;Database=Sweet;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CookieAuth>(entity =>
+            {
+                entity.HasKey(e => e.Cookie);
+
+                entity.Property(e => e.Cookie).HasColumnName("cookie");
+
+                entity.HasOne(d => d.Utilizador)
+                    .WithMany(p => p.CookieAuth)
+                    .HasForeignKey(d => d.Utilizadorid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKCookieAuth326630");
+            });
+
             modelBuilder.Entity<Dislikes>(entity =>
             {
                 entity.HasKey(e => new { e.Utilizadorid, e.Tagid });
@@ -121,8 +137,11 @@ namespace SweetChef.ModelsNew
 
                 entity.Property(e => e.Data).HasColumnType("datetime");
 
-                entity.Property(e => e.DuracaoTotal)
-                    .HasColumnName("duracaoTotal");
+                entity.Property(e => e.Dificuldade).HasColumnName("dificuldade");
+
+                entity.Property(e => e.DuracaoTotal).HasColumnName("duracaoTotal");
+
+                entity.Property(e => e.Satisfacao).HasColumnName("satisfacao");
 
                 entity.HasOne(d => d.Receita)
                     .WithMany(p => p.Execucao)
@@ -140,6 +159,12 @@ namespace SweetChef.ModelsNew
             modelBuilder.Entity<Ingrediente>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ImageLink)
+                    .IsRequired()
+                    .HasColumnName("imageLink")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()
@@ -169,6 +194,36 @@ namespace SweetChef.ModelsNew
                     .HasForeignKey(d => d.Utilizadorid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKLikes779490");
+            });
+
+            modelBuilder.Entity<Lojas>(entity =>
+            {
+                entity.HasKey(e => e.StoreNum);
+
+                entity.Property(e => e.StoreNum).HasColumnName("storeNum");
+
+                entity.Property(e => e.Latitude).HasColumnName("latitude");
+
+                entity.Property(e => e.Longitude).HasColumnName("longitude");
+            });
+
+            modelBuilder.Entity<Nutricao>(entity =>
+            {
+                entity.HasKey(e => e.Receitaid);
+
+                entity.Property(e => e.Receitaid).ValueGeneratedNever();
+
+                entity.Property(e => e.Energia).HasColumnName("energia");
+
+                entity.Property(e => e.Gordura).HasColumnName("gordura");
+
+                entity.Property(e => e.HidratosCarbono).HasColumnName("hidratosCarbono");
+
+                entity.HasOne(d => d.Receita)
+                    .WithOne(p => p.Nutricao)
+                    .HasForeignKey<Nutricao>(d => d.Receitaid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKNutricao138526");
             });
 
             modelBuilder.Entity<Opiniao>(entity =>
@@ -210,9 +265,7 @@ namespace SweetChef.ModelsNew
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Duracao)
-                    .HasColumnName("duracao")
-                    .HasColumnType("int");
+                entity.Property(e => e.Duracao).HasColumnName("duracao");
 
                 entity.Property(e => e.ImagemLink)
                     .HasColumnName("imagemLink")
@@ -306,19 +359,11 @@ namespace SweetChef.ModelsNew
                     .HasMaxLength(60)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nutricao)
-                    .IsRequired()
-                    .HasColumnName("nutricao")
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Porcoes).HasColumnName("porcoes");
 
-                entity.Property(e => e.Tempodeespera)
-                    .HasColumnName("tempodeespera");
+                entity.Property(e => e.Tempodeespera).HasColumnName("tempodeespera");
 
-                entity.Property(e => e.Tempodepreparacao)
-                    .HasColumnName("tempodepreparacao");
+                entity.Property(e => e.Tempodepreparacao).HasColumnName("tempodepreparacao");
 
                 entity.Property(e => e.VideoLink)
                     .IsRequired()
@@ -410,6 +455,11 @@ namespace SweetChef.ModelsNew
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.ImageLink)
+                    .HasColumnName("imageLink")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
@@ -461,7 +511,7 @@ namespace SweetChef.ModelsNew
                     .HasName("Utilizador");
 
                 entity.HasIndex(e => e.Password)
-                    .HasName("UQ__Utilizad__6E2DBEDE0120BB78")
+                    .HasName("UQ__Utilizad__6E2DBEDEED74F154")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -499,8 +549,6 @@ namespace SweetChef.ModelsNew
                     .HasColumnName("comentario")
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Dificuldade).HasColumnName("dificuldade");
 
                 entity.HasOne(d => d.Utilizador)
                     .WithMany(p => p.UtilizadorPasso)

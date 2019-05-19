@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,6 @@ namespace SweetChef.ModelsNew
         }
 
         public int Id { get; set; }
-        public string Nutricao { get; set; }
         public string ImagemLink { get; set; }
         public string VideoLink { get; set; }
         public string Descricao { get; set; }
@@ -28,6 +27,7 @@ namespace SweetChef.ModelsNew
         public int Tempodepreparacao { get; set; }
         public int Tempodeespera { get; set; }
 
+        public Nutricao Nutricao { get; set; }
         [JsonIgnore]
         public ICollection<EmentaSemanal> EmentaSemanal { get; set; }
         [JsonIgnore]
