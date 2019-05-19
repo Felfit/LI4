@@ -43,6 +43,9 @@
   * Retorna lista de Ingredientes usados com número de vezes e quantidade utilizada
 * api/Utilizador/{idUt}/listaCompras
   * Retorna a lista de Ingredientes necessários para os próximos 7 dias da semana
+* api/Utilizador/closestStore/{lat},{lon}
+  * Retorna as coordenadas da loja mais próxima
+
 
 ###POST
 * api/utilizador

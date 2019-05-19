@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
 using SweetChef.ModelsNew;
 using Microsoft.EntityFrameworkCore;
+using GeoCoordinatePortable;
 
 namespace SweetChef.Controllers
 {
@@ -188,6 +189,18 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("closestStore/{lat},{lon}")]
+        public ActionResult ClosestStore(float lat, float lon) {
+            GeoCoordinate usrPos = new GeoCoordinate(latitude : lat,longitude : lon);
+            var closest = _context.Lojas.
+                OrderBy(p => usrPos.GetDistanceTo(new GeoCoordinate(p.Latitude, p.Longitude))).
+                FirstOrDefault();
+            if (closest == null)
+                return NotFound();
+            return Ok(closest);
+        }
+
 
         //Create Opinion
         [HttpPost("opiniao")]
