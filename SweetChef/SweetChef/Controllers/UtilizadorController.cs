@@ -286,7 +286,7 @@ namespace SweetChef.Controllers
 
         //Put PassoFeedback
         [HttpPost("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult PostPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] int? dificuldade, [FromQuery] string comentario)
+        public ActionResult PostPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] string comentario)
         {
             try
             {
@@ -299,7 +299,6 @@ namespace SweetChef.Controllers
                 u.Utilizadorid = idUt;
                 u.PassoReceitaid = idReceita;
                 u.Passoid = idPasso;
-                u.Dificuldade = dificuldade;
                 u.Comentario = comentario;
                 _context.UtilizadorPasso.Add(u);
                 return Ok(u);
@@ -313,7 +312,7 @@ namespace SweetChef.Controllers
 
         //Post PassoFeedback
         [HttpPut("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult PutPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] int? dificuldade, [FromQuery] string comentario)
+        public ActionResult PutPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] string comentario)
         {
             try
             {
@@ -322,8 +321,6 @@ namespace SweetChef.Controllers
                 {
                     return Created("Ja foi criado antes usa o pust", null);
                 }
-                if(dificuldade.HasValue)
-                    u.Dificuldade = dificuldade;
                 if(comentario != null)
                     u.Comentario = comentario;
                 _context.UtilizadorPasso.Update(u);

@@ -55,7 +55,6 @@
     * (Optional) short rating
     * bool blacklisted
 * api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/?argumentos
-    * (Opcional) int dificuldade
     * string comentario 
 
 ###PUT
@@ -65,7 +64,6 @@
     * (Optional) short rating
     * (Optional) bool blacklisted
 * api/Utilizador/{idUt}/passoFeedback/{idReceita}/{idPasso}/?argumentos
-    * (Opcional) int dificuldade
     * (Opcional) string comentario 
 ##Duvida
 
