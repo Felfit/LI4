@@ -53,7 +53,7 @@
 * api/Utilizador/autenticar
   * TO BE EXPLAINED
 * api/Utilizador/{idUt}/opiniao/{idReceita}/?arguments
-  * Chamar Put para criar opinião. se não existir
+  * Chamar Post para criar opinião. se não existir
     * bool favorito
     * (Optional) short rating
     * bool blacklisted
@@ -62,7 +62,7 @@
 
 ###PUT
 * api/Utilizador/{idUt}/opiniao/{idReceita}/?arguments
-  * Chamar Post para atualizar um campo. Precisa de existir
+  * Chamar put para atualizar um campo. Precisa de existir
     * (Optional) bool favorito
     * (Optional) short rating
     * (Optional) bool blacklisted

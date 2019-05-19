@@ -204,7 +204,7 @@ namespace SweetChef.Controllers
 
         //Create Opinion
         [HttpPost("opiniao")]
-        public ActionResult PutOpinion([FromForm] int idUt, [FromForm] int idReceita, [FromForm] bool favorito, [FromForm] short? rating, [FromForm] bool blacklisted)
+        public ActionResult PostOpinion([FromForm] int idUt, [FromForm] int idReceita, [FromForm] bool favorito, [FromForm] short? rating, [FromForm] bool blacklisted)
         {
             try
             {
