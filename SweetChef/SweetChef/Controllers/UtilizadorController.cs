@@ -231,11 +231,18 @@ namespace SweetChef.Controllers
         }
 
         //Get Opinion
-        [HttpGet("{idUt}/opiniao/{idReceita}")]
-        public ActionResult GetOpinion(int idUt, int idReceita)
+        [HttpGet("opiniao/{idReceita}")]
+        public ActionResult GetOpinion(int idReceita)
         {
             try
             {
+                var cookie = Request.Cookies["User"];
+                var cookieAuth= _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null) {
+                    return Unauthorized();
+                }
+                var idUt = cookieAuth.Utilizadorid;
+
                 Opiniao o = _context.Opiniao.Find(idUt, idReceita);
                 if (o == null)
                 {
@@ -251,11 +258,18 @@ namespace SweetChef.Controllers
         }
 
         //Update Opinion
-        [HttpPut("{idUt}/opiniao/{idReceita}")]
-        public ActionResult PutOpinion(int idUt, int idReceita, [FromForm] bool? favorito, [FromForm] short? rating, [FromForm] bool? blacklisted)
+        [HttpPut("opiniao/{idReceita}")]
+        public ActionResult PutOpinion(int idReceita, [FromForm] bool? favorito, [FromForm] short? rating, [FromForm] bool? blacklisted)
         {
             try
             {
+                var cookie = Request.Cookies["User"];
+                var cookieAuth = _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null)
+                {
+                    return Unauthorized();
+                }
+                var idUt = cookieAuth.Utilizadorid;
                 Opiniao o = _context.Opiniao.Find(idUt, idReceita);
                 if (o == null)
                 {
@@ -279,11 +293,18 @@ namespace SweetChef.Controllers
         }
 
         //Get PassoFeedback
-        [HttpGet("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult GetPassoComment(int idUt, int idReceita,int idPasso)
+        [HttpGet("passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult GetPassoComment(int idReceita,int idPasso)
         {
             try
             {
+                var cookie = Request.Cookies["User"];
+                var cookieAuth = _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null)
+                {
+                    return Unauthorized();
+                }
+                int idUt = cookieAuth.Utilizadorid;
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt,idPasso,idReceita);
                 if (u == null)
                 {
@@ -299,11 +320,18 @@ namespace SweetChef.Controllers
         }
 
         //Put PassoFeedback
-        [HttpPost("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult PostPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] string comentario)
+        [HttpPost("passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult PostPassoComment(int idReceita, int idPasso, [FromQuery] string comentario)
         {
             try
             {
+                var cookie = Request.Cookies["User"];
+                var cookieAuth = _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null)
+                {
+                    return Unauthorized();
+                }
+                int idUt = cookieAuth.Utilizadorid;
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
                 if (u != null)
                 {
@@ -326,11 +354,18 @@ namespace SweetChef.Controllers
         }
 
         //Post PassoFeedback
-        [HttpPut("{idUt}/passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult PutPassoComment(int idUt, int idReceita, int idPasso, [FromQuery] string comentario)
+        [HttpPut("passoFeedback/{idReceita}/{idPasso}")]
+        public ActionResult PutPassoComment(int idReceita, int idPasso, [FromQuery] string comentario)
         {
             try
             {
+                var cookie = Request.Cookies["User"];
+                var cookieAuth = _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null)
+                {
+                    return Unauthorized();
+                }
+                var idUt = cookieAuth.Utilizadorid;
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
                 if (u == null)
                 {
@@ -349,13 +384,15 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet("{idUt}/receitasExecutadas")]
-        public ActionResult GetExecutados(int idUt) {
-            var user = _context.Utilizador.Find(idUt);
-            if (user == null)
+        [HttpGet("receitasExecutadas")]
+        public ActionResult GetExecutados() {
+            var cookie = Request.Cookies["User"];
+            var cookieAuth = _context.CookieAuth.Find(cookie);
+            if (cookieAuth == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
+            var idUt = cookieAuth.Utilizadorid;
             var result = _context.Execucao.
                 Where(e => e.Utilizadorid == idUt).
                 GroupBy(e => e.Receitaid).
@@ -364,13 +401,15 @@ namespace SweetChef.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{idUt}/estatisticas/temposMédios")]
-        public ActionResult GetTemposTotalMediosExecucaoPorReceita(int idUt) {
-            var user = _context.Utilizador.Find(idUt);
-            if (user == null)
+        [HttpGet("estatisticas/temposMédios")]
+        public ActionResult GetTemposTotalMediosExecucaoPorReceita() {
+            var cookie = Request.Cookies["User"];
+            var cookieAuth = _context.CookieAuth.Find(cookie);
+            if (cookieAuth == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
+            var idUt = cookieAuth.Utilizadorid;
             var restult = _context.Execucao.
                 Where(e => e.Utilizadorid == idUt).
                 GroupBy(e => e.Receita.Id).
@@ -379,13 +418,15 @@ namespace SweetChef.Controllers
             return Ok(restult);
         }
 
-        [HttpGet("{idUt}/ingredientesUsados")]
-        public ActionResult GetIngredientesUsados(int idUt) {
-            var user = _context.Utilizador.Find(idUt);
-            if (user == null)
+        [HttpGet("ingredientesUsados")]
+        public ActionResult GetIngredientesUsados() {
+            var cookie = Request.Cookies["User"];
+            var cookieAuth = _context.CookieAuth.Find(cookie);
+            if (cookieAuth == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
+            var idUt = cookieAuth.Utilizadorid;
             var result = _context.Execucao.
                 Where(e => e.Utilizadorid == idUt).
                 SelectMany(e => e.Receita.ReceitaIngrediente).
@@ -400,13 +441,15 @@ namespace SweetChef.Controllers
         }
 
         //Gera lista de compras para os próximos sete dias
-        [HttpGet("{idUt}/listaCompras")]
-        public ActionResult GetListaDeCompras(int idUt) {
-            var user = _context.Utilizador.Find(idUt);
-            if (user == null)
+        [HttpGet("listaCompras")]
+        public ActionResult GetListaDeCompras() {
+            var cookie = Request.Cookies["User"];
+            var cookieAuth = _context.CookieAuth.Find(cookie);
+            if (cookieAuth == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
+            var idUt = cookieAuth.Utilizadorid;
             var result = _context.EmentaSemanal.
                 Where(es => es.Data >= DateTime.Today && es.Data < DateTime.Today.AddDays(7)).
                 SelectMany(es => es.Receita.ReceitaIngrediente).
@@ -421,17 +464,18 @@ namespace SweetChef.Controllers
         }
 
         // GET: api/Utilizador/5
-        [HttpGet("{id}", Name = "Get")]
-        public ActionResult Get(int id)
+        [HttpGet(Name = "Get")]
+        public ActionResult Get()
         {
             try
             {
-                var user = _context.Utilizador.Find(id);
-                if (user == null)
+                var cookie = Request.Cookies["User"];
+                var cookieAuth = _context.CookieAuth.Find(cookie);
+                if (cookieAuth == null)
                 {
-                    return NotFound();
+                    return Unauthorized();
                 }
-
+                var user = cookieAuth.Utilizador;
                 return Ok(user);
             } catch (Exception e)
             {
