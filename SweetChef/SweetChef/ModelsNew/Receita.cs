@@ -26,8 +26,10 @@ namespace SweetChef.ModelsNew
         public int Porcoes { get; set; }
         public int Tempodepreparacao { get; set; }
         public int Tempodeespera { get; set; }
+        public int Energia { get; set; }
+        public int Gordura { get; set; }
+        public int HidratosCarbono { get; set; }
 
-        public Nutricao Nutricao { get; set; }
         [JsonIgnore]
         public ICollection<EmentaSemanal> EmentaSemanal { get; set; }
         [JsonIgnore]

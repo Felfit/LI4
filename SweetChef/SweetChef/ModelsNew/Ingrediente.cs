@@ -17,8 +17,8 @@ namespace SweetChef.ModelsNew
         [JsonIgnore]
         public int Unidadeid { get; set; }
         public string Nome { get; set; }
+        public string ImageLink { get; set; }
 
-        
         public Unidade Unidade { get; set; }
 
         [JsonIgnore]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -23,7 +23,6 @@ namespace SweetChef.ModelsNew
         public virtual DbSet<Ingrediente> Ingrediente { get; set; }
         public virtual DbSet<Likes> Likes { get; set; }
         public virtual DbSet<Lojas> Lojas { get; set; }
-        public virtual DbSet<Nutricao> Nutricao { get; set; }
         public virtual DbSet<Opiniao> Opiniao { get; set; }
         public virtual DbSet<Passo> Passo { get; set; }
         public virtual DbSet<PassoDúvida> PassoDúvida { get; set; }
@@ -207,25 +206,6 @@ namespace SweetChef.ModelsNew
                 entity.Property(e => e.Longitude).HasColumnName("longitude");
             });
 
-            modelBuilder.Entity<Nutricao>(entity =>
-            {
-                entity.HasKey(e => e.Receitaid);
-
-                entity.Property(e => e.Receitaid).ValueGeneratedNever();
-
-                entity.Property(e => e.Energia).HasColumnName("energia");
-
-                entity.Property(e => e.Gordura).HasColumnName("gordura");
-
-                entity.Property(e => e.HidratosCarbono).HasColumnName("hidratosCarbono");
-
-                entity.HasOne(d => d.Receita)
-                    .WithOne(p => p.Nutricao)
-                    .HasForeignKey<Nutricao>(d => d.Receitaid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FKNutricao138526");
-            });
-
             modelBuilder.Entity<Opiniao>(entity =>
             {
                 entity.HasKey(e => new { e.Receitaid, e.Utilizadorid });
@@ -346,6 +326,12 @@ namespace SweetChef.ModelsNew
                     .IsUnicode(false);
 
                 entity.Property(e => e.Dificuldade).HasColumnName("dificuldade");
+
+                entity.Property(e => e.Energia).HasColumnName("energia");
+
+                entity.Property(e => e.Gordura).HasColumnName("gordura");
+
+                entity.Property(e => e.HidratosCarbono).HasColumnName("hidratosCarbono");
 
                 entity.Property(e => e.ImagemLink)
                     .IsRequired()
@@ -511,7 +497,7 @@ namespace SweetChef.ModelsNew
                     .HasName("Utilizador");
 
                 entity.HasIndex(e => e.Password)
-                    .HasName("UQ__Utilizad__6E2DBEDEED74F154")
+                    .HasName("UQ__Utilizad__6E2DBEDE53232459")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
