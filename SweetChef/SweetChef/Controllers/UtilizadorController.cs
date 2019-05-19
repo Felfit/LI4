@@ -268,6 +268,7 @@ namespace SweetChef.Controllers
                 if (blacklisted.HasValue)
                     o.Blacklist = (bool)blacklisted;
                 _context.Opiniao.Update(o);
+                _context.SaveChanges();
                 return Ok();
             }
             catch (Exception e)
@@ -314,6 +315,7 @@ namespace SweetChef.Controllers
                 u.Passoid = idPasso;
                 u.Comentario = comentario;
                 _context.UtilizadorPasso.Add(u);
+                _context.SaveChanges();
                 return Ok(u);
             }
             catch (Exception e)
@@ -337,6 +339,7 @@ namespace SweetChef.Controllers
                 if(comentario != null)
                     u.Comentario = comentario;
                 _context.UtilizadorPasso.Update(u);
+                _context.SaveChanges();
                 return Ok(u);
             }
             catch (Exception e)
