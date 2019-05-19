@@ -236,7 +236,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                Int32.TryParse(Request.Cookies["User"],out int cookie);
                 var cookieAuth= _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null) {
                     return Unauthorized();
@@ -263,7 +263,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                Int32.TryParse(Request.Cookies["User"],out int cookie);
                 var cookieAuth = _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null)
                 {
@@ -298,7 +298,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                Int32.TryParse(Request.Cookies["User"],out int cookie);
                 var cookieAuth = _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null)
                 {
@@ -325,7 +325,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                Int32.TryParse(Request.Cookies["User"],out int cookie);
                 var cookieAuth = _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null)
                 {
@@ -359,7 +359,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                Int32.TryParse(Request.Cookies["User"],out int cookie);
                 var cookieAuth = _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null)
                 {
@@ -386,7 +386,7 @@ namespace SweetChef.Controllers
 
         [HttpGet("receitasExecutadas")]
         public ActionResult GetExecutados() {
-            var cookie = Request.Cookies["User"];
+            Int32.TryParse(Request.Cookies["User"],out int cookie);
             var cookieAuth = _context.CookieAuth.Find(cookie);
             if (cookieAuth == null)
             {
@@ -403,7 +403,7 @@ namespace SweetChef.Controllers
 
         [HttpGet("estatisticas/temposMédios")]
         public ActionResult GetTemposTotalMediosExecucaoPorReceita() {
-            var cookie = Request.Cookies["User"];
+            Int32.TryParse(Request.Cookies["User"],out int cookie);
             var cookieAuth = _context.CookieAuth.Find(cookie);
             if (cookieAuth == null)
             {
@@ -420,7 +420,7 @@ namespace SweetChef.Controllers
 
         [HttpGet("ingredientesUsados")]
         public ActionResult GetIngredientesUsados() {
-            var cookie = Request.Cookies["User"];
+            Int32.TryParse(Request.Cookies["User"],out int cookie);
             var cookieAuth = _context.CookieAuth.Find(cookie);
             if (cookieAuth == null)
             {
@@ -443,7 +443,7 @@ namespace SweetChef.Controllers
         //Gera lista de compras para os próximos sete dias
         [HttpGet("listaCompras")]
         public ActionResult GetListaDeCompras() {
-            var cookie = Request.Cookies["User"];
+            Int32.TryParse(Request.Cookies["User"],out int cookie);
             var cookieAuth = _context.CookieAuth.Find(cookie);
             if (cookieAuth == null)
             {
@@ -469,7 +469,7 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var cookie = Request.Cookies["User"];
+                int cookie = Int32.Parse(Request.Cookies["User"]);
                 var cookieAuth = _context.CookieAuth.Find(cookie);
                 if (cookieAuth == null)
                 {
@@ -522,6 +522,16 @@ namespace SweetChef.Controllers
             try
             {
                 utilizador = _context.Utilizador.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
+                CookieAuth cook = new CookieAuth();
+                Random r = new Random();
+                cook.Cookie = r.Next();
+                cook.Utilizadorid = utilizador.Id;
+                _context.CookieAuth.Add(cook);
+                _context.SaveChanges();
+                CookieOptions option = new CookieOptions();
+                option.Expires = DateTime.Now.AddMinutes(1);
+                Response.Cookies.Append("User", cook.Cookie.ToString(),option);
+                
                 return Ok(utilizador);
             }
             catch
