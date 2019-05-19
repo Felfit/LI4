@@ -515,7 +515,9 @@ namespace SweetChef.Controllers
             {
                 utilizador = _context.Utilizador.Where(c => c.Email == utilizador.Email && c.Password == utilizador.Password).Single();
                 CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddMinutes(1);
+                option.Expires = DateTime.Now.AddDays(1);
+                option.Secure = true;
+                option.HttpOnly = true;
                 //Guarda id do Utilizador em cookie
                 Response.Cookies.Append("User", utilizador.Id.ToString(),option);
                 
