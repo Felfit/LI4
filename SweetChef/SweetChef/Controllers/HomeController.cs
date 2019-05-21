@@ -88,7 +88,7 @@ namespace SweetChef.Controllers
             return View();
         }
 
-        public IActionResult PassoAPasso(int id)
+        public IActionResult PassoAPasso(int id, [FromQuery] bool? ultimoPasso, [FromQuery] int tempo)
         {
             Receita receita = _context.Find<Receita>(id);
             if(receita == null)
@@ -97,11 +97,13 @@ namespace SweetChef.Controllers
             }
             ViewData["ReceitaId"] = id;
             ViewData["ReceitaNome"] = receita.Nome;
+            ViewData["UltimoPasso"] = ultimoPasso;
+            ViewData["tempo"] = tempo;
 
             return View();
         }
 
-        public IActionResult Feedback(int id)
+        public IActionResult Feedback(int id, [FromQuery] int tempo)
         {
             Receita receita = _context.Find<Receita>(id);
             if (receita == null)
@@ -110,6 +112,8 @@ namespace SweetChef.Controllers
             }
             ViewData["ReceitaId"] = id;
             ViewData["ReceitaNome"] = receita.Nome;
+            ViewData["ReceitaDuracao"] = receita.Tempodeespera + receita.Tempodepreparacao;
+            ViewData["tempo"] = tempo / 60000;
 
             return View();
         }

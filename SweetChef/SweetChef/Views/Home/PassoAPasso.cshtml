@@ -83,13 +83,13 @@
 
 <script>
     class Receita {
-        constructor(receita, tempo) {
+        constructor(receita, tempo, ultimoPasso) {
             this.info = receita.info;
             this.ingredientes = receita.ingredientes;
             this.utensilios = receita.utensilios;
             this.passos = receita.passos;
-            this.passoAtualIndice = 0;
             this.numPassos = receita.passos.length;
+            this.passoAtualIndice = ultimoPasso ? this.numPassos - 1 : 0;
             this.passoAtual = this.passos[this.passoAtualIndice];
             this.tempo = tempo === undefined ? Date.now() : Date.now() - tempo;
         }
@@ -177,7 +177,7 @@
 
     function inicializarPasso() {
         if (receita.passoAtualIndice == receita.numPassos) {
-            location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })&tempo=" + (Date.now() - receita.tempo);
+            location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })?tempo=" + (Date.now() - receita.tempo);
         }
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
         if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
@@ -277,7 +277,7 @@
 
     $(function () {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-            window.receita = new Receita(data, location.arguments()["tempo"]);
+            window.receita = new Receita(data, location.arguments()["tempo"], location.arguments()["ultimoPasso"]);
             inicializarPagina();
             inicializarProgressBar();
             trocarConteudo();
@@ -340,6 +340,10 @@
                         </div>
                         <div class="col order-xl-2 pt-xl-1">
                             <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
+                        </div>
+                        <div class="col order-xl-2 pt-xl-1">
+                            <button type="button" class="btn btn-success d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
+                            <button type="button" class="btn btn-success d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
                         </div>
                         <div class="col-xl-6 order-xl-1 col-4">
                             <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>

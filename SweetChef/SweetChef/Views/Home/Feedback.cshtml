@@ -3,12 +3,16 @@
 }
 <h2>@ViewData["ReceitaNome"]</h2>
 <script>
-    $.getJSON
+    $.getJSON("api/Utilizador/opiniao/@ViewData["ReceitaId"]", (data) => {
+        $("[name=rating]").val(data.rating);
+        $("[name=favorito]").prop("checked", data.favorito);
+        $("[name=blacklisted]").prop("checked", data.blacklisted);
+    });
 </script>
-<p>Duração esperada: <span id="esperada"></span></p>
-<p>Duração efetiva: <span id="efetiva"></span></p>
-<br />
-<form method="put" action="">
+<p>Duração esperada: @ViewData["ReceitaDuracao"] min</p>
+<p>Duração efetiva: @ViewData["tempo"] min</span></p>
+<a class="btn btn-danger my-2 text-white" id="voltar" href="@Url.Action("PassoAPasso","Home", new { ultimoPasso = true, tempo = ViewData["tempo"]})"><i class='fas fa-arrow-left'></i> Voltar</a>
+<form method="put" action="/api/Utilizador/opiniao/@ViewData["ReceitaId"]">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="favorito">
             Avaliação
@@ -16,15 +20,18 @@
         <input class="col-sm-2" type="number" name="rating" id="rating" max="5" min="1">
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="favorito" id="favorito" value="option1">
+        <input class="form-check-input" type="checkbox" name="favorito" id="favorito" value="1">
         <label class="form-check-label" for="favorito">
             Adicionar aos favoritos
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="blacklist" id="blacklist" value="option2">
-        <label class="form-check-label" for="blacklist">
+        <input class="form-check-input" type="checkbox" name="blacklisted" id="blacklist" value="1">
+        <label class="form-check-label" for="blacklisted">
             Não quero ver mais esta receita
         </label>
+    </div>
+    <div class="form-group mt-2">
+        <input class="btn btn-primary" type="submit" name="blacklisted" id="blacklist" value="Guardar">
     </div>
 </form>
