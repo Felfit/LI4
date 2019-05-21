@@ -288,7 +288,20 @@
         // Controlo do passo
         $("#continuar").click(() => { receita.continuar(); inicializarPasso(); atualizaProgressBar(400) });
         $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(0) });
-
+        // Comentário
+        $("#comentario").click(() => {
+            let target = `api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`;
+            $.getJSON(target, (data) => {
+                $("#passoComentario").val(data);
+            });
+            $("#comentarioForm").attr("target", target);
+        });
+        $("#guardarComentario").click(() => {
+            $.ajax({
+                url: `api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/?comentario=${$("#passoComentario").val()}`,
+                type: 'PUT',
+            }).fail(() => alert("Não foi possível guardar o comentário"));
+        });
         //Collapse
         if ($(window).width() >= 1200) {
             $(".collapse-header").each((_, elem) => $($(elem).data("target")).addClass("show"));
@@ -332,7 +345,7 @@
             <div class="row flex-column mx-0 h-100">
                 <div class="h-25 py-2 order-xl-1">
                     <div class="row no-gutters">
-                        <div class="col-xl-6 order-xl-0 col-4">
+                        <div class="col-4 col-xl-6 order-xl-0">
                             <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
                         </div>
                         <div class="col order-xl-2 pt-xl-1">
@@ -342,25 +355,19 @@
                             <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
                         </div>
                         <div class="col order-xl-2 pt-xl-1">
-                            <button type="button" class="btn btn-success d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
-                            <button type="button" class="btn btn-success d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
+                            <button data-toggle="modal" data-target="#comentarioModel" class="btn btn-warning d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
                         </div>
-                        <div class="col-xl-6 order-xl-1 col-4">
+                        <div class="col order-xl-2 pt-xl-1">
+                            <button data-toggle="modal" data-target="#temporizadorModel"  type="button" class="btn btn-primary d-block mx-auto" id="temporizador"><i class="fas fa-hourglass-start"></i></button>
+                        </div>
+                        <div class="col-4 col-xl-6 order-xl-1">
                             <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
                         </div>
                     </div>
                 </div>
                 <div class="h-75 vertical-scroll order-xl-0">
                     <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
-                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse">
-                        <!--for(ajuda of receita.passoAtual.ajudas){-->
-                        <li class="list-group-item px-2 py-1"><a href="#ajudaModel" data-toggle="modal" data-target="#ajudaModel">O que é pré-aquecer?</a></li>
-                        <li class="list-group-item px-2 py-1">Como untar?</li>
-                        <li class="list-group-item px-2 py-1">Como forrar com papel vegetal?</li>
-                        <li class="list-group-item px-2 py-1">O que ser vida?</li>
-                        <li class="list-group-item px-2 py-1 active">Temporizador de 30 minutos <i class='fas fa-hourglass-start'></i></li>
-                        <!--}-->
-                    </ul>
+                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse"></ul>
                 </div>
             </div>
         </div>
@@ -386,7 +393,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ajudaTitulo">O que ser vida?</h5>
+                    <h5 class="modal-title" id="ajudaTitulo"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -422,6 +429,27 @@
         </div>
     </div>
 
+    <!-- Comentario -->
+    <div class="modal fade" id="comentarioModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Comentário sobre o passo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body form-group">
+                    <textarea id="passoComentario" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="descartarComentario">Descartar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="guardarComentario">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Produto -->
     <div class="modal fade" id="produto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered mw-100 w-75" role="document">
@@ -435,6 +463,75 @@
                 <div class="modal-body">
                     <iframe id="produtoIframe" class="embed-responsive h-100" frameborder="0"></iframe>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Temporizador -->
+<div class="modal fade" id="temporizadorModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <script>
+        $(() => {
+            let targetTime;
+            $("#temporizadorComecar").click(() => {
+                if (targetTime !== undefined) {
+                    targetTime = undefined;
+                    $("#temporizadorComecar")
+                        .removeClass("btn-danger")
+                        .addClass("btn-primary")
+                        .text("Começar");
+                    $("#temporizadorTempo").prop("readonly", false).val(0);
+                    return;
+                }
+                $("#temporizadorComecar")
+                        .removeClass("btn-primary")
+                        .addClass("btn-danger")
+                        .text("Cancelar");
+                let tempoVal = $("#temporizadorTempo").prop("readonly", true).val().split(":");
+                let tempo = tempoVal[0] * 60 * 60 + tempoVal[1] * 60; // converte para segundos
+                tempo *= 1000; // converte para milisegundos
+
+                targetTime = Date.now() + tempo;
+                setTimeout(function f() {
+                    console.log(targetTime);
+                    if (targetTime === undefined) return;
+                    let tempoEmFalta = (targetTime - Date.now()) / (60 * 1000); // converte para minutos
+                    if (tempoEmFalta > 0) {
+                        let h = Math.floor(tempoEmFalta / 60).toString();
+                        let m = Math.ceil(tempoEmFalta - h * 60).toString();
+                        $("#temporizadorTempo").val(h.padStart(2,"0") + ":" + m.padStart(2,"0"));
+                        setTimeout(f, 1000);
+                    } else {
+                        $("#temporizadorTempo").prop("readonly", false).val("");
+                        $("#temporizadorComecar")
+                            .removeClass("btn-danger")
+                            .addClass("btn-primary")
+                            .text("Começar");
+                        targetTime = undefined;
+                        $("#temporizadorAlarm")[0].play().then(() => {
+                            alert("Acabou o tempo");
+                            $("#temporizadorAlarm")[0].stop();
+                            $("#temporizadorAlarm")[0].currentTime = 0;
+                        });
+                    }
+                }, 1000);
+            });
+        });
+    </script>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Temporizador</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body form-group form-row">
+                <input id="temporizadorTempo" class="form-control col" type="time" />
+                <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm"></audio>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="temporizadorComecar">Começar</button>
             </div>
         </div>
     </div>
