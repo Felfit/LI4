@@ -19,7 +19,7 @@ CREATE TABLE Passo_Ingrediente (quantidade int NOT NULL, Passoid int NOT NULL, P
 CREATE TABLE Receita_Ingrediente (quantidade int NOT NULL, Receitaid int NOT NULL, Ingredienteid int NOT NULL, PRIMARY KEY (Receitaid, Ingredienteid));
 CREATE TABLE Passo_Dúvida (Passoid int NOT NULL, PassoReceitaid int NOT NULL, Dúvidaid int NOT NULL, questao varchar(255) NOT NULL, PRIMARY KEY (Passoid, PassoReceitaid, Dúvidaid));
 CREATE TABLE Duvida (id int IDENTITY NOT NULL, titulo varchar(255) NOT NULL, videoLink varchar(255) NULL, imagemLink varchar(255) NULL, linkexterno varchar(255) NULL, Explicacao varchar(255) NOT NULL, PRIMARY KEY (id));
-CREATE TABLE CookieAuth (cookie int IDENTITY NOT NULL, Utilizadorid int NOT NULL, PRIMARY KEY (cookie));
+CREATE TABLE CookieAuth (cookie int NOT NULL, Utilizadorid int NOT NULL, PRIMARY KEY (cookie));
 CREATE TABLE Lojas (storeNum int IDENTITY NOT NULL, latitude float(10) NOT NULL, longitude float(10) NOT NULL, PRIMARY KEY (storeNum));
 CREATE INDEX Utilizador ON Utilizador (email);
 CREATE UNIQUE INDEX Passo_numero ON Passo (numero);
