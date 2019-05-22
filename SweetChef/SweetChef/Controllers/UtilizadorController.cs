@@ -211,8 +211,8 @@ namespace SweetChef.Controllers
             {
                 int idUt = Int32.Parse(Request.Cookies["User"]);
                 var user = _context.Utilizador.Find(idUt);
-                var rec = _context.Receita.Where(r => r.Id == idReceita).Count();
-                if (user == null || rec == 0)
+                bool receitaExists = _context.Receita.Where(r => r.Id == idReceita).Any();
+                if (user == null || !receitaExists)
                 {
                     return NotFound();
                 }
@@ -241,8 +241,8 @@ namespace SweetChef.Controllers
             {
                 int idUt = Int32.Parse(Request.Cookies["User"]);
                 var user = _context.Utilizador.Find(idUt);
-                var rec = _context.Receita.Where(r => r.Id == idReceita).Count();
-                if (user == null || rec == 0)
+                bool receitaExists = _context.Receita.Where(r => r.Id == idReceita).Any();
+                if (user == null || !receitaExists)
                 {
                     return NotFound("Receita não existe");
                 }
