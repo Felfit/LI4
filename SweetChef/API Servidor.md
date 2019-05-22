@@ -52,11 +52,6 @@
   * TO BE EXPLAINED
 * api/Utilizador/autenticar
   * TO BE EXPLAINED
-* api/Utilizador/opiniao/{idReceita}/?arguments
-  * Chamar Post para criar opinião. se não existir
-    * bool favorito
-    * (Optional) short rating
-    * bool blacklisted
 * api/Utilizador/passoFeedback/{idReceita}/{idPasso}/?argumentos
     * string comentario 
 

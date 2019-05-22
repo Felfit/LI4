@@ -202,34 +202,7 @@ namespace SweetChef.Controllers
         }
 
 
-        //Create Opinion
-        [HttpPost("opiniao")]
-        public ActionResult PostOpinion([FromForm] int idUt, [FromForm] int idReceita, [FromForm] bool favorito, [FromForm] short? rating, [FromForm] bool blacklisted)
-        {
-            try
-            {
-                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
-                if (o != null)
-                {
-                    return Created("Object Already Exists",null);
-                }
-                o = new Opiniao();
-                o.Receitaid = idReceita;
-                o.Utilizadorid = idUt;
-                o.Favorito = favorito;
-                o.Rating = rating;
-                o.Blacklist = blacklisted;
-                _context.Opiniao.Add(o);
-                _context.SaveChanges();
-                return Ok("Succeds");
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
+        
         //Get Opinion
         [HttpGet("opiniao/{idReceita}")]
         public ActionResult GetOpinion(int idReceita)
@@ -238,15 +211,18 @@ namespace SweetChef.Controllers
             {
                 int idUt = Int32.Parse(Request.Cookies["User"]);
                 var user = _context.Utilizador.Find(idUt);
-                if (user == null)
+                var rec = _context.Receita.Where(r => r.Id == idReceita).Count();
+                if (user == null || rec == 0)
                 {
                     return NotFound();
                 }
-
                 Opiniao o = _context.Opiniao.Find(idUt, idReceita);
                 if (o == null)
                 {
-                    return NotFound();
+                    o = new Opiniao();
+                    o.Receitaid = idReceita; o.Utilizadorid = idUt;
+                    o.Favorito = false;
+                    o.Blacklist = false;
                 }
                 return Ok(o);
             }
@@ -265,14 +241,19 @@ namespace SweetChef.Controllers
             {
                 int idUt = Int32.Parse(Request.Cookies["User"]);
                 var user = _context.Utilizador.Find(idUt);
-                if (user == null)
+                var rec = _context.Receita.Where(r => r.Id == idReceita).Count();
+                if (user == null || rec == 0)
                 {
-                    return NotFound();
+                    return NotFound("Receita não existe");
                 }
                 Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                bool exists = true;
                 if (o == null)
                 {
-                    return NotFound();
+                    exists = false;
+                    o = new Opiniao();
+                    o.Favorito = false;
+                    o.Blacklist = false;
                 }
                 if (favorito.HasValue)
                     o.Favorito = (bool)favorito;
@@ -280,7 +261,10 @@ namespace SweetChef.Controllers
                     o.Rating = rating;
                 if (blacklisted.HasValue)
                     o.Blacklist = (bool)blacklisted;
-                _context.Opiniao.Update(o);
+                if (exists)
+                    _context.Opiniao.Update(o);
+                else
+                    _context.Opiniao.Add(o);
                 _context.SaveChanges();
                 return Ok();
             }
