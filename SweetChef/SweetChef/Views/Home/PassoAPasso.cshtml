@@ -178,6 +178,7 @@
     function inicializarPasso() {
         if (receita.passoAtualIndice == receita.numPassos) {
             location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })?tempo=" + (Date.now() - receita.tempo);
+            return;
         }
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
         if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
@@ -286,8 +287,8 @@
             history.back();
         });
         // Controlo do passo
-        $("#continuar").click(() => { receita.continuar(); inicializarPasso(); atualizaProgressBar(400) });
-        $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(0) });
+        $("#continuar").click(() => { receita.continuar(); inicializarPasso(); atualizaProgressBar(400); });
+        $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(400); });
         // Comentário
         $("#comentario").click(() => {
             let target = `api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`;
@@ -350,6 +351,73 @@
                         </div>
                         <div class="col order-xl-2 pt-xl-1">
                             <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
+                            <script>
+                                $(() => {
+                                    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                                    var recognition = new SpeechRecognition();
+                                    var voice = speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
+                                    recognition.lang = 'pt-PT';
+                                    recognition.interimResults = false;
+                                    recognition.maxAlternatives = 1;
+                                    recognition.start();
+                                    recognition.onresult = (event) => {
+                                        var last = event.results.length - 1;
+                                        var comando = event.results[last][0].transcript.toLowerCase();
+                                        var mensagem = "";
+                                        if (["repetir", "não percebi nada", "passo", "o que é para fazer"].indexOf(comando) > -1) {
+                                            mensagem = $("#passoDescricao").text();
+                                        } else if (["continuar", "próximo", "seguinte"].indexOf(comando) > -1) {
+                                            receita.continuar();
+                                            inicializarPasso();
+                                            atualizaProgressBar(400);
+                                        } else if (["retroceder", "voltar"].indexOf(comando) > -1) {
+                                            receita.retroceder();
+                                            inicializarPasso();
+                                            atualizaProgressBar(400);
+                                        } else if (["último passo", "terminar"].indexOf(comando) > -1) {
+                                            alert("Acabar");
+                                        } else if (["início", "voltar à receita", "voltar a receita"].indexOf(comando) > -1) {
+                                            alert("início");
+                                        } else if (["comentário", "comentários", "nota", "notas"].indexOf(comando) > -1) {
+                                            alert("abrir comentários");
+                                        } else if (["ingrediente", "ingredientes"].indexOf(comando) > -1) {
+                                            mensagem = "Ingredientes: ";
+                                            for (ingrediente of $("#ingredientes > li")) {
+                                                mensagem += $(ingrediente).text() + "\n";
+                                            }
+                                        } else if (["utensílio", "utensílios"].indexOf(comando) > -1) {
+                                            mensagem = "Utensílios: ";
+                                            for (utensilio of $("#utensilios > li")) {
+                                                mensagem += $(utensilio).text() + "\n";
+                                            }
+                                        } else if (["ajuda", "ajudas"].indexOf(comando) > -1) {
+                                            mensagem = "Ajudas: ";
+                                            for (ajuda of $("#ajudas > li")) {
+                                                mensagem += $(ajuda).text() + "\n";
+                                            }
+                                        } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                            alert("Abrir ingrediente " + comando);
+                                            mensagem = "Ingrediente: " + comando;
+                                        } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                            alert("Abrir utensílio " + comando);
+                                            mensagem = "Utensílio: " + comando;
+                                        } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                            alert("Abrir ajudas " + comando);
+                                            mensagem = "Ajudas: " + comando;
+                                        }
+                                        var utter = new SpeechSynthesisUtterance(mensagem);
+                                        console.log(comando);
+                                        utter.voice = voice;
+                                        speechSynthesis.speak(utter);
+                                        console.log('Confidence: ' + event.results[0][0].confidence);
+                                    }
+                                    recognition.onend = function () {
+                                        // Sempre a escutar
+                                        // Desativar quando o utilizador desativar o microfone
+                                        recognition.start();
+                                    };
+                                });
+                            </script>
                         </div>
                         <div class="col order-xl-2 pt-xl-1">
                             <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
@@ -480,7 +548,7 @@
                         .removeClass("btn-danger")
                         .addClass("btn-primary")
                         .text("Começar");
-                    $("#temporizadorTempo").prop("readonly", false).val(0);
+                    $("#temporizadorTempo").prop("readonly", false).val("");
                     return;
                 }
                 $("#temporizadorComecar")
@@ -488,18 +556,20 @@
                         .addClass("btn-danger")
                         .text("Cancelar");
                 let tempoVal = $("#temporizadorTempo").prop("readonly", true).val().split(":");
-                let tempo = tempoVal[0] * 60 * 60 + tempoVal[1] * 60; // converte para segundos
+                let tempo = Number(tempoVal[0]) * 60 * 60 + Number(tempoVal[1]) * 60 + Number(tempoVal[2]); // converte para segundos
                 tempo *= 1000; // converte para milisegundos
 
                 targetTime = Date.now() + tempo;
                 setTimeout(function f() {
                     console.log(targetTime);
                     if (targetTime === undefined) return;
-                    let tempoEmFalta = (targetTime - Date.now()) / (60 * 1000); // converte para minutos
+                    let tempoEmFalta = (targetTime - Date.now()) / 1000; // converte para segundos
                     if (tempoEmFalta > 0) {
-                        let h = Math.floor(tempoEmFalta / 60).toString();
-                        let m = Math.ceil(tempoEmFalta - h * 60).toString();
-                        $("#temporizadorTempo").val(h.padStart(2,"0") + ":" + m.padStart(2,"0"));
+                        let h = Math.floor(tempoEmFalta / (60 * 60)).toString();
+                        let m = Math.floor((tempoEmFalta - h * 60 * 60) / 60).toString();
+                        let s = Math.ceil(tempoEmFalta - h * 60 * 60 - m * 60 - 1).toString();
+                        console.log(h, m, s);
+                        $("#temporizadorTempo").val(h.padStart(2,"0") + ":" + m.padStart(2,"0") + ":" + s.padStart(2,"0"));
                         setTimeout(f, 1000);
                     } else {
                         $("#temporizadorTempo").prop("readonly", false).val("");
@@ -509,9 +579,12 @@
                             .text("Começar");
                         targetTime = undefined;
                         $("#temporizadorAlarm")[0].play().then(() => {
-                            alert("Acabou o tempo");
-                            $("#temporizadorAlarm")[0].stop();
-                            $("#temporizadorAlarm")[0].currentTime = 0;
+                            setTimeout(() => {
+                                $("#temporizadorTempo").prop("readonly", false).val("");
+                                alert("Acabou o tempo!");
+                                $("#temporizadorAlarm")[0].pause();
+                                $("#temporizadorAlarm")[0].currentTime = 0;
+                            }, 0);
                         });
                     }
                 }, 1000);
@@ -527,8 +600,8 @@
                 </button>
             </div>
             <div class="modal-body form-group form-row">
-                <input id="temporizadorTempo" class="form-control col" type="time" />
-                <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm"></audio>
+                <input id="temporizadorTempo" class="form-control col text-center" type="time" step="1"/>
+                <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm" preload="auto"></audio>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="temporizadorComecar">Começar</button>
