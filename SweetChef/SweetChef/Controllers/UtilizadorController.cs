@@ -477,6 +477,7 @@ namespace SweetChef.Controllers
 
         // POST: api/Utilizador
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Post([FromForm] Utilizador utilizador)
         {
             try
@@ -526,10 +527,10 @@ namespace SweetChef.Controllers
             }
             catch
             {
-                return NotFound(email);
+                return Redirect("/?email="+email);
             }
         }
-        [HttpPost]
+        //[HttpPost]
         // DELETE: api/Utilizador?5
         [HttpDelete]
         public IActionResult Delete([FromQuery] int codigo)
