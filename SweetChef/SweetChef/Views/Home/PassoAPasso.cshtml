@@ -95,14 +95,14 @@
         }
 
         continuar() {
-            this.passoAtualIndice = (this.passoAtualIndice + 1).clamp(0, this.numPassos);
+            this.passoAtualIndice = (this.passoAtualIndice + 1).clamp(-1, this.numPassos);
             if (this.passoAtualIndice < this.numPassos) {
                 this.passoAtual = this.passos[this.passoAtualIndice];
             }
         }
 
         retroceder() {
-            this.passoAtualIndice = (this.passoAtualIndice - 1).clamp(0, this.numPassos);
+            this.passoAtualIndice = (this.passoAtualIndice - 1).clamp(-1, this.numPassos);
             if (this.passoAtualIndice < this.numPassos) {
                 this.passoAtual = this.passos[this.passoAtualIndice];
             }
@@ -178,6 +178,10 @@
     function inicializarPasso() {
         if (receita.passoAtualIndice == receita.numPassos) {
             location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })?tempo=" + (Date.now() - receita.tempo);
+            return;
+        }
+        if (receita.passoAtualIndice == -1) {
+            location.href = "@Url.Action("Receita", "Home", new { id = ViewData["ReceitaId"] })";
             return;
         }
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
@@ -291,7 +295,7 @@
         $("#retroceder").click(() => { receita.retroceder(); inicializarPasso(); atualizaProgressBar(400); });
         // Comentário
         $("#comentario").click(() => {
-            let target = `api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`;
+            let target = `/api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`;
             $.getJSON(target, (data) => {
                 $("#passoComentario").val(data);
             });
@@ -299,7 +303,7 @@
         });
         $("#guardarComentario").click(() => {
             $.ajax({
-                url: `api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/?comentario=${$("#passoComentario").val()}`,
+                url: `/api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/?comentario=${$("#passoComentario").val()}`,
                 type: 'PUT',
             }).fail(() => alert("Não foi possível guardar o comentário"));
         });
