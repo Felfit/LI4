@@ -60,9 +60,9 @@ INSERT INTO Utensilio_Receita
 INSERT INTO Passo 
 	(numero, Receitaid, duracao, descricao, imagemLink, videoLink, linkExterno)
 	VALUES
-	(1, 1, 5, 'Bata a manteiga até ficar um creme branco', '/images/boloDeBolacha/bater.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=46&end=54', null),
+	(1, 1, 5, 'Bata a manteiga até ficar um creme branco', '/images/boloDeBolacha/bater.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=46&end=53', null),
 	(2, 1, 2, 'Junte açúcar ao creme e continue a bater', '/images/boloDeBolacha/beterComAcucar.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=60&end=72', null),
-	(3, 1, 3, 'Junte as gemas de ovos uma de cada vez ao creme enquanto continua a bater até ficar homogéneo', '/images/boloDeBolacha/beterComAcucar.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=85&end=101', null),
+	(3, 1, 3, 'Junte as gemas de ovos uma de cada vez ao creme enquanto continua a bater até ficar homogéneo', '/images/boloDeBolacha/baterComOvos.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=85&end=101', null),
 	(4, 1, 2, 'Passe 6 bolachas maria por café, uma de cada vez', '/images/boloDeBolacha/molhar.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=111&end=115', null),
 	(5, 1, 2, 'Coloque as bolachas no centro do suporte para bolos e barre o topo com o creme', '/images/boloDeBolacha/semiMonte.PNG', null, null),
 	(6, 1, 20, 'Repita os dois passos anteriores, para formar as várias camadas do bolo até acabarem as bolachas', '/images/boloDeBolacha/monte.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=128&end=198', null),
@@ -73,14 +73,14 @@ INSERT INTO Passo
 INSERT INTO Duvida
 	(titulo, videoLink, imagemLink, linkexterno, Explicacao)
 	VALUES
-	('gema', null, 'https://sitedoovo.com.br/wp-content/uploads/2019/02/gema-do-ovo.jpg', null, 'A gema está situada centralmente no interior do ovo e possui uma forma esférica. É nela que se concentra a parte mais gordurosa e calórica do ovo'),
-	('clara', null, 'https://www.mundoboaforma.com.br/wp-content/uploads/2015/07/Eggwhite-614x330.jpg', null, 'A clara trata-se de uma substância aquosa e viscosa, praticamente transparente e sem odor próprio. A clara é rica em proteínas e é de alta digestão.'),
-	('separar gema da clara', 'https://www.youtube.com/watch?v=tx72s86URhA', '/images/duvidas/ovosGema.PNG', null, null),
-	('mistura homogénea', null, null, null, 'Misturas homogêneas são aquelas em que não se consegue perceber a diferença entre duas ou mais substâncias. Exemplos destas misturas são a água salgada e o ar'),
-	('barrar', null, 'https://4men.pt/wp-content/uploads/2019/01/0f95b97c47b9affa49e5bb97f55d5cbc-754x394.jpg', null, 'Cobrir, normalmente, um objeto sólido com algum tipo de mistura pegajosa'),
-	('bolacha ralada', 'https://www.youtube.com/embed/OD9Rp-UJNG4?start=12&end=25', null, null, null),
-	('alter. graos de café', null, 'https://st.depositphotos.com/3695467/5158/i/950/depositphotos_51584001-stock-photo-grated-chocolate.jpg', null, 'Como alternativa aos grãos de café ou até em conjunto pode ser utilizado chocolate ralado que também ficará delicioso.'),
-	('levar ao frigorifico', null, null, null, 'É necessário colocar o bolo no frigorífico, isto para lhe conferir consistência. De outro modo o bolo iria-se desfazer facilmente');
+	('Gema', null, 'https://sitedoovo.com.br/wp-content/uploads/2019/02/gema-do-ovo.jpg', null, 'A gema está situada centralmente no interior do ovo e possui uma forma esférica. É nela que se concentra a parte mais gordurosa e calórica do ovo'),
+	('Clara', null, 'https://www.mundoboaforma.com.br/wp-content/uploads/2015/07/Eggwhite-614x330.jpg', null, 'A clara trata-se de uma substância aquosa e viscosa, praticamente transparente e sem odor próprio. A clara é rica em proteínas e é de alta digestão.'),
+	('Separar gema da clara', 'https://www.youtube.com/watch?v=tx72s86URhA', '/images/duvidas/ovosGema.PNG', null, null),
+	('Mistura homogénea', null, null, null, 'Misturas homogêneas são aquelas em que não se consegue perceber a diferença entre duas ou mais substâncias. Exemplos destas misturas são a água salgada e o ar'),
+	('Barrar', null, 'https://4men.pt/wp-content/uploads/2019/01/0f95b97c47b9affa49e5bb97f55d5cbc-754x394.jpg', null, 'Cobrir, normalmente, um objeto sólido com algum tipo de mistura pegajosa'),
+	('Bolacha ralada', 'https://www.youtube.com/embed/OD9Rp-UJNG4?start=12&end=25', null, null, null),
+	('Alternativo a grãos de café', null, 'https://st.depositphotos.com/3695467/5158/i/950/depositphotos_51584001-stock-photo-grated-chocolate.jpg', null, 'Como alternativa aos grãos de café ou até em conjunto pode ser utilizado chocolate ralado que também ficará delicioso.'),
+	('Levar ao frigorifico', null, null, null, 'É necessário colocar o bolo no frigorífico, isto para lhe conferir consistência. De outro modo o bolo iria-se desfazer facilmente');
 
 INSERT INTO Passo_Dúvida
 	(Passoid, PassoReceitaid, Dúvidaid, questao)
