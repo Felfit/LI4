@@ -23,12 +23,15 @@ namespace SweetChef.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+                return Redirect("/Home/Cozinhar/");
             return View();
         }
 
 
         public IActionResult Cozinhar()
         {
+            ViewData["tags"] = _context.Tag.Select(t => new { t.Id, nome = t.Tag1 }).ToArray();
             return View();
         }
 

@@ -520,9 +520,9 @@ namespace SweetChef.Controllers
                 ClaimsIdentity cIdentity = new ClaimsIdentity(claims, "login");
                 ClaimsPrincipal principal = new ClaimsPrincipal(cIdentity);
                 await HttpContext.SignInAsync(principal);
-
+                
                 //Request.HttpContext.
-                return Ok(utilizador);
+                return Redirect("/Home/Cozinhar/");
             }
             catch
             {
