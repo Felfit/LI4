@@ -39,7 +39,11 @@ namespace SweetChef
 
             
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/";
+
+                });
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

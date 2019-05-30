@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SweetChef.Models;
 using SweetChef.ModelsNew;
 
 namespace SweetChef.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly SweetContext _context;
@@ -18,7 +20,7 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

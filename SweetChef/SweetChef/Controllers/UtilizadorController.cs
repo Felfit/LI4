@@ -529,7 +529,7 @@ namespace SweetChef.Controllers
                 return NotFound(email);
             }
         }
-
+        [HttpPost]
         // DELETE: api/Utilizador?5
         [HttpDelete]
         public IActionResult Delete([FromQuery] int codigo)
