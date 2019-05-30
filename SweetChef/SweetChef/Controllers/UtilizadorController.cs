@@ -526,7 +526,7 @@ namespace SweetChef.Controllers
             }
             catch
             {
-                return NotFound(email);
+                return Redirect("/?email="+email);
             }
         }
         [HttpPost]
