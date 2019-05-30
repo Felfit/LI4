@@ -1,7 +1,67 @@
 ﻿@{
-    ViewData["Title"] = "Ementa Semanal";
+    ViewData["Title"] = "Definições de utilizador";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+<h5>Preferências das sugestões:</h5>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h6>Etiquetas preferidas:</h6>
+            <div style="height:7em" class="overflow-auto border p-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="tagPrefCheck1">
+                    <label class="form-check-label" for="tagPrefCheck1">
+                        Default checkbox
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="tagPrefCheck2">
+                    <label class="form-check-label" for="tagPrefCheck2">
+                        Default checkbox
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h6>Etiquetas excluidas:</h6>
+            <div style="height:7em" class="overflow-auto border p-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="tagExcCheck1">
+                    <label class="form-check-label" for="tagExcCheck1">
+                        Default checkbox
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="tagExcCheck2">
+                    <label class="form-check-label" for="tagExcCheck2">
+                        Default checkbox
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h6>Ingredientes excluídos:</h6>
+            <div style="height:7em" class="overflow-auto border p-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="ingExcCheck1">
+                    <label class="form-check-label" for="ingExcCheck1">
+                        Default checkbox
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="ingExcCheck2">
+                    <label class="form-check-label" for="ingExcCheck2">
+                        Default checkbox
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+
+<a asp-area="" asp-controller="Home" asp-action="Tutorial" class="btn btn-primary mt-3">Tutorial</a>

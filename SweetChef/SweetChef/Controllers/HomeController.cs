@@ -30,6 +30,16 @@ namespace SweetChef.Controllers
             return View();
         }
 
+        public IActionResult Configuracao()
+        {
+            return View();
+        }
+
+        public IActionResult Tutorial()
+        {
+            return View();
+        }
+
         public IActionResult EmentaSemanal()
         {
             ViewData["Message"] = "Your application description page.";
