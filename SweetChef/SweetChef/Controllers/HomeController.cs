@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SweetChef.Models;
 using SweetChef.ModelsNew;
 
 namespace SweetChef.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly SweetContext _context;
@@ -18,15 +20,18 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+                return Redirect("/Home/Cozinhar/");
             return View();
         }
 
 
         public IActionResult Cozinhar()
         {
+            ViewData["tags"] = _context.Tag.Select(t => new { t.Id, nome = t.Tag1 }).ToArray();
             return View();
         }
 
