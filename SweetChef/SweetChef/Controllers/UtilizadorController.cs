@@ -552,6 +552,14 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("logout")]
+        [Authorize]
+        public async Task<IActionResult> logoutAsync()
+        {
+            await HttpContext.SignOutAsync();
+            return Redirect("/");
+        }
         // PUT: api/Utilizador/5
         [HttpPut("{id}")]
         [AllowAnonymous]
