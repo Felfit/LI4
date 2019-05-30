@@ -48,7 +48,12 @@ namespace SweetChef.Controllers
         {
             return View();
         }
-        
+
+        public IActionResult ListaCompras()
+        {
+            return View();
+        }
+
         public IActionResult Receita(int id)
         {
             Receita receita = _context.Find<Receita>(id);
