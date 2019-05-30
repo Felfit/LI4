@@ -2,6 +2,9 @@
     ViewData["Title"] = "Ementa Semanal";
 }
 <h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
-
-<p>Use this area to provide additional information.</p>
+<p>Selecione a data das receitas que pretende visualizar</p>
+<form target="receitas" class="form-inline" method="get" action="@Url.Action("ReceitaSemanalReceitas", "Home")">
+    <input type="date" name="semana" class="form-control mr-1"/>
+    <input type="submit" value="Procurar" class="btn btn-primary"/>
+</form>
+<iframe name="receitas" class="w-100 border-0" style="height: 20em" src="@Url.Action("ReceitaSemanalReceitas", "Home")"></iframe>

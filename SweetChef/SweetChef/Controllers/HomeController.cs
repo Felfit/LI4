@@ -31,7 +31,7 @@ namespace SweetChef.Controllers
 
         public IActionResult Cozinhar()
         {
-            ViewData["tags"] = _context.Tag.Select(t => new { t.Id, nome = t.Tag1 }).ToArray();
+            ViewData["tags"] = _context.Tag.Select(t => new { t.Id, Nome = t.Tag1 }).ToArray();
             return View();
         }
 
