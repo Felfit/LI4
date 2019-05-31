@@ -24,7 +24,10 @@ namespace SweetChef.Controllers
         public IActionResult Index()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewData["NomeUtilizador"] = "Utilizador";
                 return Redirect("/Home/Cozinhar/");
+            }
             return View();
         }
 

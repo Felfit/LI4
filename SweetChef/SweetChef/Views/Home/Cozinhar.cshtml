@@ -94,7 +94,7 @@
                 receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
                 receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
-                receitaElement.appendTo("#popularRow");
+                receitaElement.appendTo("#favoritosRow");
                 console.log(receitaElement);
             }
             $(".receitasPlaceholder").remove();
@@ -102,44 +102,67 @@
     });
 </script>
 
+
+<!-- Procurar Receita -->
 <form class="form-inline my-2 my-lg-0 form-row">
     <input class="form-control mx-sm-2 col-9 col-sm-6 col-md-4 col-lg-3" type="search" placeholder="Receita" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Procurar <i class="fas fa-search"></i></button>
 </form>
 
-
-
 <div class="row">
-    <div class="col-6 col-md-4 col-lg-3">
+    <!-- dropdown Etiqueta -->
+    <div class="col-6 col-md-4 col-lg-2">
         <div class="btn-group my-2 w-100">
-            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownEtiqueta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Etiqueta
             </button>
-            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
-                @foreach (var tag in ViewData["tags"] as IEnumerable<dynamic>)
-                {
-                <a class="dropdown-item" href="@Url.Action("GetReceitasFiltradas", "Receita", new { tags = tag.Id })">Action</a>
-                }
+            <div class="dropdown-menu w-100" aria-labelledby="dropdownEtiqueta">
+                <!-- coisas -->
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-4 col-lg-3">
+
+    <!-- dropdown Dificuldade -->
+    <div class="col-6 col-md-4 col-lg-2">
         <div class="btn-group my-2 w-100">
-            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownDificuldade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dificuldade
             </button>
-            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
-                <a class="dropdown-item" href="#">Fácil</a>
-                <a class="dropdown-item" href="#">Médio</a>
-                <a class="dropdown-item" href="#">Difícil</a>
+            <div class="dropdown-menu w-100" aria-labelledby="dropdownDificuldade">
+                <div class="form-check dropdown-item">
+                    <input class="form-check-input" type="checkbox" value="" id="checkFacil">
+                    <label class="form-check-label" for="checkFacil">
+                        Fácil
+                    </label>
+                </div>
+                <div class="form-check dropdown-item">
+                    <input class="form-check-input" type="checkbox" value="" id="checkMedio">
+                    <label class="form-check-label" for="checkMedio">
+                        Médio
+                    </label>
+                </div>
+                <div class="form-check dropdown-item">
+                    <input class="form-check-input" type="checkbox" value="" id="checkDificil">
+                    <label class="form-check-label" for="checkDificil">
+                        Difícil
+                    </label>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- toggle inicial -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <a href="#" class="btn btn-secondary btn-sm active my-2" role="button" aria-pressed="true">Favoritos e Sugestões</a>
+    </div>
+
 </div>
+
 <hr />
-<h2>Popular <i class="fas fa-fire text-danger"></i></h2>
+
+<h2>Favoritos <i class="fas fa-star text-warning"></i></i></h2>
 <div class="container-fluid horizontal-scroll py-2">
-    <div class="row flex-row flex-nowrap" id="popularRow">
+    <div class="row flex-row flex-nowrap" id="favoritosRow">
         <template id="receitaTemplate">
             <div class="receita">
                 <div class="card">
@@ -183,30 +206,52 @@
         </div>
     </div>
 </div>
-<!--
-<h2>Favoritos <i class="far fa-star text-warning"></i></h2>
+
+<div class="my-2">
+    <h2>Sugestões</h2>
+</div>
 <div class="container-fluid horizontal-scroll py-2">
-    <div class="row flex-row flex-nowrap">
-        <div class="receita">
-            <div class="card">
-                <img class="card-img-top" src="https://pt.rc-cdn.community.thermomix.com/recipeimage/wfyc82g5-5b66a-158943-cfcd2-d8ynfdz2/b71b90ce-4969-416a-ac17-d57400a577b9/main/bolo-de-arroz.jpg" alt="Bolo de arroz">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-truncate">Bolo de arroz</h5>
+    <div class="row flex-row flex-nowrap" id="sugestoesRow">
+        <template id="receitaTemplate">
+            <div class="receita">
+                <div class="card">
+                    <img class="card-img-top receitaImagem">
                     <i class="fas fa-star text-warning fav-icon"></i>
-                    <div class="row text-black-50 text-center">
-                        <div class="col text-success">
-                            <i class="fas fa-signal"></i>
-                            <span>Fácil</span>
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                        <div class="row text-black-50 text-center">
+                            <div class="col receitaDificuldade">
+                                <i class="fas fa-signal"></i>
+                                <span class="receitaDificuldadeTexto"></span>
+                            </div>
+                            <div class="col">
+                                <i class="far fa-clock"></i>
+                                <span class="receitaTempo"></span>&nbsp;min
+                            </div>
+                            <a class="stretched-link receitaLink"></a>
                         </div>
-                        <div class="col">
-                            <i class="far fa-clock"></i>
-                            <span>30 min</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <div class="receitasPlaceholder">
+            <div class="receita">
+                <div class="card">
+                    <img class="card-img-top receitaImagem bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                        <div class="row text-black-50 text-center">
+                            <div class="col receitaDificuldade">
+                                <i class="fas fa-signal"></i>
+                            </div>
+                            <div class="col">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <a class="stretched-link receitaLink"></a>
                         </div>
-                        <a asp-controller="Home" asp-action="Receita" asp-route-id="1" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    -->

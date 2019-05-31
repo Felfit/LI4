@@ -2,6 +2,10 @@
     ViewData["Title"] = ViewData["ReceitaNome"];
 }
 <script>
+    $('.carousel').carousel({
+        pause: true
+    })
+
     $(() => {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
             $("#receitaImagem").attr("src", data.info.imagemLink);
@@ -19,6 +23,14 @@
             }
             $("#preparacao").text(data.info.tempodepreparacao + " min");
             $("#cozedura").text(data.info.tempodeespera + " min");
+            $("#classificacao").text("5");
+            if (true) { // ver se é favorito
+                $("#favorito").addClass("fas fa-star");
+            } else {
+                $("#favorito").addClass("far fa-star");
+            }
+
+
             $("#energiaVal").text(data.info.energia);
             $("#gorduraVal").text(data.info.gordura);
             $("#hidratosVal").text(data.info.hidratosCarbono);
@@ -49,78 +61,126 @@
 
 
 <h2>@ViewData["ReceitaNome"]</h2>
+
+<!-- Caracteristicas gerais -->
 <div class="row">
-    <div class="col-lg-4 order-lg-1">
-        <img class="img-fluid bg-light mb-3" id="receitaImagem" />
-        <p id="descricao">Exemplo de uma descrição</p>
-        <a class="btn btn-primary mb-1" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar passo a passo</a>
-        <a class="btn btn-secondary" href="#">Adicionar à ementa semanal</a>
+    <div class="col text-center">
+        <span>Porções</span><br />
+        <i class="fas fa-user"></i><br />
+        <span id="porcoes"></span><br />
     </div>
-    <div class="col-lg-8 order-lg-0">
-        <div class="row">
-            <div class="col text-center">
-                <span>Porções</span><br />
-                <i class="fas fa-user"></i><br />
-                <span id="porcoes"></span><br />
-            </div>
-            <div class="col text-center">
-                <span>Preparação</span><br />
-                <i class="fas fa-clock"></i><br />
-                <span id="preparacao"></span><br />
-            </div>
-            <div class="col text-center">
-                <span>Cozedura</span><br />
-                <i class="fas fa-fire"></i><br />
-                <span id="cozedura"></span><br />
-            </div>
-            <div class="col text-center" id="dificuldadeDiv">
-                <span>Dificuldade</span><br />
-                <i class="fas fa-signal"></i><br />
-                <span id="dificuldade"></span><br />
-            </div>
-        </div>
-        <div class="row m-2 d-none" id="videoContainer">
-            <div class="col embed-responsive embed-responsive-16by9">
-                <iframe id="receitaVideo" class="rounded embed-responsive-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-lg-6">
-                <h4>Ingredientes</h4>
-                <ul id="ingredientes" class="list-group list-group-flush mb-1"></ul>
-                <h4>Receita</h4>
-                <ol id="receita" class="list-group list-group-flush mb-1"></ol>
-            </div>
-            <div class="col-lg-6">
-                <h4>Utensílios</h4>
-                <ul id="utensilios" class="list-group list-group-flush mb-1"></ul>
-                <h4 class="mt-2">Tabela nutricional</h4>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Dose</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Energia</th>
-                            <td><span id="energiaVal"></span> Kcal</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Gordura</th>
-                            <td><span id="gorduraVal"></span> g</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Hidratos de carbono</th>
-                            <td><span id="hidratosVal"></span> g</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="col text-center">
+        <span>Preparação</span><br />
+        <i class="fas fa-clock"></i><br />
+        <span id="preparacao"></span><br />
+    </div>
+    <div class="col text-center">
+        <span>Cozedura</span><br />
+        <i class="fas fa-fire"></i><br />
+        <span id="cozedura"></span><br />
+    </div>
+    <div class="col text-center" id="dificuldadeDiv">
+        <span>Dificuldade</span><br />
+        <i class="fas fa-signal"></i><br />
+        <span id="dificuldade"></span><br />
+    </div>
+    <div class="col text-center">
+        <span>Classificação</span><br />
+        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><br />
+        <span id="classificacao"></span><br />
+    </div>
+    <div class="col text-center">
+        <button type="button" class="btn btn-outline-primary btn-lg"><i id="favorito" class=""></i><br /></button>
     </div>
 </div>
+
+<hr />
+
+<div class="row">
+    <div class="col-lg-8 order-lg-0">
+
+        <!-- Imagem/Vídeo -->
+        <div id="carouselIndicators" class="row m-2 carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselIndicators" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+                <!-- Imagem -->
+                <div class="carousel-item active">
+                    <img class="d-block img-fluid bg-light mb-3" id="receitaImagem" alt="Imagem" />
+                </div>
+                <!-- Vídeo -->
+                <div class="carousel-item d-none" id="videoContainer">
+                    <div class="col embed-responsive embed-responsive-16by9">
+                        <iframe id="receitaVideo" class="rounded embed-responsive-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-4 order-lg-1">
+        <a class="btn btn-primary mb-3 w-100 mt-2" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar passo a passo</a>
+        <a class="btn btn-secondary mb-3 w-100" href="#">Adicionar à ementa semanal</a>
+        <p id="descricao">
+            Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição
+        </p>
+    </div>
+</div>
+
+<hr />
+
+<div class="row mt-2">
+    <div class="col-lg-6">
+        <!-- Preparação -->
+        <h4>Preparação</h4>
+        <ol id="receita" class="list-group list-group-flush mb-5"></ol>
+        <!-- Tabela nutricional -->
+        <h4>Tabela nutricional</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Dose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Energia</th>
+                    <td><span id="energiaVal"></span> Kcal</td>
+                </tr>
+                <tr>
+                    <th scope="row">Gordura</th>
+                    <td><span id="gorduraVal"></span> g</td>
+                </tr>
+                <tr>
+                    <th scope="row">Hidratos de carbono</th>
+                    <td><span id="hidratosVal"></span> g</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Ingredientes -->
+        <h4>Ingredientes</h4>
+        <ul id="ingredientes" class="list-group list-group-flush mb-5"></ul>
+
+        <!-- Utensílios -->
+        <h4>Utensílios</h4>
+        <ul id="utensilios" class="list-group list-group-flush mb-5"></ul>
+    </div>
+</div>
+
 
 <!-- Produto -->
 <div class="modal fade" id="produto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
