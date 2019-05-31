@@ -66,10 +66,12 @@
                 </ul>
             </div>
             <div class="form-inline ml-auto">
-                <span class="mr-1">
-                    @ViewData["NomeUtilizador"]
-                </span>
-                <i class="fas fa-user"></i>
+                <a asp-area="" asp-controller="Home" asp-action="Configuracao">
+                    <span class="mr-1">
+                        @ViewData["NomeUtilizador"]
+                    </span>
+                    <i class="fas fa-user"></i>
+                </a>
             </div>
         </nav>
     </header>
