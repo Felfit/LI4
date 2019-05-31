@@ -41,7 +41,7 @@
     </fieldset>
 </form>
 
-<form method="PUT" action="/api/Receita">
+<form method="POST" action="/api/Receita">
     <fieldset>
         <legend>Atualizar Receita {ID}:</legend>
         <input value="{ID}" name="id" hidden/>
@@ -194,15 +194,12 @@ public int Tempodeespera { get; set; }
 
 <h1>Form UtensilioPasso</h1>
 <fieldset>
-        <legend>IngredienteDúvida Adicionar:</legend>
+        <legend>UtensilioDúvida Adicionar:</legend>
         <form  method="POST" action="api/Receita/passo/utensilio">
                 <input value="1" type="number" name="Passoid" hidden/>
                 <input value="1" type="number" name="PassoReceitaid" hidden/>
-                Id do Ingrediente:
-                <br/><input type="number" name="Ingredienteid" required/><br/>
-                Quantidade:
-                <br/><input type="number" name="Quantidade" required/><br/>
-                </br>
+                Id do Utensilio:
+                <br/><input type="number" name="Utensilioid" required/><br/>
                 <input type="submit" value="Adicionar">        
         </form>
 </fieldset>
@@ -245,6 +242,36 @@ public int Tempodeespera { get; set; }
 </fieldset>
 
 
+
+<H1>Form Ingrediente</H1>
+
+<fieldset>
+        <legend>Ingrediente:</legend>
+        <form action="/action_page.php" >
+            Nome:
+            <br/><input required/><br/>
+            Imagem:
+            <br/><input/><br/>
+            Unidade:
+            <br/><input type="search" required/><br/>
+            <br/>  
+            <input type="submit" value="Submit">     
+        </form>
+</fieldset>
+
+<H1>Form Utensílio</H1>
+
+<fieldset>
+        <legend>Utensílio:</legend>
+        <form action="/action_page.php" >
+            Nome:
+            <br/><input required/><br/>
+            Imagem:
+            <br/><input/><br/>
+            <br/> 
+            <input type="submit" value="Submit">            
+        </form>
+</fieldset>
 
 
 

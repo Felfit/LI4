@@ -155,14 +155,14 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost("update")]
         public ActionResult updateReceita([FromForm] Receita r)
         {
             try
             {
                 _context.Receita.Update(r);
                 _context.SaveChanges();
-                return Ok(r);
+                return Ok();
             }
             catch (Exception e)
             {
