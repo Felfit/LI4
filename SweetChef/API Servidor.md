@@ -45,6 +45,8 @@
   * Retorna a lista de Ingredientes necessários para os próximos 7 dias da semana
 * api/Utilizador/closestStore/{lat},{lon}
   * Retorna as coordenadas da loja mais próxima
+* api/Utilizador/ementa?idUt=...&data=...
+  * Retorna a ementa de uma determinada data
 
 
 ###POST
@@ -53,16 +55,32 @@
 * api/Utilizador/autenticar
   * TO BE EXPLAINED
 * api/Utilizador/passoFeedback/{idReceita}/{idPasso}/?argumentos
-    * string comentario 
+    * string comentario
+* api/Utilizador/ementa
+    * Passa no form -> idUt, idRec, data 
+    * Adiciona uma receita à ementa semanal
+* api/Utilizador/restricoesAlimentar
+    * Passa no form idUt, idReceita, data, duracao
+    * Define as restrições elementares
 
 ###PUT
 * api/Utilizador/opiniao/{idReceita}/?arguments
-  * Chamar put para atualizar um campo. Precisa de existir
+  * Chamar put para atualizar um campo. Precisa existir
     * (Optional) bool favorito
     * (Optional) short rating
     * (Optional) bool blacklisted
 * api/Utilizador/passoFeedback/{idReceita}/{idPasso}/?argumentos
     * (Opcional) string comentario 
+* api/Utilizador/configuracao
+    * Passar no form -> idUt, List<int> restricoes, List<int> likes, List<int> dislikes
+    * Definir a configuração do utilizador
+
+###DELETE
+* api/Utilizador/ementa
+  * Passa no form ->  idUt, idReceita, data
+  * Remove da ementa semanal uma receita
+
+
 ##Duvida
 
 ###GET
