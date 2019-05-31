@@ -106,7 +106,7 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-      
+     
         //Adiciona uma receita à ementa
         [HttpPost("ementa")]
         public ActionResult PostReceitaEmenta([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
