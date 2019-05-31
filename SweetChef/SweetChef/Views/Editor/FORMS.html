@@ -1,0 +1,259 @@
+<h1>Forms Receita</h1>
+<form method="POST" action="/api/Receita">
+    <fieldset>
+        <legend>Criar Receita:</legend>
+        <input value="0" name="Tempodepreparacao" hidden/>
+        <input value="0" name="Tempodeespera" hidden/>
+        Nome:
+        <br/><input name="Nome" type="text" required/><br/>
+        Descrição:
+        <br/><input name="Descricao" name="Nome" type="text" required/><br/>
+        Imagem:
+        <br/><input name="ImagemLink" type="url"/><br/>
+        Video:
+        <br/><input name="VideoLink" type="url"/><br/>
+        Dificuldade:
+        <fieldset>
+                Facil
+                <input type="radio" name="Dificuldade" value="1" required/>
+                <br/>
+                Médio
+                <input type="radio" name="Dificuldade" value="2" required/>
+                <br/>
+                Dificil
+                <input type="radio" name="Dificuldade" value="3" required/>
+        </fieldset>
+        Porções:
+        <br/><input name="Porcoes" type="number" required/>    
+        <fieldset>
+                <legend>Nutricao:</legend>
+                Energia:
+                <br/><input name="Energia" type="number" required/>
+                </br>
+                Gordura:
+                <br/><input name="Gordura" type="number" required/>
+                <br/>
+                Hidratos de Carbono:
+                <br/><input name="HidratosCarbono" type="number" required/>
+        </fieldset>
+    </br>
+    <input type="submit" value="Adicionar">
+    </fieldset>
+</form>
+
+<form method="PUT" action="/api/Receita">
+    <fieldset>
+        <legend>Atualizar Receita {ID}:</legend>
+        <input value="{ID}" name="id" hidden/>
+        Nome:
+        <br/><input name="Nome" type="text" required/><br/>
+        Descrição:
+        <br/><input name="Descricao" name="Nome" type="text" required/><br/>
+        Imagem:
+        <br/><input name="ImagemLink" type="url"/><br/>
+        Video:
+        <br/><input name="VideoLink" type="url"/><br/>
+        Dificuldade:
+        <fieldset>
+                Facil
+                <input type="radio" name="Dificuldade" value="1" required/>
+                <br/>
+                Médio
+                <input type="radio" name="Dificuldade" value="2" required/>
+                <br/>
+                Dificil
+                <input type="radio" name="Dificuldade" value="3" required/>
+        </fieldset>
+        Porções:
+        <br/><input name="Porcoes" type="number" required/>    
+        <fieldset>
+                <legend>Nutricao:</legend>
+                Energia:
+                <br/><input name="Energia" type="number" required/>
+                </br>
+                Gordura:
+                <br/><input name="Gordura" type="number" required/>
+                <br/>
+                Hidratos de Carbono:
+                <br/><input name="HidratosCarbono" type="number" required/>
+        </fieldset>
+    </br>
+    <input type="submit" value="Guardar">
+    </fieldset>
+</form>
+
+</br>
+//Derivado
+public int Tempodepreparacao { get; set; }
+</br>
+//Derivado
+public int Tempodeespera { get; set; }
+</br>
+
+<h1>Form Passo</h1>
+<fieldset>
+        <legend>Passo Criar:</legend>
+    <form method="POST" action="api/Receita/passo" >
+        <input value="1" name="Numero" hidden/>
+        <input value="1" name="Receitaid" hidden/>
+        <input hidden/>
+        Descricao:
+        <br/><input type="text" name="Descricao" required/><br/>
+        Imagem:
+        <br/><input type="url" name="ImagemLink"/><br/>
+        Video:
+        <br/><input type="url" name="VideoLink"/><br/>
+        Link Externo:
+        <br/><input type="url" name="LinkExterno"/><br/>
+        Duração:
+        <br/><input type="number" name="Duracao" required/><br/>
+        </br>
+        <input type="submit" value="Submit">            
+    </form>
+</fieldset>
+<fieldset>
+        <legend>Passo Atualizar:</legend>
+    <form method="PUT" action="api/Receita/passo" >
+        <input value="1" name="Numero" hidden/>
+        <input value="1" name="Receitaid" hidden/>
+        <input hidden/>
+        Descricao:
+        <br/><input type="text" name="Descricao" required/><br/>
+        Imagem:
+        <br/><input type="url" name="ImagemLink"/><br/>
+        Video:
+        <br/><input type="url" name="VideoLink"/><br/>
+        Link Externo:
+        <br/><input type="url" name="LinkExterno"/><br/>
+        Duração:
+        <br/><input type="number" name="Duracao" required/><br/>
+        </br>
+        <input type="submit" value="Submit">            
+    </form>
+</fieldset>
+
+<h1>Form PassoDuvida</h1>
+
+
+
+<fieldset>
+    <legend>PassoDúvida Adicionar:</legend>
+    
+            <input value="1" name="Passoid" hidden/>
+            <input value="1" name="PassoReceitaid" hidden/>
+            Id da Dúvida:
+            <br/><input name="Dúvidaid" required/><br/>
+            Questão:
+            <br/><input name="Questao" required/><br/>
+            </br>
+            <input type="submit" value="Adicionar">        
+    </form>
+</fieldset>
+
+<fieldset>
+    <legend>PassoDúvida Atualizar:</legend>
+    <form  method="PUT" action="api/Receita/passo/duvida">
+            <input value="1" name="Passoid" hidden/>
+            <input value="1" name="PassoReceitaid" hidden/>
+            Id da Dúvida:
+            <br/><input name="Dúvidaid" required/><br/>
+            Questão:
+            <br/><input name="Questao" required/><br/>
+            </br>
+            <input type="submit" value="Guardar">        
+    </form>
+</fieldset>
+
+<h1>Form IngredientePasso</h1>
+<fieldset>
+        <legend>IngredienteDúvida Adicionar:</legend>
+        <form  method="POST" action="api/Receita/passo/ingrediente">
+                <input value="1" type="number" name="Passoid" hidden/>
+                <input value="1" type="number" name="PassoReceitaid" hidden/>
+                Id do Ingrediente:
+                <br/><input type="number" name="Ingredienteid" required/><br/>
+                Quantidade:
+                <br/><input type="number" name="Quantidade" required/><br/>
+                </br>
+                <input type="submit" value="Adicionar">        
+        </form>
+</fieldset>
+<fieldset>
+        <legend>IngredienteDúvida Atualizar:</legend>
+        <form  method="PUT" action="api/Receita/passo/ingrediente">
+                <input value="1" type="number" name="Passoid" hidden/>
+                <input value="1" type="number" name="PassoReceitaid" hidden/>
+                Id do Ingrediente:
+                <br/><input type="number" name="Ingredienteid" required/><br/>
+                Quantidade:
+                <br/><input type="number" name="Quantidade" required/><br/>
+                </br>
+                <input type="submit" value="Guardar">        
+        </form>
+</fieldset>
+
+<h1>Form UtensilioPasso</h1>
+<fieldset>
+        <legend>IngredienteDúvida Adicionar:</legend>
+        <form  method="POST" action="api/Receita/passo/utensilio">
+                <input value="1" type="number" name="Passoid" hidden/>
+                <input value="1" type="number" name="PassoReceitaid" hidden/>
+                Id do Ingrediente:
+                <br/><input type="number" name="Ingredienteid" required/><br/>
+                Quantidade:
+                <br/><input type="number" name="Quantidade" required/><br/>
+                </br>
+                <input type="submit" value="Adicionar">        
+        </form>
+</fieldset>
+<H1>Form Dúvida</H1>
+<fieldset>
+        <legend>Dúvida Criar:</legend>
+        <form method="POST" action="/api/duvida" >
+            Título:
+            <br/><input type="text" name="Titulo" required/><br/>
+            Imagem:
+            <br/><input type="url" name="ImagemLink"/><br/>
+            Video:
+            <br/><input type="url" name="VideoLink"/><br/>
+            Link Externo:
+            <br/><input type="url" name="Linkexterno"/><br/>
+            Explicação:
+            <br/><input type="text" name="Explicacao" required/><br/>
+            </br>
+            <input type="submit" value="Adicionar">            
+        </form>
+</fieldset>
+
+<fieldset>
+        <legend>Dúvida Atualizar {Id}:</legend>
+        <form method="PUT" action="/api/duvida" >
+            <input name="id" value="{Id}" hidden/>
+            Título:
+            <br/><input type="text" name="Titulo" required/><br/>
+            Imagem:
+            <br/><input type="url" name="ImagemLink"/><br/>
+            Video:
+            <br/><input type="url" name="VideoLink"/><br/>
+            Link Externo:
+            <br/><input type="url" name="Linkexterno"/><br/>
+            Explicação:
+            <br/><input type="text" name="Explicacao" required/><br/>
+            </br>
+            <input type="submit" value="Guardar">            
+        </form>
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
