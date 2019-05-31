@@ -88,6 +88,25 @@ namespace SweetChef.Controllers
             }
         }
 
+        //Vai buscar as ementas semanais de uma certa data
+        [HttpGet("ementa")]
+        public ActionResult GetReceitasEmenta([FromQuery] int idUt, [FromQuery] DateTime data)
+        {
+            try
+            {
+                var ementa= _context.EmentaSemanal.
+                   Where(em => em.Utilizadorid == idUt && em.Data.Equals(data)).
+                   Select(em => em.Receita).
+                   ToList();
+                return Ok(ementa);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+      
         //Adiciona uma receita à ementa
         [HttpPost("ementa")]
         public ActionResult PostReceitaEmenta([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
@@ -477,6 +496,7 @@ namespace SweetChef.Controllers
 
         // POST: api/Utilizador
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Post([FromForm] Utilizador utilizador)
         {
             try
@@ -529,7 +549,7 @@ namespace SweetChef.Controllers
                 return Redirect("/?email="+email);
             }
         }
-        [HttpPost]
+        //[HttpPost]
         // DELETE: api/Utilizador?5
         [HttpDelete]
         public IActionResult Delete([FromQuery] int codigo)

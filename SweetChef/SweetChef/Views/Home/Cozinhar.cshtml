@@ -116,9 +116,10 @@
                 Etiqueta
             </button>
             <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+                @foreach (var tag in ViewData["tags"] as IEnumerable<dynamic>)
+                {
+                <a class="dropdown-item" href="@Url.Action("GetReceitasFiltradas", "Receita", new { tags = tag.Id })">Action</a>
+                }
             </div>
         </div>
     </div>
