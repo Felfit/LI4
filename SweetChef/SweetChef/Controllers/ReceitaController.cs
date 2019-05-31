@@ -23,6 +23,154 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
+        [HttpPost("passo/duvida")]
+        public ActionResult addDuvidaPassoReceita([FromForm] PassoDúvida p)
+        {
+            try
+            {
+                _context.PassoDúvida.Add(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("passo/duvida")]
+        public ActionResult updateDuvidaPassoReceita([FromForm] PassoDúvida p)
+        {
+            try
+            {
+                _context.PassoDúvida.Update(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("passo/utensilio")]
+        public ActionResult addUtensilioPassoReceita([FromForm] UtensilioPasso p)
+        {
+            try
+            {
+                ///TODO COISAS
+                _context.UtensilioPasso.Add(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("passo/ingrediente")]
+        public ActionResult addIngredientePassoReceita([FromForm] PassoIngrediente p)
+        {
+            try
+            {
+                ///TODO COISAS
+                _context.PassoIngrediente.Add(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("passo/ingrediente")]
+        public ActionResult updateIngredientePassoReceita([FromForm] PassoIngrediente p)
+        {
+            try
+            {
+
+                ///FAZER MAIS COISAS
+                _context.PassoIngrediente.Update(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("passo")]
+        public ActionResult addPassoReceita([FromForm] Passo p)
+        {
+            try
+            {
+                _context.Passo.Add(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("passo")]
+        public ActionResult updatePassoReceita([FromForm] Passo p)
+        {
+            try
+            {
+                _context.Passo.Update(p);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult addReceita([FromForm] Receita r)
+        {
+            try
+            {
+                _context.Receita.Add(r);
+                _context.SaveChanges();
+                return Ok(r);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut]
+        public ActionResult updateReceita([FromForm] Receita r)
+        {
+            try
+            {
+                _context.Receita.Update(r);
+                _context.SaveChanges();
+                return Ok(r);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         // GET: api/Receita
         [HttpGet]
         public ActionResult Get()
