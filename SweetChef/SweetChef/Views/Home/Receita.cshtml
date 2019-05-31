@@ -19,9 +19,12 @@
             }
             $("#preparacao").text(data.info.tempodepreparacao + " min");
             $("#cozedura").text(data.info.tempodeespera + " min");
+            $("#energiaVal").text(data.info.energia);
+            $("#gorduraVal").text(data.info.gordura);
+            $("#hidratosVal").text(data.info.hidratosCarbono);
             const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
             const dificuldadeColor = [, "success", "warning", "danger"];
-            $("#dificuldadeDiv").addClass("text-" + dificuldadeColor[data.info.dificuldade]);
+            $("#dificuldadeDiv > i").addClass("text-" + dificuldadeColor[data.info.dificuldade]);
             $("#dificuldade").text(dificuldadeTexto[data.info.dificuldade]);
             for (const ingrediente of data.ingredientes) {
                 $("#ingredientes").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}">${ingrediente.nome} <small>${ingrediente.quantidade} ${ingrediente.unidade}</small></li>`);
@@ -102,15 +105,15 @@
                     <tbody>
                         <tr>
                             <th scope="row">Energia</th>
-                            <td>200 Kcal</td>
+                            <td><span id="energiaVal"></span> Kcal</td>
                         </tr>
                         <tr>
                             <th scope="row">Gordura</th>
-                            <td>10 g</td>
+                            <td><span id="gorduraVal"></span> g</td>
                         </tr>
                         <tr>
                             <th scope="row">Hidratos de carbono</th>
-                            <td>10 g</td>
+                            <td><span id="hidratosVal"></span> g</td>
                         </tr>
                     </tbody>
                 </table>
