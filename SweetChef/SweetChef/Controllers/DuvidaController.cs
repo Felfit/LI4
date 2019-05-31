@@ -42,5 +42,72 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        // api/duvida
+        [HttpPost("duvidaPasso")]
+        public ActionResult addPassoDuvida([FromForm] PassoDúvida pd)
+        {
+            try
+            {
+                _context.PassoDúvida.Add(pd);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        // api/duvida
+        [HttpPut("duvidaPasso")]
+        public ActionResult updatePassoDuvida([FromForm] PassoDúvida pd)
+        {
+            try
+            {
+                _context.PassoDúvida.Update(pd);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        // api/duvida
+        [HttpPost]
+        public ActionResult addDuvida([FromForm] Duvida d)
+        {
+            try
+            {
+                _context.Duvida.Add(d);
+                _context.SaveChanges();
+                return Ok(d);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        // api/duvida
+        [HttpPut]
+        public ActionResult updateDuvida([FromForm] Duvida d)
+        {
+            try
+            {
+                _context.Duvida.Update(d);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
