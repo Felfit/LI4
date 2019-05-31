@@ -43,6 +43,11 @@ namespace SweetChef.Controllers
             return View();
         }
 
+        public IActionResult Editor()
+        {
+            return View();
+        }
+
         public IActionResult Tutorial()
         {
             return View();
