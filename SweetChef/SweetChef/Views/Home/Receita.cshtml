@@ -6,6 +6,34 @@
         pause: true
     })
 
+    function toggleFavorita() {
+        $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
+            if (dataFav.favorito) {
+                $.ajax({
+                    url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
+                    type: 'PUT',
+                    data: "favorito=False",
+                    success: function(data) {
+                        $("#favorito").removeClass("fas fa-star")
+                        $("#favorito").addClass("far fa-star");
+                    }
+                });
+                
+            } else {
+                $.ajax({
+                    url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
+                    type: 'PUT',
+                    data: "favorito=True",
+                    success: function(data) {
+                        $("#favorito").removeClass("far fa-star")
+                        $("#favorito").addClass("fas fa-star");
+                    }
+                });
+            }
+        });
+    }
+
+
     $(() => {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
 
@@ -41,7 +69,6 @@
                     $("#favorito").addClass("far fa-star");
                 }
             });
-            // TODO por mais bonito
 
             // descrição
             $("#descricao").text(data.info.descricao);
@@ -125,7 +152,7 @@
         <button type="button" class="btn btn-secondary btn-sm">Avaliar</button><br />
     </div>
     <div class="col text-center">
-        <button type="button" class="btn btn-outline-primary btn-lg"><i id="favorito" class=""></i><br /></button>
+        <button type="button" class="m-3 btn btn-outline-warning btn-lg" onclick="toggleFavorita()"><i id="favorito" class=""></i><br /></button>
     </div>
 </div>
 
