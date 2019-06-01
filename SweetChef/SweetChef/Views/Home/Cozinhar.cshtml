@@ -84,7 +84,7 @@
         }
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
-        $.getJSON("/api/Receita", (data) => {
+        $.getJSON("/api/Receita/", (data) => {
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -99,6 +99,7 @@
             }
             $(".receitasPlaceholder").remove();
         });
+        $("")
     });
 </script>
 
