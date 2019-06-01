@@ -184,7 +184,10 @@ namespace SweetChef.Controllers
         {
             var sidut = ControllerContext.HttpContext.User.Identity.Name;
             int idUt = Int32.Parse(sidut);
-            return _context.Utilizador.Where(p => p.Id == idUt).Select(u => u.Nome).First();
+            string ut = _context.Utilizador.Where(p => p.Id == idUt).Select(u => u.Nome).FirstOrDefault();
+            if (ut == null)
+                return "";
+            return ut;
         }
     }
 }
