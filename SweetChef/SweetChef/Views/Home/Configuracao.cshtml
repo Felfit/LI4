@@ -85,10 +85,16 @@
 
 <hr/>
 
+<form method="POST" id="ingForm" action="/api/tag">
+    <input class="form-control" type="text" name="tag" required />
+    <input type="submit" class="btn btn-primary" value="Adicionar">
+</form>
+
 <h4>Ajuda</h4>
 <div class="container">
     <a asp-area="" asp-controller="Home" asp-action="Tutorial" class="btn btn-primary mt-3">Tutorial</a>
 </div>
-    <hr />
 
-    <a asp-area="" asp-controller="Home" asp-action="" class="btn btn-danger mt-3">Sair</a>
+<hr />
+
+<a asp-area="" asp-controller="Home" asp-action="" class="btn btn-danger mt-3">Sair</a>
