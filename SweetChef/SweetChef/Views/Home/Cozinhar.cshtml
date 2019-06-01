@@ -84,6 +84,7 @@
         }
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
+
         $.getJSON("/api/Receita", (data) => {
             for (const receita of data) {
                 let receitaElement = gerarReceita();
@@ -99,6 +100,20 @@
             }
             $(".receitasPlaceholder").remove();
         });
+
+        function gerarEtiqueta() {
+            return $($("#etiquetaTemplate").html());
+        }
+        $.getJSON("/api/Tags", (data) => {
+            for (const etiqueta of data) {
+                let etiquetaElement = gerarEtiqueta();
+                window.etiqueta = etiquetaElement;
+                console.log(etiquetaElement);
+            }
+
+        });
+
+
     });
 </script>
 
@@ -117,7 +132,16 @@
                 Etiqueta
             </button>
             <div class="dropdown-menu w-100" aria-labelledby="dropdownEtiqueta">
-                <!-- coisas -->
+
+                <template id="etiquetaTemplate">
+                    <div class="form-check dropdown-item">
+                        <input class="form-check-input" type="checkbox" value="" id="checkFacil">
+                        <label class="form-check-label" for="checkFacil">
+                            <span class="etiquetaNome"></span>
+                        </label>
+                    </div>
+                </template>
+
             </div>
         </div>
     </div>
