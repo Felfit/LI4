@@ -50,7 +50,7 @@ namespace SweetChef.Controllers
 
                 var receitas = utilizador.Opiniao
                                .Where(o => o.Favorito == true)
-                               .Select(o => new { o.Receita })
+                               .Select(o => o.Receita)
                                .ToArray();
                 return Ok(receitas);
             }

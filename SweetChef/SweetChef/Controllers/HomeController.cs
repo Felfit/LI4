@@ -45,6 +45,10 @@ namespace SweetChef.Controllers
 
             return View();
         }
+        public IActionResult Insercao()
+        {
+            return View();
+        }
 
         public IActionResult Editor(int id)
         {
@@ -64,6 +68,7 @@ namespace SweetChef.Controllers
             return View();
         }
 
+       
         public IActionResult EmentaSemanal()
         {
             var sidut = HttpContext.User.Identity.Name;
