@@ -404,7 +404,7 @@ namespace SweetChef.Controllers
             int numRatings = temp.n;
             if (temp.n > 0)
                 media = (int)temp.soma / numRatings;
-            return Ok(new { media, numRatings});
+            return Ok(new { media, numRatings });
         }
 
     }
