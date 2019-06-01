@@ -23,38 +23,7 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-        [HttpPost("passo/duvida")]
-        public ActionResult addDuvidaPassoReceita([FromForm] PassoDúvida p)
-        {
-            try
-            {
-                _context.PassoDúvida.Add(p);
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpPut("passo/duvida")]
-        public ActionResult updateDuvidaPassoReceita([FromForm] PassoDúvida p)
-        {
-            try
-            {
-                _context.PassoDúvida.Update(p);
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
+        
         [HttpPost("passo/utensilio")]
         public ActionResult addUtensilioPassoReceita([FromForm] UtensilioPasso p)
         {
@@ -62,8 +31,16 @@ namespace SweetChef.Controllers
             {
                 ///TODO COISAS
                 _context.UtensilioPasso.Add(p);
+                if (_context.UtensilioReceita.Where(ur => ur.Utensilioid == p.Utensilioid && ur.Receitaid == p.PassoReceitaid).FirstOrDefault() == null)
+                {
+                    UtensilioReceita ur = new UtensilioReceita();
+                    ur.Receitaid = p.PassoReceitaid;
+                    ur.Utensilioid = p.Utensilioid;
+                    _context.UtensilioReceita.Add(ur);
+                }
+                    
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
@@ -79,8 +56,23 @@ namespace SweetChef.Controllers
             {
                 ///TODO COISAS
                 _context.PassoIngrediente.Add(p);
+                ReceitaIngrediente ri = _context.ReceitaIngrediente.
+                    Where(pi => pi.Ingredienteid == p.Ingredienteid && pi.Receitaid == p.PassoReceitaid).
+                    FirstOrDefault();
+                if (ri == null) {
+                    ri = new ReceitaIngrediente();
+                    ri.Quantidade = p.Quantidade;
+                    ri.Receitaid = p.PassoReceitaid;
+                    ri.Ingredienteid = p.Ingredienteid;
+                    _context.ReceitaIngrediente.Add(ri);
+                }
+                else
+                {
+                    ri.Quantidade += p.Quantidade;
+                    _context.ReceitaIngrediente.Update(ri);
+                }
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
@@ -89,16 +81,25 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpPost("passo/ingrediente/update")]
         [HttpPut("passo/ingrediente")]
-        public ActionResult updateIngredientePassoReceita([FromForm] PassoIngrediente p)
+        public ActionResult UpdateIngredientePassoReceita([FromForm] PassoIngrediente p)
         {
             try
             {
 
                 ///FAZER MAIS COISAS
+                var old = _context.PassoIngrediente.Find(p.Passoid, p.PassoReceitaid, p.Ingredienteid);
+                
                 _context.PassoIngrediente.Update(p);
+                ReceitaIngrediente ri = _context.ReceitaIngrediente.
+                    Where(pi => pi.Ingredienteid == p.Ingredienteid && pi.Receitaid == p.PassoReceitaid).
+                    FirstOrDefault();
+                ri.Quantidade += p.Quantidade;
+                ri.Quantidade -= old.Quantidade;
+                _context.ReceitaIngrediente.Update(ri);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
@@ -108,13 +109,16 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost("passo")]
-        public ActionResult addPassoReceita([FromForm] Passo p)
+        public ActionResult AddPassoReceita([FromForm] Passo p)
         {
             try
             {
                 _context.Passo.Add(p);
+                var r = _context.Receita.Find(p.Receitaid);
+                r.Tempodepreparacao += p.Duracao;
+                _context.Receita.Update(r);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/"+p.Receitaid+"?passo="+p.Numero);
             }
             catch (Exception e)
             {
@@ -123,14 +127,15 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpPost("passo/update")]
         [HttpPut("passo")]
-        public ActionResult updatePassoReceita([FromForm] Passo p)
+        public ActionResult UpdatePassoReceita([FromForm] Passo p)
         {
             try
             {
                 _context.Passo.Update(p);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.Receitaid + "?passo=" + p.Numero);
             }
             catch (Exception e)
             {
@@ -140,13 +145,14 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost]
-        public ActionResult addReceita([FromForm] Receita r)
+        public ActionResult AddReceita([FromForm] Receita r)
         {
             try
             {
+                Console.Beep();
                 _context.Receita.Add(r);
                 _context.SaveChanges();
-                return Ok(r);
+                return Redirect("/Home/Editor/" + r.Id);
             }
             catch (Exception e)
             {
@@ -156,13 +162,14 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost("update")]
-        public ActionResult updateReceita([FromForm] Receita r)
+        [HttpPut]
+        public ActionResult UpdateReceita([FromForm] Receita r)
         {
             try
             {
                 _context.Receita.Update(r);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/"+r.Id);
             }
             catch (Exception e)
             {
@@ -226,27 +233,12 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet("favoritas/{idUtilizador}")]
-        public ActionResult GetReceitasFavoritas(int idUtilizador)
+        [HttpGet("recomendadas")]
+        public ActionResult GetReceitasRecomendadas()
         {
-            try
-            {
-                var favoritas = _context.Opiniao.
-                    Where(o => o.Utilizadorid == idUtilizador && o.Favorito).
-                    Select(o => o.Receita).
-                    ToList();
-                return Ok(favoritas);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
 
-        [HttpGet("recomendadas/{idUtilizador}")]
-        public ActionResult GetReceitasRecomendadas(int idUtilizador)
-        {
             var restricoes = _context.RestricoesAlimentares.
                 Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
                 SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
@@ -311,5 +303,22 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("opinioes/{idReceita}")]
+        public ActionResult OpinioesMedia(int idReceita)
+        {
+            var temp = _context.Receita.
+                Where(r => r.Id == idReceita).
+                Select(r => r.Opiniao).
+                Select(o => new { soma = o.Sum(s => s.Rating), n = o.Count() }).FirstOrDefault();
+            if (temp == null)
+                return NotFound();
+            int media = 0;
+            int numRatings = temp.n;
+            if (temp.n > 0)
+                media = (int)temp.soma / numRatings;
+            return Ok(new { media, numRatings});
+        }
+
     }
 }

@@ -22,7 +22,7 @@ CREATE TABLE Duvida (id int IDENTITY NOT NULL, titulo varchar(255) NOT NULL, vid
 CREATE TABLE CookieAuth (cookie int NOT NULL, Utilizadorid int NOT NULL, PRIMARY KEY (cookie));
 CREATE TABLE Lojas (storeNum int IDENTITY NOT NULL, latitude float(10) NOT NULL, longitude float(10) NOT NULL, PRIMARY KEY (storeNum));
 CREATE INDEX Utilizador ON Utilizador (email);
-CREATE UNIQUE INDEX Passo_numero ON Passo (numero);
+CREATE INDEX Passo_numero ON Passo (numero);
 ALTER TABLE RestricoesAlimentares ADD CONSTRAINT FKRestricoes611183 FOREIGN KEY (Utilizadorid) REFERENCES Utilizador (id);
 ALTER TABLE RestricoesAlimentares ADD CONSTRAINT FKRestricoes283234 FOREIGN KEY (Ingredienteid) REFERENCES Ingrediente (id);
 ALTER TABLE Ingrediente ADD CONSTRAINT FKIngredient791622 FOREIGN KEY (Unidadeid) REFERENCES Unidade (id);

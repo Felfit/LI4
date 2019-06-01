@@ -61,6 +61,7 @@ namespace SweetChef.Controllers
         }
 
         // api/duvida
+        [HttpPost("duvidaPasso/Update")]
         [HttpPut("duvidaPasso")]
         public ActionResult updatePassoDuvida([FromForm] PassoDúvida pd)
         {
@@ -94,6 +95,7 @@ namespace SweetChef.Controllers
             }
         }
         // api/duvida
+        [HttpPost("update")]
         [HttpPut]
         public ActionResult updateDuvida([FromForm] Duvida d)
         {
