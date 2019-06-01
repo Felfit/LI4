@@ -57,17 +57,20 @@
             $("#dificuldade").text(dificuldadeTexto[data.info.dificuldade]);
 
             // classificação
-            $("#classificacao").text(5);
-            $("#estrelas").text(5);
-            // TODO ir buscar class media
+            $.getJSON("/api/Receita/opinioes/@ViewData["ReceitaId"]", (data) => {
+                $("#mediaClass").text("⭐".repeat(Math.round(data.media)) + "(" + data.media + ")");
+                $("#numClass").text(data.numRatings + " avaliações");
+            });
 
-            // favorita
+            // favorita e minha classificação
             $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
                 if (dataFav.favorito) {
                     $("#favorito").addClass("fas fa-star");
                 } else {
                     $("#favorito").addClass("far fa-star");
                 }
+                 $("#minhaClass").text("⭐".repeat(dataFav.rating));
+
             });
 
             // descrição
@@ -121,36 +124,67 @@
 
 <!-- Caracteristicas gerais -->
 <div class="row">
+
     <div class="col text-center">
         <span>Porções</span><br />
         <i class="fas fa-user"></i><br />
         <span id="porcoes"></span><br />
     </div>
+
     <div class="col text-center">
         <span>Preparação</span><br />
         <i class="fas fa-clock"></i><br />
         <span id="preparacao"></span><br />
     </div>
+
     <div class="col text-center">
         <span>Cozedura</span><br />
         <i class="fas fa-fire"></i><br />
         <span id="cozedura"></span><br />
     </div>
+
     <div class="col text-center" id="dificuldadeDiv">
         <span>Dificuldade</span><br />
         <i class="fas fa-signal"></i><br />
         <span id="dificuldade"></span><br />
     </div>
+
     <div class="col text-center">
         <span>Classificação</span><br />
-        <span id="estrelas"></span><br />
-        <span id="classificacao"></span><br />
+        <span id="mediaClass"></span><br />
+        <span id="numClass"></span><br />
     </div>
+
     <div class="col text-center">
         <span>Minha class.</span><br />
-        <span>5</span><br />
-        <button type="button" class="btn btn-secondary btn-sm">Avaliar</button><br />
+        <span id="minhaClass"></span><br />
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#avaliarModal">Avaliar</button><br />
     </div>
+    <div class="modal fade" id="avaliarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Minha classificação da receita</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="m-2">
+                            <input type="number" min="0" max="5" class="form-control" id="inputClassMin" placeholder="Classificação">
+                        </div>
+                        <!-- acabar -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col text-center">
         <button type="button" class="m-3 btn btn-outline-warning btn-lg" onclick="toggleFavorita()"><i id="favorito" class=""></i><br /></button>
     </div>
