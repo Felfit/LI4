@@ -24,6 +24,13 @@
   * Retorna as receitas favoritas do utilizador
 
 
+##Tags
+###Get
+* api/tags
+    * Retorna lista com tags
+
+
+
 ##Utilizador
 
 ###GET

@@ -31,14 +31,16 @@ namespace SweetChef.Controllers
         }
 
         //Get receitas favoritas
-        [HttpGet("{id}/favoritas")]
-        public ActionResult getReceitasFavoritas(int id)
+        [HttpGet("favoritas")]
+        public ActionResult getReceitasFavoritas()
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 var utilizador = _context.Utilizador.
                                                 Include("Opiniao.Receita").
-                                                Where(p => p.Id == id).
+                                                Where(p => p.Id == idUt).
                                                 FirstOrDefault();
                                                 
                 if (utilizador == null)
@@ -50,10 +52,7 @@ namespace SweetChef.Controllers
                                .Where(o => o.Favorito == true)
                                .Select(o => new { o.Receita })
                                .ToArray();
-                if (receitas.Length == 0)
-                    return NotFound();
-                else
-                    return Ok(receitas);
+                return Ok(receitas);
             }
             catch (Exception e)
             {
@@ -522,6 +521,36 @@ namespace SweetChef.Controllers
             catch
             {
                 return Redirect("/?email="+email);
+            }
+        }
+
+        [HttpPost]
+        [Route("registar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Registar([FromForm] Utilizador ut)
+        {
+            try
+            {
+                Utilizador u= _context.Utilizador.Where(c => c.Email == ut.Email).FirstOrDefault();
+                if (u != null)
+                    return Redirect("/?email=" + ut.Email);
+                ut.Id = 0;
+                _context.Utilizador.Add(ut);
+                _context.SaveChanges();
+                List<Claim> claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, ut.Id.ToString()),
+                };
+                ClaimsIdentity cIdentity = new ClaimsIdentity(claims, "login");
+                ClaimsPrincipal principal = new ClaimsPrincipal(cIdentity);
+                await HttpContext.SignInAsync(principal);
+
+                //Request.HttpContext.
+                return Redirect("/Home/Cozinhar/");
+            }
+            catch
+            {
+                return Redirect("/?email=" + ut.Email);
             }
         }
         //[HttpPost]
