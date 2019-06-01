@@ -24,7 +24,10 @@ namespace SweetChef.Controllers
         public IActionResult Index()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewData["NomeUtilizador"] = "Utilizador";
                 return Redirect("/Home/Cozinhar/");
+            }
             return View();
         }
 
@@ -32,6 +35,21 @@ namespace SweetChef.Controllers
         public IActionResult Cozinhar()
         {
             ViewData["tags"] = _context.Tag.Select(t => new { t.Id, Nome = t.Tag1 }).ToArray();
+            return View();
+        }
+
+        public IActionResult Configuracao()
+        {
+            return View();
+        }
+
+        public IActionResult Editor()
+        {
+            return View();
+        }
+
+        public IActionResult Tutorial()
+        {
             return View();
         }
 
@@ -53,7 +71,12 @@ namespace SweetChef.Controllers
         {
             return View();
         }
-        
+
+        public IActionResult ListaCompras()
+        {
+            return View();
+        }
+
         public IActionResult Receita(int id)
         {
             Receita receita = _context.Find<Receita>(id);

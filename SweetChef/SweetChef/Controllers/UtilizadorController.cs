@@ -88,6 +88,25 @@ namespace SweetChef.Controllers
             }
         }
 
+        //Vai buscar as ementas semanais de uma certa data
+        [HttpGet("ementa")]
+        public ActionResult GetReceitasEmenta([FromQuery] int idUt, [FromQuery] DateTime data)
+        {
+            try
+            {
+                var ementa= _context.EmentaSemanal.
+                   Where(em => em.Utilizadorid == idUt && em.Data.Equals(data)).
+                   Select(em => em.Receita).
+                   ToList();
+                return Ok(ementa);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+     
         //Adiciona uma receita à ementa
         [HttpPost("ementa")]
         public ActionResult PostReceitaEmenta([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
@@ -309,40 +328,6 @@ namespace SweetChef.Controllers
         }
 
         //Put PassoFeedback
-        [HttpPost("passoFeedback/{idReceita}/{idPasso}")]
-        public ActionResult PostPassoComment(int idReceita, int idPasso, [FromQuery] string comentario)
-        {
-            try
-            {
-                var sidut = ControllerContext.HttpContext.User.Identity.Name;
-                int idUt = Int32.Parse(sidut);
-                var user = _context.Utilizador.Find(idUt);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
-                if (u != null)
-                {
-                    return Created("Ja foi criado antes usa o pust",null);
-                }
-                u = new UtilizadorPasso();
-                u.Utilizadorid = idUt;
-                u.PassoReceitaid = idReceita;
-                u.Passoid = idPasso;
-                u.Comentario = comentario;
-                _context.UtilizadorPasso.Add(u);
-                _context.SaveChanges();
-                return Ok(u);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        //Post PassoFeedback
         [HttpPut("passoFeedback/{idReceita}/{idPasso}")]
         public ActionResult PutPassoComment(int idReceita, int idPasso, [FromQuery] string comentario)
         {
@@ -356,17 +341,20 @@ namespace SweetChef.Controllers
                     return NotFound();
                 }
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
+                bool exists = true;
                 if (u == null)
                 {
+                    exists = false;
                     u = new UtilizadorPasso();
-                    u.Utilizadorid = idUt;
-                    u.PassoReceitaid = idReceita;
-                    u.Passoid = idPasso;
-                    _context.UtilizadorPasso.Add(u);
                 }
-                if(comentario != null)
-                    u.Comentario = comentario;
-                _context.UtilizadorPasso.Update(u);
+                u.Utilizadorid = idUt;
+                u.PassoReceitaid = idReceita;
+                u.Passoid = idPasso;
+                u.Comentario = comentario;
+                if(exists)
+                    _context.UtilizadorPasso.Update(u);
+                else
+                    _context.UtilizadorPasso.Add(u);
                 _context.SaveChanges();
                 return Ok(u);
             }
@@ -376,6 +364,8 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+     
 
         [HttpGet("receitasExecutadas")]
         public ActionResult GetExecutados() {
