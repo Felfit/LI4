@@ -524,6 +524,36 @@ namespace SweetChef.Controllers
                 return Redirect("/?email="+email);
             }
         }
+
+        [HttpPost]
+        [Route("registar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Registar([FromForm] Utilizador ut)
+        {
+            try
+            {
+                Utilizador u= _context.Utilizador.Where(c => c.Email == ut.Email).FirstOrDefault();
+                if (u != null)
+                    return Redirect("/?email=" + ut.Email);
+                ut.Id = 0;
+                _context.Utilizador.Add(ut);
+                _context.SaveChanges();
+                List<Claim> claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, ut.Id.ToString()),
+                };
+                ClaimsIdentity cIdentity = new ClaimsIdentity(claims, "login");
+                ClaimsPrincipal principal = new ClaimsPrincipal(cIdentity);
+                await HttpContext.SignInAsync(principal);
+
+                //Request.HttpContext.
+                return Redirect("/Home/Cozinhar/");
+            }
+            catch
+            {
+                return Redirect("/?email=" + ut.Email);
+            }
+        }
         //[HttpPost]
         // DELETE: api/Utilizador?5
         [HttpDelete]
