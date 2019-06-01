@@ -4,59 +4,81 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
+<script>
+    // etiquetas
+    $.getJSON("/api/Tag", (data) => {
+        for (const etiqueta of data) {
+
+            let element = $($("#checkboxTemplate").html());
+            window.etiqueta = element;
+            element.find(".textTemplate").text(etiqueta.nome);
+            element.find(".checkTemplate").attr("id", "etiquetaPref" + etiqueta.id);
+            element.find(".labelTemplate").attr("for", "etiquetaPref" + etiqueta.id);
+            element.appendTo("#etiquetasMenuPref");
+            
+            element = $($("#checkboxTemplate").html());
+            window.etiqueta = element;
+            element.find(".textTemplate").text(etiqueta.nome);
+            element.find(".checkTemplate").attr("id", "etiquetaExc" + etiqueta.id);
+            element.find(".labelTemplate").attr("for", "etiquetaExc" + etiqueta.id);
+            element.appendTo("#etiquetasMenuExc");
+            
+        }
+    });
+
+    $.getJSON("/api/ingrediente", (data) => {
+        for (const ingrediente of data) {
+
+            let element = $($("#checkboxTemplate").html());
+            window.ingrediente = element;
+            element.find(".textTemplate").text(ingrediente.nome);
+            element.find(".checkTemplate").attr("id", "ingrediente" + ingrediente.id);
+            element.find(".labelTemplate").attr("for", "ingrediente" + ingrediente.id);
+            element.appendTo("#ingredientesMenu");
+            
+        }
+    });
+
+
+</script>
+
 <h4>Preferências das sugestões</h4>
 <div class="container">
+
+    <template id="checkboxTemplate">
+        <div class="form-check">
+            <input class="form-check-input checkTemplate" type="checkbox" value="">
+            <label class="form-check-label labelTemplate">
+                <span class="textTemplate"></span>
+            </label>
+        </div>
+    </template>
+
     <div class="row">
         <div class="col">
             <h6>Etiquetas preferidas:</h6>
-            <div style="height:7em" class="overflow-auto border p-1">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="tagPrefCheck1">
-                    <label class="form-check-label" for="tagPrefCheck1">
-                        Default checkbox
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="tagPrefCheck2">
-                    <label class="form-check-label" for="tagPrefCheck2">
-                        Default checkbox
-                    </label>
-                </div>
+            <div style="height:7em" class="overflow-auto border p-1" id="etiquetasMenuPref">
+                <!-- preenchido com template -->
             </div>
         </div>
         <div class="col">
             <h6>Etiquetas excluidas:</h6>
-            <div style="height:7em" class="overflow-auto border p-1">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="tagExcCheck1">
-                    <label class="form-check-label" for="tagExcCheck1">
-                        Default checkbox
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="tagExcCheck2">
-                    <label class="form-check-label" for="tagExcCheck2">
-                        Default checkbox
-                    </label>
-                </div>
+            <div style="height:7em" class="overflow-auto border p-1" id="etiquetasMenuExc">
+                <!-- preenchido com template -->
             </div>
         </div>
         <div class="col">
             <h6>Ingredientes excluídos:</h6>
-            <div style="height:7em" class="overflow-auto border p-1">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="ingExcCheck1">
-                    <label class="form-check-label" for="ingExcCheck1">
-                        Default checkbox
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="ingExcCheck2">
-                    <label class="form-check-label" for="ingExcCheck2">
-                        Default checkbox
-                    </label>
-                </div>
+            <div style="height:7em" class="overflow-auto border p-1" id="ingredientesMenu">
+                <!-- preenchido com template -->
             </div>
+        </div>
+    </div>
+
+    <div class="form-group row mt-3">
+        <label for="inputClassMin" class="col-sm-2 col-form-label">Classificação mínima</label>
+        <div class="col-sm-1">
+            <input type="number" min="0" max="5" class="form-control" id="inputClassMin" placeholder="Classificação">
         </div>
     </div>
 </div>

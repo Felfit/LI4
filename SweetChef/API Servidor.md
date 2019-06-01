@@ -35,7 +35,7 @@
 ##Utilizador
 
 ###GET
-* api/utilizador/favoritas
+* api/Utilizador/favoritas
   * Retorna as receitas favoritas do utilizador
 * api/Utilizador/
   * Retorna as informações do utilizador.

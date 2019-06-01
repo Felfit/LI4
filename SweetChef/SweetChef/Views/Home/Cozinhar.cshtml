@@ -84,6 +84,8 @@
         }
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
+
+        // receitas
         $.getJSON("/api/Receita/", (data) => {
             for (const receita of data) {
                 let receitaElement = gerarReceita();
@@ -95,11 +97,22 @@
                 receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                 receitaElement.appendTo("#favoritosRow");
-                console.log(receitaElement);
             }
             $(".receitasPlaceholder").remove();
         });
-        $("")
+
+        // etiquetas
+        $.getJSON("/api/Tag", (data) => {
+            for (const etiqueta of data) {
+                let etiquetaElement = $($("#etiquetaTemplate").html());
+                window.etiqueta = etiquetaElement;
+                etiquetaElement.find(".etiquetaNome").text(etiqueta.nome);
+                etiquetaElement.find(".checkEtiqueta").attr("id", "etiqueta" + etiqueta.id);
+                etiquetaElement.find(".labelEtiqueta").attr("for", "etiqueta" + etiqueta.id);
+
+                etiquetaElement.appendTo("#etiquetasMenu");
+            }
+        });
     });
 </script>
 
@@ -112,19 +125,28 @@
 
 <div class="row">
     <!-- dropdown Etiqueta -->
-    <div class="col-6 col-md-4 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-3">
         <div class="btn-group my-2 w-100">
             <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownEtiqueta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Etiqueta
             </button>
-            <div class="dropdown-menu w-100" aria-labelledby="dropdownEtiqueta">
-                <!-- coisas -->
+            <div class="dropdown-menu w-100 overflow-auto" style="height: 10em" aria-labelledby="dropdownEtiqueta" id="etiquetasMenu">
+
+                <template id="etiquetaTemplate">
+                    <div class="form-check dropdown-item">
+                        <input class="form-check-input checkEtiqueta" type="checkbox" value="">
+                        <label class="form-check-label labelEtiqueta">
+                            <span class="etiquetaNome"></span>
+                        </label>
+                    </div>
+                </template>
+
             </div>
         </div>
     </div>
 
     <!-- dropdown Dificuldade -->
-    <div class="col-6 col-md-4 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-3">
         <div class="btn-group my-2 w-100">
             <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownDificuldade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dificuldade
