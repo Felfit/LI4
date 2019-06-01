@@ -100,7 +100,7 @@
     <div class="col-lg-8 order-lg-0">
 
         <!-- Imagem/Vídeo -->
-        <div id="carouselIndicators" class="row my-2 mx-0 carousel slide" data-ride="carousel">
+        <div id="carouselIndicators" class="row my-2 mx-0 carousel slide" data-ride="carousel" data-interval="false">
             <ol class="carousel-indicators">
                 <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
                 <li data-target="#carouselIndicators" data-slide-to="1"></li>
@@ -130,7 +130,7 @@
 
     <div class="col-lg-4 order-lg-1">
         <a class="btn btn-primary mb-3 w-100 mt-2" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar passo a passo</a>
-        <a class="btn btn-secondary mb-3 w-100" href="#">Adicionar à ementa semanal</a>
+        <a class="btn btn-secondary mb-3 w-100" data-toggle="modal" data-target="#ementaSemanal">Adicionar à ementa semanal</a>
         <p id="descricao">
             Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição
         </p>
@@ -194,6 +194,36 @@
             </div>
             <div class="modal-body">
                 <iframe id="produtoIframe" class="embed-responsive h-100" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Ementa Semanal -->
+<div class="modal fade" id="ementaSemanal" tabindex="-1" role="dialog" aria-hidden="true">
+    <script>
+        $(() => {
+            $("#guardarEmentaSemanal").on("click", () => {
+                $.post("/api/Utilizador/ementa", $("#ementaSemanalForm").serialize()).fail(() => alert("Não foi possível adicionar à ementa semanal. Tente mais tarde."))
+            })
+        });
+    </script>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adicionar à ementa semanal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="ementaSemanalForm">
+                    <input type="hidden" name="idRec" value="@ViewData["ReceitaId"]"/>
+                    <input id="dataEmentaSemanal" type="date" name="data" class="form-control" required/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="guardarEmentaSemanal" type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
             </div>
         </div>
     </div>
