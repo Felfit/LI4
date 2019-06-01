@@ -66,7 +66,6 @@ namespace SweetChef.Controllers
 
         public IActionResult EmentaSemanal()
         {
-            ViewData["Message"] = "Your application description page.";
             var sidut = HttpContext.User.Identity.Name;
             int idUt = Int32.Parse(sidut);
             ViewData["idUser"] = idUt;
