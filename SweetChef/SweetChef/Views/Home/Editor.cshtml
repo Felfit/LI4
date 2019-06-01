@@ -140,14 +140,26 @@
                         Video:
                         <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
                     </div>
-                    <div class="form-group">
-                        Dificuldade:
-                        Facil
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
-                        Médio
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
-                        Dificil
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
+                        <label>Dificuldade:</label>
+                    <div class="form-group row">
+                        <div class="form-check m-3">
+                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
+                            <label class="form-check-label" for="DificuldadeReceita3">
+                                Facil
+                            </label>
+                        </div>
+                        <div class="form-check m-3">
+                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
+                            <label class="form-check-label" for="DificuldadeReceita3">
+                                Medio
+                            </label>
+                        </div>
+                        <div class="form-check m-3">
+                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
+                            <label class="form-check-label" for="DificuldadeReceita3">
+                                Dificil
+                            </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         Porções:
@@ -185,7 +197,7 @@
             <form method="POST" id="PassoForm" action="/api/Receita/passo">
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Selecionar Passo:</label>
-                    <select class="step" id="stepSelect">
+                    <select class="form-control step" id="stepSelect">
                         <option>Criar Novo</option>
                     </select>
                 </div>
@@ -244,7 +256,7 @@
                 <form method="POST" id="IngForm" action="/api/Receita/passo/ingrediente">
                     <div class="form-group">
                         <label>Editar Ingrediente</label>
-                        <select class="ingredSelect" id="inredSelect">
+                        <select class="form-control ingredSelect" id="inredSelect">
                             <option>Criar Novo</option>
                         </select>
                     </div>
@@ -274,7 +286,7 @@
                         <input type="number" name="Utensilioid" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-primary value="Adicionar">
+                        <input type="submit" class="btn btn-primary" value="Adicionar">
                     </div>
                 </form>
             </div>
