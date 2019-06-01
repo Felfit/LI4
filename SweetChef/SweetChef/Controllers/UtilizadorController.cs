@@ -119,7 +119,7 @@ namespace SweetChef.Controllers
             {
                 var sidut = ControllerContext.HttpContext.User.Identity.Name;
                 int idUt = Int32.Parse(sidut);
-                EmentaSemanal em = _context.EmentaSemanal.Find(idUt, idRec, data);
+                EmentaSemanal em = _context.EmentaSemanal.Find(data, idRec, idUt);
                 if(em != null)
                 {
                     return Created("Object Already Exists", null);
