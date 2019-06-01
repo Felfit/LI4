@@ -117,9 +117,10 @@ namespace SweetChef.Controllers
             {
                 _context.Passo.Add(p);
                 var r = _context.Receita.Find(p.Receitaid);
-                r.Tempodepreparacao += p.Duracao; 
+                r.Tempodepreparacao += p.Duracao;
+                _context.Receita.Update(r);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/"+p.Receitaid+"?passo="+p.Numero);
             }
             catch (Exception e)
             {
@@ -136,7 +137,7 @@ namespace SweetChef.Controllers
             {
                 _context.Passo.Update(p);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.Receitaid + "?passo=" + p.Numero);
             }
             catch (Exception e)
             {

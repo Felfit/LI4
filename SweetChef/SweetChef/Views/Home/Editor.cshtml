@@ -5,9 +5,54 @@
 }
 
 <h2>Editor</h2>
-
 <script>
+
+    function showStep(i) {
+        var length = json.responseJSON.passos.length;
+        if (i == "Criar Novo" || length < i) {
+            $("#NumeroPasso").val(length + 1);
+            $("#DescricaoPasso").val("");
+            $("#ImagemLinkPasso").val("");
+            $("#VideoLinkPasso").val("");
+            $("#LinkExternoPasso").val("");
+            $("#DuracaoPasso").val("");
+            $("#AssessoriosPasso").hide();
+            $('#ReceitaForm').attr("action", "/api/Receita");
+            $('#PassoForm').attr("action", "/api/Receita/passo/");
+        }
+        else {
+            passo = json.responseJSON.passos[i - 1];
+            $('#PassoForm').attr("action", "/api/Receita/passo/update");
+            $("#AssessoriosPasso").show();
+            $("#NumeroPasso").val(i);
+            $("#dpid").val(i);
+            $("#ingpid").val(i);
+            $("#upId").val(i);
+            $("#DescricaoPasso").val(passo.info.descricao);
+            $("#ImagemLinkPasso").val(passo.info.imagemLink);
+            $("#VideoLinkPasso").val(passo.info.videoLink);
+            $("#LinkExternoPasso").val(passo.info.linkExterno);
+            $("#DuracaoPasso").val(passo.info.duracao);
+            $("select.ingredSelect").find('option')
+                .remove()
+                .end()
+                .append('<option>Adicionar Novo</option>')
+                .val('whatever');
+            $('#IngredienteIdEdit').val('');
+            $('#IngIdClass').show();
+            $('#IngredienteQuantEdit').val('');
+            $('#IngSubmitButton').val("Adicionar");
+            for (var k = 0; k < passo.ingredientes.length; k++) {
+                $("select.ingredSelect").
+                    append('<option value="' + k + '">' + passo.ingredientes[k].nome + '</option>');
+            }
+        }
+    }
+
     if ("@ViewData["ReceitaId"]" != 'Unknown') {
+        Location.prototype.arguments = function () {
+            return Object.fromEntries((this.href.split("?")[1] || "").split("&").map(v => v.split("=")));
+        };
         var json = $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
             $("#IdReceita").val(data.info.id);
             $("#ImagemLinkReceita").val(data.info.imagemLink);
@@ -25,12 +70,18 @@
             for (k = 1; k <= data.passos.length; k++) {
                 $("#stepSelect").append('<option value=' + k + '>' + k + '</option>');
             }
+            if (location.arguments()["passo"] <= data.passos.length) {
+                $('#stepSelect option:contains(' + location.arguments()["passo"] + ')').prop({ selected: true });
+                showStep(location.arguments()["passo"]);
+            }
         });
-
+        
+        
         $(document).ready(function () {
             $("select.ingredSelect").change(function () {
                 var k = $(this).children("option:selected").val();
                 if (k == 'Adicionar Novo') {
+                    $('#IngForm').attr("action", "/api/Receita/passo/ingrediente");
                     $('#IngredienteIdEdit').val('');
                     $('#IngIdClass').show();
                     $('#IngredienteQuantEdit').val('');
@@ -39,6 +90,7 @@
                 else {
                     var numpasso = $("#NumeroPasso").val();
                     passo = json.responseJSON.passos[numpasso - 1];
+                    $('#IngForm').attr("action", "/api/Receita/passo/ingrediente/update");
                     $('#IngredienteIdEdit').val(passo.ingredientes[k].id);
                     $('#IngIdClass').hide();
                     $('#IngredienteQuantEdit').val(passo.ingredientes[k].quantidade);
@@ -50,44 +102,10 @@
         $(document).ready(function () {
             $("select.step").change(function () {
                 var i = $(this).children("option:selected").val();
-                var length = json.responseJSON.passos.length;
-                if (i == "Criar Novo" || length < i) {
-                    $("#NumeroPasso").val(length + 1);
-                    $("#DescricaoPasso").val("");
-                    $("#ImagemLinkPasso").val("");
-                    $("#VideoLinkPasso").val("");
-                    $("#LinkExternoPasso").val("");
-                    $("#DuracaoPasso").val("");
-                    $("#AssessoriosPasso").hide();
-                }
-                else {
-                    passo = json.responseJSON.passos[i - 1];
-                    $("#AssessoriosPasso").show();
-                    $("#NumeroPasso").val(i);
-                    $("#dpid").val(i);
-                    $("#ingpid").val(i);
-                    $("#upId").val(i);
-                    $("#DescricaoPasso").val(passo.info.descricao);
-                    $("#ImagemLinkPasso").val(passo.info.imagemLink);
-                    $("#VideoLinkPasso").val(passo.info.videoLink);
-                    $("#LinkExternoPasso").val(passo.info.linkExterno);
-                    $("#DuracaoPasso").val(passo.info.duracao);
-                    $("select.ingredSelect").find('option')
-                        .remove()
-                        .end()
-                        .append('<option>Adicionar Novo</option>')
-                        .val('whatever');
-                    $('#IngredienteIdEdit').val('');
-                    $('#IngIdClass').show();
-                    $('#IngredienteQuantEdit').val('');
-                    $('#IngSubmitButton').val("Adicionar");
-                    for (var k = 0; k < passo.ingredientes.length; k++) {
-                        $("select.ingredSelect").
-                            append('<option value="' + k + '">' + passo.ingredientes[k].nome + '</option>');
-                    }
-                }
+                showStep(i);
             });
         });
+        
     }
     else {
         $(document).ready(function () {
@@ -98,6 +116,7 @@
         console.log("R");
     }
 
+    
 </script>
 
 <div class="container">
@@ -163,7 +182,7 @@
     <div id="PassosEdr" class="container">
         <h2>Passos</h2>
         <div class="col">
-            <form method="POST" action="/api/Receita/passo">
+            <form method="POST" id="PassoForm" action="/api/Receita/passo">
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Selecionar Passo:</label>
                     <select class="step" id="stepSelect">
@@ -222,7 +241,7 @@
                 </form>
             </div>
             <div class="col">
-                <form method="POST" action="/api/Receita/passo/ingrediente">
+                <form method="POST" id="IngForm" action="/api/Receita/passo/ingrediente">
                     <div class="form-group">
                         <label>Editar Ingrediente</label>
                         <select class="ingredSelect" id="inredSelect">
