@@ -31,14 +31,16 @@ namespace SweetChef.Controllers
         }
 
         //Get receitas favoritas
-        [HttpGet("{id}/favoritas")]
+        [HttpGet("favoritas")]
         public ActionResult getReceitasFavoritas(int id)
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 var utilizador = _context.Utilizador.
                                                 Include("Opiniao.Receita").
-                                                Where(p => p.Id == id).
+                                                Where(p => p.Id == idUt).
                                                 FirstOrDefault();
                                                 
                 if (utilizador == null)
