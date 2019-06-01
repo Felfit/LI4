@@ -94,3 +94,9 @@
 ###GET
 * api/duvida/{idReceita}/{idPasso}
   * Retorna array com todas as dúvidas associadas passo.
+
+##Ingrediente
+
+###GET
+* api/Ingrediente
+  * Retorna uma lista com todos os ingredientes
