@@ -91,7 +91,7 @@ namespace SweetChef.Controllers
 
         //Vai buscar as ementas semanais de uma certa data
         [HttpGet("ementa")]
-        public ActionResult GetReceitasEmenta([FromQuery] DateTime data)
+        public ActionResult GetReceitasEmenta([FromQuery] DateTime dataInicial, [FromQuery] DateTime dataFinal)
         {
            
             try
@@ -99,7 +99,7 @@ namespace SweetChef.Controllers
                 var sidut = ControllerContext.HttpContext.User.Identity.Name;
                 int idUt = Int32.Parse(sidut);
                 var ementa= _context.EmentaSemanal.
-                   Where(em => em.Utilizadorid == idUt && em.Data.Equals(data)).
+                   Where(em => em.Utilizadorid == idUt && em.Data >= dataInicial && em.Data <= dataFinal).
                    Select(em => em.Receita).
                    ToList();
                 return Ok(ementa);

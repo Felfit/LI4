@@ -59,7 +59,7 @@
   * Retorna a lista de Ingredientes necessários para os próximos 7 dias da semana
 * api/Utilizador/closestStore/{lat},{lon}
   * Retorna as coordenadas da loja mais próxima
-* api/Utilizador/ementa?idUt=...&data=...
+* api/Utilizador/ementa?idUt=...&dataInicial=...&dataFinal=...
   * Retorna a ementa de uma determinada data
 
 
