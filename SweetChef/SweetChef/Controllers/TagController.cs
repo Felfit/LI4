@@ -25,7 +25,7 @@ namespace SweetChef.Controllers
         [HttpGet]
         public ActionResult Tags()
         {
-            return Ok(_context.Tag.ToArray());
+            return Ok(_context.Tag.ToList());
         }
     }
 }

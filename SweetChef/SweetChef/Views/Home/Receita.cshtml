@@ -8,7 +8,48 @@
 
     $(() => {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
+
+            // porções
+            if (data.info.porcoes == 1) {
+                $("#porcoes").text("1 porção");
+            } else {
+                $("#porcoes").text(data.info.porcoes + " porções");
+            }
+
+            // tempo preparação
+            $("#preparacao").text(data.info.tempodepreparacao + " min");
+
+            // tempo cozedura
+            $("#cozedura").text(data.info.tempodeespera + " min");
+
+            // dificulade
+            const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
+            const dificuldadeColor = [, "success", "warning", "danger"];
+            $("#dificuldadeDiv > i").addClass("text-" + dificuldadeColor[data.info.dificuldade]);
+            $("#dificuldade").text(dificuldadeTexto[data.info.dificuldade]);
+
+            // classificação
+            $("#classificacao").text(5);
+            $("#estrelas").text(5);
+            // TODO ir buscar class media
+
+            // favorita
+            $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
+                if (dataFav.favorito) {
+                    $("#favorito").addClass("fas fa-star");
+                } else {
+                    $("#favorito").addClass("far fa-star");
+                }
+            });
+            // TODO por mais bonito
+
+            // descrição
+            $("#descricao").text(data.info.descricao);
+
+            // imagem
             $("#receitaImagem").attr("src", data.info.imagemLink);
+
+            // vídeo
             if (data.info.videoLink) {
                 $("#receitaVideo").attr("src", data.info.videoLink).on("load", () => {
                     console.log("hey");
@@ -16,40 +57,23 @@
                 });
             }
 
-            if (data.info.porcoes == 1) {
-                $("#porcoes").text("1 porção");
-            } else {
-                $("#porcoes").text(data.info.porcoes + " porções");
-            }
-            $("#preparacao").text(data.info.tempodepreparacao + " min");
-            $("#cozedura").text(data.info.tempodeespera + " min");
-            $("#classificacao").text("5");
 
-            // vê se é favorita
-            $.getJSON("/api/Utilizador/favoritas", (data) => {
-                for (const receita of data) {
-                    console.log(receita);
-                }
-                if (true) {
-                    $("#favorito").addClass("fas fa-star");
-                } else {
-                    $("#favorito").addClass("far fa-star");
-                }
-            });
-
+            // tabela nutricional
             $("#energiaVal").text(data.info.energia);
             $("#gorduraVal").text(data.info.gordura);
             $("#hidratosVal").text(data.info.hidratosCarbono);
-            const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
-            const dificuldadeColor = [, "success", "warning", "danger"];
-            $("#dificuldadeDiv > i").addClass("text-" + dificuldadeColor[data.info.dificuldade]);
-            $("#dificuldade").text(dificuldadeTexto[data.info.dificuldade]);
+
+            // ingredientes
             for (const ingrediente of data.ingredientes) {
                 $("#ingredientes").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}">${ingrediente.nome} <small>${ingrediente.quantidade} ${ingrediente.unidade}</small></li>`);
             }
+
+            //utensilios
             for (const utensilio of data.utensilios) {
                 $("#utensilios").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${utensilio.id}" data-tipo="utensilio" data-nome="${utensilio.nome}">${utensilio.nome}</li>`);
             }
+
+            // preparação
             for (const passo of data.passos) {
                 $("#receita").append(`<li class="list-group-item px-2 py-1">${passo.info.descricao}</small></li>`);
             }
@@ -92,8 +116,13 @@
     </div>
     <div class="col text-center">
         <span>Classificação</span><br />
-        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><br />
+        <span id="estrelas"></span><br />
         <span id="classificacao"></span><br />
+    </div>
+    <div class="col text-center">
+        <span>Minha class.</span><br />
+        <span>5</span><br />
+        <button type="button" class="btn btn-secondary btn-sm">Avaliar</button><br />
     </div>
     <div class="col text-center">
         <button type="button" class="btn btn-outline-primary btn-lg"><i id="favorito" class=""></i><br /></button>
@@ -102,6 +131,7 @@
 
 <hr />
 
+<!-- Imagem/Vídeo | Descrição e botões -->
 <div class="row">
     <div class="col-lg-8 order-lg-0">
 
@@ -134,12 +164,11 @@
         </div>
     </div>
 
+    <!-- Descrição e botões -->
     <div class="col-lg-4 order-lg-1">
         <a class="btn btn-primary mb-3 w-100 mt-2" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar passo a passo</a>
-        <a class="btn btn-secondary mb-3 w-100" href="#">Adicionar à ementa semanal</a>
-        <p id="descricao">
-            Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição. Exemplo de uma descrição
-        </p>
+        <a class="btn btn-secondary mb-3 w-100" href="#">Adicionar à ementa semanal</a> <!-- Fazer -->
+        <p id="descricao"></p>
     </div>
 </div>
 
