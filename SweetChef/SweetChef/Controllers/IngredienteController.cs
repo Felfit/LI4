@@ -30,5 +30,21 @@ namespace SweetChef.Controllers
                 return Ok("[]");
             return Ok(t);
         }
+
+        [HttpPost]
+        public ActionResult PostIngrediente([FromForm]Ingrediente ing)
+        {
+            _context.Ingrediente.Add(ing);
+            _context.SaveChanges();
+            return Redirect(Request.Host.Value);
+        }
+
+        [HttpPost("unidade")]
+        public ActionResult PostUnidade([FromForm]Unidade un)
+        {
+            _context.Unidade.Add(un);
+            _context.SaveChanges();
+            return Redirect(Request.Host.Value);
+        }
     }
 }

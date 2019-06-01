@@ -30,5 +30,15 @@ namespace SweetChef.Controllers
                 return Ok("[]");
             return Ok(t);
         }
+    
+        [HttpPost]
+        public ActionResult Tag([FromForm]string tag)
+        {
+            var t = new Tag();
+            t.Tag1 = tag;
+            _context.Tag.Add(t);
+            _context.SaveChanges();
+            return Redirect(Request.Host.Value);
+        }
     }
 }

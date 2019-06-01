@@ -30,3 +30,9 @@ nav {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.carousel-control-next, .carousel-control-prev {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+    height: 75% !important;
+}

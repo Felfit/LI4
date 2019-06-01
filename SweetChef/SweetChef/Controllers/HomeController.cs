@@ -45,6 +45,10 @@ namespace SweetChef.Controllers
 
             return View();
         }
+        public IActionResult Insercao()
+        {
+            return View();
+        }
 
         public IActionResult Editor(int id)
         {
@@ -64,9 +68,9 @@ namespace SweetChef.Controllers
             return View();
         }
 
+       
         public IActionResult EmentaSemanal()
         {
-            ViewData["Message"] = "Your application description page.";
             var sidut = HttpContext.User.Identity.Name;
             int idUt = Int32.Parse(sidut);
             ViewData["idUser"] = idUt;

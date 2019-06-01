@@ -11,11 +11,9 @@
         }
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
-        $("form").on("submit", function(e) {
-            e.preventDefaul()
-            $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]/data=${$("input").val()}`, (data) => {
-                //console.log($("input").val());
-                //alerta;
+        $("form").on("submit", function (e) {
+            $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&data=${$("input").val()}`, (data) => {
+                console.log($("input").val());
                 for (const receita of data) {
                     let receitaElement = gerarReceita();
                     window.receita = receitaElement;
@@ -30,7 +28,8 @@
                 }
                 $(".receitasPlaceholder").remove();
             });
-            return false;});
+            return false;
+        });
     });
 </script>
 
