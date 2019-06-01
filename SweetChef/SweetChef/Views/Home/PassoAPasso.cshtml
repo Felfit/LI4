@@ -303,7 +303,9 @@
         $("#comentario").click(() => {
             let target = `/api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`;
             $.getJSON(target, (data) => {
-                $("#passoComentario").val(data);
+                $("#passoComentario").val(data.comentario);
+            }).fail(() => {
+                $("#passoComentario").val("");
             });
             $("#comentarioForm").attr("target", target);
         });
@@ -365,98 +367,103 @@
                                 $(() => {
                                     var recognitionActive = false;
                                     var utterActive = true;
-                                    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-                                    var recognition = new SpeechRecognition();
-                                    var voice = speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
-                                    recognition.lang = 'pt-PT';
-                                    recognition.interimResults = false;
-                                    recognition.maxAlternatives = 1;
-                                    $("#microfone").click(function() {
-                                        try {
-                                            if (recognitionActive = !recognitionActive) {
-                                                recognition.start();
+                                    try {
+                                        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                                        var recognition = new SpeechRecognition();
+                                        var voice = speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
+                                        recognition.lang = 'pt-PT';
+                                        recognition.interimResults = false;
+                                        recognition.maxAlternatives = 1;
+                                        $("#microfone").click(function () {
+                                            try {
+                                                if (recognitionActive = !recognitionActive) {
+                                                    recognition.start();
+                                                }
+                                            } catch (e) {
+                                                console.log(e);
+                                            } finally {
+                                                $(this)
+                                                    .toggleClass("btn-danger")
+                                                    .toggleClass("btn-success")
+                                                    .children("i")
+                                                    .toggleClass("fa-microphone-slash")
+                                                    .toggleClass("fa-microphone");
                                             }
-                                        } catch (e) {
-                                            console.log(e);
-                                        } finally {
+                                        });
+                                        $("#audio").click(function () {
+                                            utterActive = !utterActive;
                                             $(this)
                                                 .toggleClass("btn-danger")
                                                 .toggleClass("btn-success")
                                                 .children("i")
-                                                .toggleClass("fa-microphone-slash")
-                                                .toggleClass("fa-microphone");
-                                        }
-                                    });
-                                    $("#audio").click(function() {
-                                        utterActive = !utterActive;
-                                        $(this)
-                                            .toggleClass("btn-danger")
-                                            .toggleClass("btn-success")
-                                            .children("i")
                                                 .toggleClass("fa-volume-up")
                                                 .toggleClass("fa-volume-mute");
-                                        recognition.start();
-                                    });
-                                    recognition.onresult = (event) => {
-                                        var last = event.results.length - 1;
-                                        var comando = event.results[last][0].transcript.toLowerCase();
-                                        var mensagem = "";
-                                        if (["repetir", "não percebi nada", "passo", "o que é para fazer"].indexOf(comando) > -1) {
-                                            mensagem = $("#passoDescricao").text();
-                                        } else if (["continuar", "próximo", "seguinte"].indexOf(comando) > -1) {
-                                            receita.continuar();
-                                            inicializarPasso();
-                                            atualizaProgressBar(400);
-                                        } else if (["retroceder", "voltar"].indexOf(comando) > -1) {
-                                            receita.retroceder();
-                                            inicializarPasso();
-                                            atualizaProgressBar(400);
-                                        } else if (["último passo", "terminar"].indexOf(comando) > -1) {
-                                            alert("Acabar");
-                                        } else if (["início", "voltar à receita", "voltar a receita"].indexOf(comando) > -1) {
-                                            alert("início");
-                                        } else if (["comentário", "comentários", "nota", "notas"].indexOf(comando) > -1) {
-                                            alert("abrir comentários");
-                                        } else if (["ingrediente", "ingredientes"].indexOf(comando) > -1) {
-                                            mensagem = "Ingredientes: ";
-                                            for (ingrediente of $("#ingredientes > li")) {
-                                                mensagem += $(ingrediente).text() + "\n";
-                                            }
-                                        } else if (["utensílio", "utensílios"].indexOf(comando) > -1) {
-                                            mensagem = "Utensílios: ";
-                                            for (utensilio of $("#utensilios > li")) {
-                                                mensagem += $(utensilio).text() + "\n";
-                                            }
-                                        } else if (["ajuda", "ajudas"].indexOf(comando) > -1) {
-                                            mensagem = "Ajudas: ";
-                                            for (ajuda of $("#ajudas > li")) {
-                                                mensagem += $(ajuda).text() + "\n";
-                                            }
-                                        } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                            $("#produto").modal("show");
-                                            showProduto($(`#ingredientes>li[data-nome=${comando}]`).data("id"), comando, "ingrediente");
-                                            mensagem = "Ingrediente: " + comando;
-                                        } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                            $("#produto").modal("show");
-                                            showProduto($(`#utensilios>li[data-nome=${comando}]`).data("id"), comando, "utensilio");
-                                            mensagem = "Utensílio: " + comando;
-                                        } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                            alert("Abrir ajudas " + comando);
-                                            mensagem = "Ajudas: " + comando;
-                                        }
-                                        console.log(comando);
-                                        if (utterActive) {
-                                            var utter = new SpeechSynthesisUtterance(mensagem);
-                                            utter.voice = voice;
-                                            speechSynthesis.speak(utter);
-                                        }
-                                        console.log('Confidence: ' + event.results[0][0].confidence);
-                                    }
-                                    recognition.onend = function () {
-                                        if (recognitionActive) {
                                             recognition.start();
+                                        });
+                                        recognition.onresult = (event) => {
+                                            var last = event.results.length - 1;
+                                            var comando = event.results[last][0].transcript.toLowerCase();
+                                            var mensagem = "";
+                                            if (["repetir", "não percebi nada", "passo", "o que é para fazer"].indexOf(comando) > -1) {
+                                                mensagem = $("#passoDescricao").text();
+                                            } else if (["continuar", "próximo", "seguinte"].indexOf(comando) > -1) {
+                                                receita.continuar();
+                                                inicializarPasso();
+                                                atualizaProgressBar(400);
+                                            } else if (["retroceder", "voltar"].indexOf(comando) > -1) {
+                                                receita.retroceder();
+                                                inicializarPasso();
+                                                atualizaProgressBar(400);
+                                            } else if (["último passo", "terminar"].indexOf(comando) > -1) {
+                                                alert("Acabar");
+                                            } else if (["início", "voltar à receita", "voltar a receita"].indexOf(comando) > -1) {
+                                                alert("início");
+                                            } else if (["comentário", "comentários", "nota", "notas"].indexOf(comando) > -1) {
+                                                alert("abrir comentários");
+                                            } else if (["ingrediente", "ingredientes"].indexOf(comando) > -1) {
+                                                mensagem = "Ingredientes: ";
+                                                for (ingrediente of $("#ingredientes > li")) {
+                                                    mensagem += $(ingrediente).text() + "\n";
+                                                }
+                                            } else if (["utensílio", "utensílios"].indexOf(comando) > -1) {
+                                                mensagem = "Utensílios: ";
+                                                for (utensilio of $("#utensilios > li")) {
+                                                    mensagem += $(utensilio).text() + "\n";
+                                                }
+                                            } else if (["ajuda", "ajudas"].indexOf(comando) > -1) {
+                                                mensagem = "Ajudas: ";
+                                                for (ajuda of $("#ajudas > li")) {
+                                                    mensagem += $(ajuda).text() + "\n";
+                                                }
+                                            } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
+                                                $("#produto").modal("show");
+                                                showProduto($(`#ingredientes>li[data-nome=${comando}]`).data("id"), comando, "ingrediente");
+                                                mensagem = "Ingrediente: " + comando;
+                                            } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
+                                                $("#produto").modal("show");
+                                                showProduto($(`#utensilios>li[data-nome=${comando}]`).data("id"), comando, "utensilio");
+                                                mensagem = "Utensílio: " + comando;
+                                            } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
+                                                alert("Abrir ajudas " + comando);
+                                                mensagem = "Ajudas: " + comando;
+                                            }
+                                            console.log(comando);
+                                            if (utterActive) {
+                                                var utter = new SpeechSynthesisUtterance(mensagem);
+                                                utter.voice = voice;
+                                                speechSynthesis.speak(utter);
+                                            }
+                                            console.log('Confidence: ' + event.results[0][0].confidence);
                                         }
-                                    };
+                                        recognition.onend = function () {
+                                            if (recognitionActive) {
+                                                recognition.start();
+                                            }
+                                        };
+                                    } catch (e) {
+                                        console.log(e);
+                                        $("#microfone").hide();
+                                    }
                                 });
                             </script>
                         </div>
@@ -596,21 +603,17 @@
                         .removeClass("btn-primary")
                         .addClass("btn-danger")
                         .text("Cancelar");
-                let tempoVal = $("#temporizadorTempo").prop("readonly", true).val().split(":");
-                let tempo = Number(tempoVal[0]) * 60 * 60 + Number(tempoVal[1]) * 60 + Number(tempoVal[2]); // converte para segundos
+                let tempoVal = $("#temporizadorTempo").prop("readonly", true).val();
+                let tempo = Number(tempoVal) * 60; // converte para segundos
                 tempo *= 1000; // converte para milisegundos
 
                 targetTime = Date.now() + tempo;
                 setTimeout(function f() {
                     console.log(targetTime);
                     if (targetTime === undefined) return;
-                    let tempoEmFalta = (targetTime - Date.now()) / 1000; // converte para segundos
+                    let tempoEmFalta = Math.floor((targetTime - Date.now()) / 1000 / 60); // converte para minutos
                     if (tempoEmFalta > 0) {
-                        let h = Math.floor(tempoEmFalta / (60 * 60)).toString();
-                        let m = Math.floor((tempoEmFalta - h * 60 * 60) / 60).toString();
-                        let s = Math.ceil(tempoEmFalta - h * 60 * 60 - m * 60 - 1).toString();
-                        console.log(h, m, s);
-                        $("#temporizadorTempo").val(h.padStart(2,"0") + ":" + m.padStart(2,"0") + ":" + s.padStart(2,"0"));
+                        $("#temporizadorTempo").val(tempoEmFalta);
                         setTimeout(f, 1000);
                     } else {
                         $("#temporizadorTempo").prop("readonly", false).val("");
@@ -628,7 +631,7 @@
                             }, 0);
                         });
                     }
-                }, 1000);
+                }, 60 * 1000);
             });
         });
     </script>
@@ -640,9 +643,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body form-group form-row">
-                <input id="temporizadorTempo" class="form-control col text-center" type="time" step="1"/>
-                <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm" preload="auto"></audio>
+            <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm" preload="auto"></audio>
+            <div class="modal-body form-group row">
+                <input id="temporizadorTempo" class="form-control col text-center" type="number" step="1" />
+                <label for="temporizadorTempo" class="col-2 col-form-label">minutos</label>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="temporizadorComecar">Começar</button>
