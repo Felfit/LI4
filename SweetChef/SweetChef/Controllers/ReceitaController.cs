@@ -23,38 +23,7 @@ namespace SweetChef.Controllers
             _context = context;
         }
 
-        [HttpPost("passo/duvida")]
-        public ActionResult addDuvidaPassoReceita([FromForm] PassoDúvida p)
-        {
-            try
-            {
-                _context.PassoDúvida.Add(p);
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpPut("passo/duvida")]
-        public ActionResult updateDuvidaPassoReceita([FromForm] PassoDúvida p)
-        {
-            try
-            {
-                _context.PassoDúvida.Update(p);
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
+        
         [HttpPost("passo/utensilio")]
         public ActionResult addUtensilioPassoReceita([FromForm] UtensilioPasso p)
         {
@@ -62,7 +31,16 @@ namespace SweetChef.Controllers
             {
                 ///TODO COISAS
                 _context.UtensilioPasso.Add(p);
+                if (_context.UtensilioReceita.Where(ur => ur.Utensilioid == p.Utensilioid && ur.Receitaid == p.PassoReceitaid).FirstOrDefault() == null)
+                {
+                    UtensilioReceita ur = new UtensilioReceita();
+                    ur.Receitaid = p.PassoReceitaid;
+                    ur.Utensilioid = p.Utensilioid;
+                    _context.UtensilioReceita.Add(ur);
+                }
+                    
                 _context.SaveChanges();
+                
                 return Ok();
             }
             catch (Exception e)
@@ -71,6 +49,7 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
 
         [HttpPost("passo/ingrediente")]
         public ActionResult addIngredientePassoReceita([FromForm] PassoIngrediente p)
@@ -79,6 +58,21 @@ namespace SweetChef.Controllers
             {
                 ///TODO COISAS
                 _context.PassoIngrediente.Add(p);
+                ReceitaIngrediente ri = _context.ReceitaIngrediente.
+                    Where(pi => pi.Ingredienteid == p.Ingredienteid && pi.Receitaid == p.PassoReceitaid).
+                    FirstOrDefault();
+                if (ri == null) {
+                    ri = new ReceitaIngrediente();
+                    ri.Quantidade = p.Quantidade;
+                    ri.Receitaid = p.PassoReceitaid;
+                    ri.Ingredienteid = p.Ingredienteid;
+                    _context.ReceitaIngrediente.Add(ri);
+                }
+                else
+                {
+                    ri.Quantidade += p.Quantidade;
+                    _context.ReceitaIngrediente.Update(ri);
+                }
                 _context.SaveChanges();
                 return Ok();
             }
@@ -89,14 +83,23 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpPost("passo/ingrediente/update")]
         [HttpPut("passo/ingrediente")]
-        public ActionResult updateIngredientePassoReceita([FromForm] PassoIngrediente p)
+        public ActionResult UpdateIngredientePassoReceita([FromForm] PassoIngrediente p)
         {
             try
             {
 
                 ///FAZER MAIS COISAS
+                var old = _context.PassoIngrediente.Find(p.Passoid, p.PassoReceitaid, p.Ingredienteid);
+                
                 _context.PassoIngrediente.Update(p);
+                ReceitaIngrediente ri = _context.ReceitaIngrediente.
+                    Where(pi => pi.Ingredienteid == p.Ingredienteid && pi.Receitaid == p.PassoReceitaid).
+                    FirstOrDefault();
+                ri.Quantidade += p.Quantidade;
+                ri.Quantidade -= old.Quantidade;
+                _context.ReceitaIngrediente.Update(ri);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -108,11 +111,13 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost("passo")]
-        public ActionResult addPassoReceita([FromForm] Passo p)
+        public ActionResult AddPassoReceita([FromForm] Passo p)
         {
             try
             {
                 _context.Passo.Add(p);
+                var r = _context.Receita.Find(p.Receitaid);
+                r.Tempodepreparacao += p.Duracao; 
                 _context.SaveChanges();
                 return Ok();
             }
@@ -123,8 +128,9 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpPost("passo/update")]
         [HttpPut("passo")]
-        public ActionResult updatePassoReceita([FromForm] Passo p)
+        public ActionResult UpdatePassoReceita([FromForm] Passo p)
         {
             try
             {
@@ -140,7 +146,7 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost]
-        public ActionResult addReceita([FromForm] Receita r)
+        public ActionResult AddReceita([FromForm] Receita r)
         {
             try
             {
@@ -156,7 +162,8 @@ namespace SweetChef.Controllers
         }
 
         [HttpPost("update")]
-        public ActionResult updateReceita([FromForm] Receita r)
+        [HttpPut]
+        public ActionResult UpdateReceita([FromForm] Receita r)
         {
             try
             {

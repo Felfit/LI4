@@ -2,15 +2,12 @@
 @{
     ViewData["Title"] = "Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ReceitaId"] = "2";
+    ViewData["ReceitaId"] = "1";
 }
 
 <h2>Editor</h2>
 
 <script>
-
-  
-
     var json = $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
         $("#IdReceita").val(data.info.id);
         $("#ImagemLinkReceita").val(data.info.imagemLink);
@@ -28,15 +25,33 @@
         for (k = 1; k <= data.passos.length; k++){
             $("#stepSelect").append('<option value='+k+'>'+k+'</option>');
         }
-        
-    });
 
+    });
+    $(document).ready(function () {
+        $("select.ingredSelect").change(function () {
+            var k = $(this).children("option:selected").val();
+            if (k == 'Adicionar Novo') {
+                $('#IngredienteIdEdit').val('');
+                $('#IngIdClass').show();
+                $('#IngredienteQuantEdit').val('');
+                $('#IngSubmitButton').val("Adicionar");
+            }
+            else {
+                var numpasso = $("#NumeroPasso").val();
+                passo = json.responseJSON.passos[numpasso - 1];
+                $('#IngredienteIdEdit').val(passo.ingredientes[k].id);
+                $('#IngIdClass').hide();
+                $('#IngredienteQuantEdit').val(passo.ingredientes[k].quantidade);
+                $('#IngSubmitButton').val("Guardar");
+            }
+        })
+    });
+    
     $(document).ready(function () {
         $("select.step").change(function () {
             var i = $(this).children("option:selected").val();
             var length = json.responseJSON.passos.length;
-        
-            if (i == "Create New" || length < i) {
+            if (i == "Criar Novo" || length < i) {
                 $("#NumeroPasso").val(length + 1);
                 $("#DescricaoPasso").val("");
                 $("#ImagemLinkPasso").val("");
@@ -47,7 +62,6 @@
             }
             else {
                 passo = json.responseJSON.passos[i - 1];
-                console.log(i);
                 $("#AssessoriosPasso").show();
                 $("#NumeroPasso").val(i);
                 $("#dpid").val(i);
@@ -58,111 +72,180 @@
                 $("#VideoLinkPasso").val(passo.info.videoLink);
                 $("#LinkExternoPasso").val(passo.info.linkExterno);
                 $("#DuracaoPasso").val(passo.info.duracao);
+                $("select.ingredSelect").find('option')
+                    .remove()
+                    .end()
+                    .append('<option>Adicionar Novo</option>')
+                    .val('whatever');
+                $('#IngredienteIdEdit').val('');
+                $('#IngIdClass').show();
+                $('#IngredienteQuantEdit').val('');
+                $('#IngSubmitButton').val("Adicionar");
+                for (var k = 0; k < passo.ingredientes.length; k++){
+                    $("select.ingredSelect").
+                        append('<option value="' + k + '">' + passo.ingredientes[k].nome + '</option>');
+                }
             }
         });
     });
 </script>
-        
-        <div class="row">
-            <div id="coisas" />
-                <form method="post" action="/api/Receita/update">
-                    <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
+<div class="container">
+    <div id="RecipeEditor" class="container">
+        <div class="col">
+            <form method="post" action="/api/Receita/update">
+                <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
+                <div class="form-group">
                     Nome:
-                    <input name="Nome" id="NomeReceita" type="text" required />
+                    <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
+                </div>
+                <div class="form-group">
                     Descrição:
-                    <input name="Descricao" id="DescricaoReceita" type="text" required />
+                    <input name="Descricao" id="DescricaoReceita" class="form-control" type="text" required />
+                </div>
+                <div class="form-group">
                     Imagem:
-                    <input name="ImagemLink" id="ImagemLinkReceita" type="url" />
+                    <input name="ImagemLink" class="form-control" id="ImagemLinkReceita" type="url" />
+                </div>
+                <div class="form-group">
                     Video:
-                    <input name="VideoLink" id="VideoLinkReceita" type="url" />
+                    <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
+                </div>
+                <div class="form-group">
                     Dificuldade:
-                    <fieldset>
-                        Facil
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
-                        Médio
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
-                        Dificil
-                        <input type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
-                    </fieldset>
+                    Facil
+                    <input type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
+                    Médio
+                    <input type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
+                    Dificil
+                    <input type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
+                </div>
+                <div class="form-group">
                     Porções:
-                    <input name="Porcoes" id="PorcoesReceita" type="number" required />
-                    <fieldset>
-                        Nutricao:
-                        Energia:
-                        <input name="Energia" id="EnergiaReceita" type="number" required />
-                        Gordura:
-                        <input name="Gordura" id="GorduraReceita" type="number" required />
-                        
-                        Hidratos de Carbono:
-                        <input name="HidratosCarbono" id="HidratosCarbonoReceita" type="number" required />
-                    </fieldset>
-                   
-                    <input type="submit" value="Guardar">
-                </form>
-            </div>
+                    <input name="Porcoes" class="form-control" id="PorcoesReceita" type="number" required />
+                </div>
+                <div class="form-group">
+                    Nutricao:
+                    <div class="row">
+                        <div class="col">
+                            Energia:
+                            <input name="Energia" id="EnergiaReceita" class="form-control" type="number" required />
+                        </div>
+                        <div class="col">
+                            Gordura:
+                            <input name="Gordura" id="GorduraReceita" class="form-control" type="number" required />
+                        </div>
+                        <div class="col">
+                            Hidratos de Carbono:
+                            <input name="HidratosCarbono" id="HidratosCarbonoReceita" class="form-control" type="number" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Adicionar">
+                </div>
+            </form>
         </div>
-
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="step" id="stepSelect">
-            <option>Create New</option>
-        </select>
-        <div id="RecipeEditor">
-                Criar Passo: 
-                <form method="POST" action="/api/Receita/passo">
-                    <input value="1" name="Numero" id="NumeroPasso" hidden />
-                    <input value="@ViewData["ReceitaId"]" name="Receitaid" id="ReceitaidPasso" hidden />
-                    <input hidden />
+    </div>
+    <br />
+    <h2>Passos</h2>
+    <div id="RecipeEditor" class="container">
+        <div class="col">
+            <form method="POST" action="/api/Receita/passo">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Selecionar Passo:</label>
+                    <select class="step" id="stepSelect">
+                        <option>Criar Novo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input value="1" name="Numero" id="NumeroPasso" class="form-control" hidden />
+                </div>
+                <div class="form-group">
+                    <input value="@ViewData["ReceitaId"]" name="Receitaid" class="form-control" id="ReceitaidPasso" hidden />
+                </div>
+                <div class="form-group">
                     Descricao:
-                    <input type="text" name="Descricao" id="DescricaoPasso" required />
+                    <input type="text" name="Descricao" id="DescricaoPasso" class="form-control" required />
+                </div>
+                <div class="form-group">
                     Imagem:
-                    <input type="url" name="ImagemLink" id="ImagemLinkPasso" />
+                    <input type="url" name="ImagemLink" class="form-control" id="ImagemLinkPasso" />
+                </div>
+                <div class="form-group">
                     Video:
-                    <input type="url" name="VideoLink" id="VideoLinkPasso" />
+                    <input type="url" name="VideoLink" class="form-control" id="VideoLinkPasso" />
+                </div>
+                <div class="form-group">
                     Link Externo:
-                    <input type="url" name="LinkExterno" id="LinkExternoPasso" />
+                    <input type="url" name="LinkExterno" class="form-control" id="LinkExternoPasso" />
+                </div>
+                <div class="form-group">
                     Duração:
-                    <input type="number" name="Duracao" id="DuracaoPasso" required />
-                    
-                    <input type="submit" value="Submit">
-                </form>
-            <div id="AssessoriosPasso" style="display: none" class="row">
-                <div class="col-md-4">
-                    PassoDúvida Adicionar:
-                    <form method="POST" action="api/Receita/passo/duvida">
-                        <input value="1" name="Passoid" hidden id="dpid"/>
-                        <input value="@ViewData["ReceitaId"]" name="PassoReceitaid" hidden />
+                    <input type="number" name="Duracao" class="form-control" id="DuracaoPasso" required />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Adicionar">
+                </div>
+            </form>
+        </div>
+        <br />
+        <div id="AssessoriosPasso" class="row" style="display: none">
+            <div class="col">
+                <label>Adicionar Dúvida</label>
+                <form method="POST" action="api/Duvida/passo/duvidaPasso">
+                    <input value="1" name="Passoid" hidden id="dpid" />
+                    <input value="@ViewData["ReceitaId"]" name="PassoReceitaid" hidden />
+                    <div class="form-group">
                         Id da Dúvida:
-                        <input name="Dúvidaid" required />
+                        <input name="Dúvidaid" class="form-control" required />
+                    </div>
+                    <div class="form-group">
                         Questão:
-                        <input name="Questao" required />
-                        
-                        <input type="submit" value="Guardar">
-                    </form>
-                </div>
-
-                <div class="col-md-4">
-                    IngredienteDúvida Adicionar:
-                    <form method="POST" action="/api/Receita/passo/ingrediente">
-                        <input value="1" type="number" name="Passoid" id="ingpid"hidden />
-                        <input value="@ViewData["ReceitaId"]" type="number" name="PassoReceitaid" hidden />
+                        <input name="Questao" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Adicionar">
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+                <form method="POST" action="/api/Receita/passo/ingrediente">
+                    <div class="form-group">
+                        <label>Editar Ingrediente</label>
+                        <select class="ingredSelect" id="inredSelect">
+                            <option>Criar Novo</option>
+                        </select>
+                    </div>
+                    <input value="1" type="number" name="Passoid" id="ingpid" hidden />
+                    <input value="@ViewData["ReceitaId"]" type="number" name="PassoReceitaid" hidden />
+                    <div class="form-group" id="IngIdClass">
                         Id do Ingrediente:
-                        <input type="number" name="Ingredienteid" required />
+                        <input type="number" name="Ingredienteid" id="IngredienteIdEdit"class="form-control" required />
+                    </div>
+                    <div class="form-group">
                         Quantidade:
-                        <input type="number" name="Quantidade" required />
-                        
-                        <input type="submit" value="Adicionar">
-                    </form>
-                </div>
+                        <input type="number" name="Quantidade" id="IngredienteQuantEdit" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="IngSubmitButton" value="Adicionar">
+                    </div>
+                </form>
+            </div>
 
-                <div class="col-md-4">
-                    UtensilioDúvida Adicionar:
-                    <form method="POST" action="/api/Receita/passo/utensilio">
-                        <input value="1" type="number" name="Passoid" id="upId" hidden />
-                        <input value="@ViewData["ReceitaId"]" type="number" name="PassoReceitaid" hidden />
+            <div class="col">
+                Adicionar Utensílio
+                <form method="POST" action="/api/Receita/passo/utensilio">
+                    <input value="1" type="number" name="Passoid" id="upId" hidden />
+                    <input value="@ViewData["ReceitaId"]" type="number" name="PassoReceitaid" hidden />
+                    <div class="form-group">
                         Id do Utensilio:
-                        <input type="number" name="Utensilioid" required />
+                        <input type="number" name="Utensilioid" class="form-control" required />
+                    </div>
+                    <div class="form-group">
                         <input type="submit" value="Adicionar">
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+</div>
