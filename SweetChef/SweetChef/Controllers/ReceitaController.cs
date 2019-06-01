@@ -396,7 +396,7 @@ namespace SweetChef.Controllers
                 Where(r => r.Id == idReceita).
                 SelectMany(r => r.Opiniao).
                 Where(o => o.Rating != null).
-                ToList().
+                GroupBy(o => o).
                 Select(o => new { soma = o.Sum(s => s.Rating), n = o.Count() }).FirstOrDefault();
             if (temp == null)
                 return NotFound();
