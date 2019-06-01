@@ -32,7 +32,7 @@ namespace SweetChef.Controllers
 
         //Get receitas favoritas
         [HttpGet("favoritas")]
-        public ActionResult getReceitasFavoritas(int id)
+        public ActionResult getReceitasFavoritas()
         {
             try
             {

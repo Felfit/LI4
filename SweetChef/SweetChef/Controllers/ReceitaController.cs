@@ -234,24 +234,6 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet("favoritas/{idUtilizador}")]
-        public ActionResult GetReceitasFavoritas(int idUtilizador)
-        {
-            try
-            {
-                var favoritas = _context.Opiniao.
-                    Where(o => o.Utilizadorid == idUtilizador && o.Favorito).
-                    Select(o => o.Receita).
-                    ToList();
-                return Ok(favoritas);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
         [HttpGet("recomendadas/{idUtilizador}")]
         public ActionResult GetReceitasRecomendadas(int idUtilizador)
         {
