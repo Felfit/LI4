@@ -1,0 +1,126 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<script>
+
+
+
+
+</script>
+
+
+<div class="container">
+
+    <div class="col">
+        <label>Adicionar Dúvida</label>
+        <form method="POST" id="DuvidaForm" action="/api/duvida">
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Selecionar Passo:</label>
+                <select class="form-control duvida" id="stepSelect">
+                    <option>Criar Novo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input value="1" name="idDuvida" class="form-control" hidden />
+            </div>
+            <div class="form-group">
+                Titulo:
+                <input type="text" name="Titulo" id="TituloDuvida" class="form-control" required />
+            </div>
+            <div class="form-group">
+                Imagem:
+                <input type="url" name="ImagemLink" class="form-control" id="ImagemLinkDuvida" />
+            </div>
+            <div class="form-group">
+                Video:
+                <input type="url" name="VideoLink" class="form-control" id="VideoLinkDuvida" />
+            </div>
+            <div class="form-group">
+                Link Externo:
+                <input type="url" name="Linkexterno" class="form-control" id="LinkExternoDuvida" />
+            </div>
+            <div class="form-group">
+                Explicação:
+                <input type="text" name="Explicacao" class="form-control" id="ExplicacaoDuvida" required />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary value="Adicionar">
+            </div>
+        </form>
+    </div>
+
+    <div class="col">
+        <label>Adicionar Ingrediente</label>
+        <form method="POST" id="ingForm" action="api/ingrediente">
+            <div class="form-group">
+                <label> Nome:</label>
+                <input class="form-control" type="text" name="Nome" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label> Imagem:</label>
+                <input class="form-control" type="url" name="ImageLink" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="">Unidade</label>
+                <select class="form-control" name="unidadeId" id="exampleFormControlSelect1"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary value="Adicionar">
+            </div>
+        </form>
+    </div>
+
+    <div class="col">
+        <label>
+            Adicionar Utensílios
+        </label>
+        <form method="POST" id="ingForm" action="api/Utensilio">
+            <div class="form-group">
+                <label> Nome:</label>
+                <input class="form-control" type="text" name="Nome" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label> Imagem:</label>
+                <input class="form-control" type="url" name="ImageLink" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary value="Adicionar">
+            </div>
+        </form>
+    </div>
+
+
+    <div class="col">
+        <label>
+            Adicionar Tags
+        </label>
+        <form method="POST" id="ingForm" action="/api/tag">
+            <div class="form-group">
+                <label> Nome:</label>
+                <input class="form-control" type="text" name="tag" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary value="Adicionar">
+            </div>
+        </form>
+    </div>
+
+    <div class="col">
+        <label>
+            Adicionar Unidade
+        </label>
+        <form method="POST" id="ingForm" action="api/ingrediente/unidade">
+            <div class="form-group">
+                <label> Nome:</label>
+                <input class="form-control" type="text" name="Nome" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary value="Adicionar">
+            </div>
+        </form>
+    </div>
+</div>
+
