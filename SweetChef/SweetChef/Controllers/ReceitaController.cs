@@ -40,8 +40,7 @@ namespace SweetChef.Controllers
                 }
                     
                 _context.SaveChanges();
-                
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
@@ -74,7 +73,7 @@ namespace SweetChef.Controllers
                     _context.ReceitaIngrediente.Update(ri);
                 }
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
@@ -101,7 +100,7 @@ namespace SweetChef.Controllers
                 ri.Quantidade -= old.Quantidade;
                 _context.ReceitaIngrediente.Update(ri);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/" + p.PassoReceitaid + "?passo=" + p.Passoid);
             }
             catch (Exception e)
             {
