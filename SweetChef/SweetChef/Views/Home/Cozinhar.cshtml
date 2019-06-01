@@ -118,7 +118,7 @@
             <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
                 @foreach (var tag in ViewData["tags"] as IEnumerable<dynamic>)
                 {
-                <a class="dropdown-item" href="@Url.Action("GetReceitasFiltradas", "Receita", new { tags = tag.Id })">Action</a>
+                <a class="dropdown-item" href="@Url.Action("GetReceitasFiltradas", "Receita")">Action</a>
                 }
             </div>
         </div>

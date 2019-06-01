@@ -358,7 +358,11 @@ namespace SweetChef.Controllers
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt, idPasso, idReceita);
                 if (u == null)
                 {
-                    return Created("Ja foi criado antes usa o pust", null);
+                    u = new UtilizadorPasso();
+                    u.Utilizadorid = idUt;
+                    u.PassoReceitaid = idReceita;
+                    u.Passoid = idPasso;
+                    _context.UtilizadorPasso.Add(u);
                 }
                 if(comentario != null)
                     u.Comentario = comentario;

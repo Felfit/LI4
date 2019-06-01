@@ -221,7 +221,9 @@
             $("#passoMedia").hide();
         }
         $("#ajudas").html("");
-        $.getJSON(`/api/duvida/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}`, (duvidas) => {
+        let passo = receita.passoAtualIndice + 1;
+        $.getJSON(`/api/duvida/@ViewData["ReceitaId"]/${passo}`, (duvidas) => {
+            if (passo != receita.passoAtualIndice + 1) return;
             let indiceDuvida = 0;
             for (const duvida of duvidas) {
                 $('<li class="list-group-item px-2 py-1"></li>')
@@ -430,20 +432,20 @@
                                             for (ajuda of $("#ajudas > li")) {
                                                 mensagem += $(ajuda).text() + "\n";
                                             }
-                                        } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                        } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
                                             $("#produto").modal("show");
                                             showProduto($(`#ingredientes>li[data-nome=${comando}]`).data("id"), comando, "ingrediente");
                                             mensagem = "Ingrediente: " + comando;
-                                        } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                        } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
                                             $("#produto").modal("show");
                                             showProduto($(`#utensilios>li[data-nome=${comando}]`).data("id"), comando, "utensilio");
                                             mensagem = "Utensílio: " + comando;
-                                        } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text()).indexOf(comando) > -1) {
+                                        } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
                                             alert("Abrir ajudas " + comando);
                                             mensagem = "Ajudas: " + comando;
                                         }
                                         console.log(comando);
-                                        if (utterActive && mensagem != "") {
+                                        if (utterActive) {
                                             var utter = new SpeechSynthesisUtterance(mensagem);
                                             utter.voice = voice;
                                             speechSynthesis.speak(utter);
@@ -474,15 +476,15 @@
                 </div>
                 <div class="h-75 vertical-scroll order-xl-0">
                     <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
-                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse text-capitalize modal-li"></ul>
+                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 order-xl-1 h-100 vertical-scroll">
             <h4 data-toggle="collapse" data-target="#ingredientes" class="collapse-header">Ingredientes</h4>
-            <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse text-capitalize modal-li"></ul>
+            <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
             <h4 data-toggle="collapse" data-target="#utensilios" class="collapse-header">Utensílios</h4>
-            <ul id="utensilios" class="list-group list-group-flush mb-1 collapse text-capitalize modal-li"></ul>
+            <ul id="utensilios" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
         </div>
     </div>
 
@@ -500,7 +502,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-capitalize" id="ajudaTitulo"></h5>
+                    <h5 class="modal-title" id="ajudaTitulo"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -562,7 +564,7 @@
         <div class="modal-dialog modal-dialog-centered mw-100 w-75" role="document">
             <div class="modal-content" style="height: 75vh">
                 <div class="modal-header">
-                    <h5 class="modal-title text-capitalize" id="produtoTitle"></h5>
+                    <h5 class="modal-title" id="produtoTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

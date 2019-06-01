@@ -10,8 +10,8 @@
     });
 </script>
 <p>Duração esperada: @ViewData["ReceitaDuracao"] min</p>
-<p>Duração efetiva: @ViewData["tempo"] min</span></p>
-<a class="btn btn-danger my-2 text-white" id="voltar" href="@Url.Action("PassoAPasso","Home", new { ultimoPasso = true, tempo = ViewData["tempo"]})"><i class='fas fa-arrow-left'></i> Voltar</a>
+<p>Duração efetiva: @ViewData["tempo"] min</p>
+<a class="btn btn-danger my-2 text-white" id="voltar" href="@Url.Action("PassoAPasso","Home", new { id = ViewData["ReceitaId"], ultimoPasso = true, tempo = ViewData["tempo"]})"><i class='fas fa-arrow-left'></i> Voltar</a>
 <form method="put" action="/api/Utilizador/opiniao/@ViewData["ReceitaId"]">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="favorito">
