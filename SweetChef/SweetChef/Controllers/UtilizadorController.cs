@@ -62,10 +62,12 @@ namespace SweetChef.Controllers
         }
         //Create Execução
         [HttpPost("restricaoAlimentar")]
-        public ActionResult PostExecucao([FromForm] int idUt, [FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
+        public ActionResult PostExecucao([FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 Execucao e = _context.Execucao.Find(idUt, idReceita, data);
                 if (e != null)
                 {
@@ -89,11 +91,13 @@ namespace SweetChef.Controllers
 
         //Vai buscar as ementas semanais de uma certa data
         [HttpGet("ementa")]
-        public ActionResult GetReceitasEmenta([FromQuery] int idUt, [FromQuery] DateTime data)
+        public ActionResult GetReceitasEmenta([FromQuery] DateTime data)
         {
            
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 var ementa= _context.EmentaSemanal.
                    Where(em => em.Utilizadorid == idUt && em.Data.Equals(data)).
                    Select(em => em.Receita).
@@ -109,10 +113,12 @@ namespace SweetChef.Controllers
      
         //Adiciona uma receita à ementa
         [HttpPost("ementa")]
-        public ActionResult PostReceitaEmenta([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
+        public ActionResult PostReceitaEmenta([FromForm] int idRec, [FromForm] DateTime data)
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 EmentaSemanal em = _context.EmentaSemanal.Find(idUt, idRec);
                 if(em != null)
                 {
@@ -135,10 +141,12 @@ namespace SweetChef.Controllers
 
         //Remove uma receita da ementa
         [HttpDelete("ementa")]
-        public IActionResult Delete([FromForm] int idUt, [FromForm] int idRec, [FromForm] DateTime data)
+        public IActionResult Delete([FromForm] int idRec, [FromForm] DateTime data)
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 //TODO ver se a ordem está correta 
                 var ementa = _context.EmentaSemanal.Find(idUt, idRec, data);
 
@@ -162,10 +170,12 @@ namespace SweetChef.Controllers
         //Remove todas as entradas daquele utilizador nas tabelas respetivas e adiciona as novas.
         //Basicamente se não me passa a lista quer dizer que não quer cenas
         [HttpPut("configuracao")]
-        public ActionResult UpdateConfiguracao([FromForm] int idUt, [FromForm] List<int> restricoes, [FromForm] List<int> likes, [FromForm] List<int> dislikes)
+        public ActionResult UpdateConfiguracao([FromForm] List<int> restricoes, [FromForm] List<int> likes, [FromForm] List<int> dislikes)
         {
             try
             {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
                 _context.RemoveRange(_context.RestricoesAlimentares.Where(x => x.Utilizadorid == idUt));
                 if (restricoes.Count != 0)
                 {
