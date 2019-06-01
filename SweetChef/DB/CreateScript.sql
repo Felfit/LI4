@@ -1,6 +1,6 @@
 ﻿CREATE TABLE RestricoesAlimentares (Utilizadorid int NOT NULL, Ingredienteid int NOT NULL, PRIMARY KEY (Utilizadorid, Ingredienteid));
 CREATE TABLE Utilizador (id int IDENTITY NOT NULL, Nome varchar(60) NOT NULL, email varchar(50) NOT NULL UNIQUE, password varchar(16) NOT NULL UNIQUE, dataNascimento datetime NOT NULL, PRIMARY KEY (id));
-CREATE TABLE Ingrediente (id int IDENTITY NOT NULL, Unidadeid int NOT NULL, nome varchar(20) NOT NULL, imageLink varchar(255) NOT NULL, PRIMARY KEY (id));
+CREATE TABLE Ingrediente (id int IDENTITY NOT NULL, Unidadeid int NOT NULL, nome varchar(64) NOT NULL, imageLink varchar(255) NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Unidade (id int IDENTITY NOT NULL, nome varchar(255) NOT NULL, PRIMARY KEY (id));
 CREATE TABLE Dislikes (Utilizadorid int NOT NULL, Tagid int NOT NULL, PRIMARY KEY (Utilizadorid, Tagid));
 CREATE TABLE [Tag] (id int IDENTITY NOT NULL, [tag] varchar(255) NOT NULL, PRIMARY KEY (id));
