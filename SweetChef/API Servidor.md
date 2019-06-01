@@ -22,7 +22,8 @@
   * Retorna receitas filtradas. Todos os campos são opcionais. Tags é uma lista.
 * api/Receita/favoritas/{idUtilizador}
   * Retorna as receitas favoritas do utilizador
-
+* api/Receita/opinioes/{idReceita}
+  * Retorna Média das opiniões sobre a receita
 
 ##Tags
 ###Get
