@@ -49,7 +49,6 @@ namespace SweetChef.Controllers
             }
         }
 
-
         [HttpPost("passo/ingrediente")]
         public ActionResult addIngredientePassoReceita([FromForm] PassoIngrediente p)
         {
@@ -234,9 +233,12 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet("recomendadas/{idUtilizador}")]
-        public ActionResult GetReceitasRecomendadas(int idUtilizador)
+        [HttpGet("recomendadas")]
+        public ActionResult GetReceitasRecomendadas()
         {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
+
             var restricoes = _context.RestricoesAlimentares.
                 Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
                 SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
@@ -301,5 +303,22 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("opinioes/{idReceita}")]
+        public ActionResult OpinioesMedia(int idReceita)
+        {
+            var temp = _context.Receita.
+                Where(r => r.Id == idReceita).
+                Select(r => r.Opiniao).
+                Select(o => new { soma = o.Sum(s => s.Rating), n = o.Count() }).FirstOrDefault();
+            if (temp == null)
+                return NotFound();
+            int media = 0;
+            int numRatings = temp.n;
+            if (temp.n > 0)
+                media = (int)temp.soma / numRatings;
+            return Ok(new { media, numRatings});
+        }
+
     }
 }

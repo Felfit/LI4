@@ -15,14 +15,15 @@
       * Info
       * Ingredientes
       * Utensilios
-* api/Receita/recomendadas/{idUtilizador}
+* api/Receita/recomendadas
   * Retorna as informações de receitas tendo em consideração os gostos do utilizador exceto as receitas das restrições alimentares
     * Nao retorna as favoritas  
 * api/Receita/filtradas?dif=...&dur=...&tags=...&tags
   * Retorna receitas filtradas. Todos os campos são opcionais. Tags é uma lista.
 * api/Receita/favoritas/{idUtilizador}
   * Retorna as receitas favoritas do utilizador
-
+* api/Receita/opinioes/{idReceita}
+  * Retorna Média das opiniões sobre a receita
 
 ##Tags
 ###Get
@@ -93,3 +94,9 @@
 ###GET
 * api/duvida/{idReceita}/{idPasso}
   * Retorna array com todas as dúvidas associadas passo.
+
+##Ingrediente
+
+###GET
+* api/Ingrediente
+  * Retorna uma lista com todos os ingredientes

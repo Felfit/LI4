@@ -91,6 +91,7 @@ namespace SweetChef.Controllers
         [HttpGet("ementa")]
         public ActionResult GetReceitasEmenta([FromQuery] int idUt, [FromQuery] DateTime data)
         {
+           
             try
             {
                 var ementa= _context.EmentaSemanal.
