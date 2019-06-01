@@ -234,9 +234,12 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet("recomendadas/{idUtilizador}")]
-        public ActionResult GetReceitasRecomendadas(int idUtilizador)
+        [HttpGet("recomendadas")]
+        public ActionResult GetReceitasRecomendadas()
         {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
+
             var restricoes = _context.RestricoesAlimentares.
                 Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
                 SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 

@@ -15,7 +15,7 @@
       * Info
       * Ingredientes
       * Utensilios
-* api/Receita/recomendadas/{idUtilizador}
+* api/Receita/recomendadas
   * Retorna as informações de receitas tendo em consideração os gostos do utilizador exceto as receitas das restrições alimentares
     * Nao retorna as favoritas  
 * api/Receita/filtradas?dif=...&dur=...&tags=...&tags
