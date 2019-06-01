@@ -262,6 +262,91 @@ namespace SweetChef.Controllers
             return Ok(receitas);
         }
 
+        [HttpGet("filtradasTodas")]
+        public ActionResult GetReceitas()
+        {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
+            var restricoes = _context.RestricoesAlimentares.
+                Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
+                SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
+                Select(ri => ri.Receita);  //Recolhe apenas as receitas.
+            var disliked = _context.Dislikes.
+                Where(d => d.Utilizadorid == idUtilizador).
+                SelectMany(d => d.Tag.TagReceita).
+                Select(tr => tr.Receita);
+            var blacklisted = _context.Opiniao.
+                Where(o => o.Utilizadorid == idUtilizador && o.Blacklist == true).
+                Select(o => o.Receita);
+            //Seleciona todas as receitas exceto as restritas
+            var receitas = _context.Receita.
+                Except(restricoes).
+                Except(disliked).
+                Except(blacklisted).
+                ToList();
+            return Ok(receitas);
+        }
+
+
+        [HttpGet("tendencias")]
+        public ActionResult GetTrending()
+        {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
+            var restricoes = _context.RestricoesAlimentares.
+                Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
+                SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
+                Select(ri => ri.Receita);  //Recolhe apenas as receitas.
+            var disliked = _context.Dislikes.
+                Where(d => d.Utilizadorid == idUtilizador).
+                SelectMany(d => d.Tag.TagReceita).
+                Select(tr => tr.Receita);
+            var blacklisted = _context.Opiniao.
+                Where(o => o.Utilizadorid == idUtilizador && o.Blacklist == true).
+                Select(o => o.Receita);
+            //Seleciona todas as receitas exceto as restritas
+            var receitas = _context.Receita.
+                OrderByDescending(s => s.Execucao.Count).
+                Except(restricoes).
+                Except(disliked).
+                Except(blacklisted).
+                ToList();
+            return Ok(receitas);
+        }
+
+        [HttpGet("descoberta")]
+        public ActionResult GetVizinhas()
+        {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUtilizador = Int32.Parse(sidut);
+            var restricoes = _context.RestricoesAlimentares.
+                Where(ra => ra.Utilizadorid == idUtilizador).  //Apenas as restrições do utilizador 
+                SelectMany(ra => ra.Ingrediente.ReceitaIngrediente). //Seleciona todas as entradas ReceitaIngrediente 
+                Select(ri => ri.Receita);  //Recolhe apenas as receitas.
+            var disliked = _context.Dislikes.
+                Where(d => d.Utilizadorid == idUtilizador).
+                SelectMany(d => d.Tag.TagReceita).
+                Select(tr => tr.Receita);
+            var blacklisted = _context.Opiniao.
+                Where(o => o.Utilizadorid == idUtilizador && o.Blacklist == true).
+                Select(o => o.Receita);
+            //Seleciona todas as receitas exceto as restritas
+            var realizadas = _context.Execucao.
+                Where(e => e.Utilizadorid == idUtilizador).
+                Select(e => e.Receita);
+            var receitas = realizadas.
+                SelectMany(r => r.TagReceita).
+                Select(tr => tr.Tag).
+                SelectMany(t => t.TagReceita).
+                Select(tr => tr.Receita).
+                Except(realizadas).
+                Except(restricoes).
+                Except(disliked).
+                Except(blacklisted).
+                ToList();
+            return Ok(receitas);
+        }
+
         // Get: api/Receita/id
         [HttpGet("{id}", Name = "GetReceita")]
         public ActionResult GetReceitaEPassos(int id)
@@ -309,7 +394,9 @@ namespace SweetChef.Controllers
         {
             var temp = _context.Receita.
                 Where(r => r.Id == idReceita).
-                Select(r => r.Opiniao).
+                SelectMany(r => r.Opiniao).
+                Where(o => o.Rating != null).
+                ToList().
                 Select(o => new { soma = o.Sum(s => s.Rating), n = o.Count() }).FirstOrDefault();
             if (temp == null)
                 return NotFound();

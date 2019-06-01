@@ -24,6 +24,12 @@
   * Retorna as receitas favoritas do utilizador
 * api/Receita/opinioes/{idReceita}
   * Retorna Média das opiniões sobre a receita
+* api/Receita/filtradasTodas
+  * Retorna todas as receitas exceto os dislikes e as blacklist
+* api/Receita/descoberta
+  * Retorna todas receitas recomendadas ao utilizador baseadas nas receitas previamente executadas 
+* api/Receita/tendencias
+  * Retorna todas as receitas filtradas pela configuração ordenadas descendentemente pelo numero de execuções
 
 ##Tags
 ###Get

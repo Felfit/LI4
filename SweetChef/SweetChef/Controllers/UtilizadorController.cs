@@ -287,6 +287,8 @@ namespace SweetChef.Controllers
                 {
                     exists = false;
                     o = new Opiniao();
+                    o.Utilizadorid = idUt;
+                    o.Receitaid = idReceita;
                     o.Favorito = false;
                     o.Blacklist = false;
                 }
