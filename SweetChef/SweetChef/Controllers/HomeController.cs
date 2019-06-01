@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,9 +25,9 @@ namespace SweetChef.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                ViewData["NomeUtilizador"] = "Utilizador";
                 return Redirect("/Home/Cozinhar/");
             }
+
             return View();
         }
 
@@ -35,50 +35,62 @@ namespace SweetChef.Controllers
         public IActionResult Cozinhar()
         {
             ViewData["tags"] = _context.Tag.Select(t => new { t.Id, Nome = t.Tag1 }).ToArray();
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
             return View();
         }
 
         public IActionResult Configuracao()
         {
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View();
         }
 
         public IActionResult Editor(int id)
         {
-
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
             if (_context.Receita.Find(id) != null)
                 ViewData["ReceitaId"] = id;
             else
                 ViewData["ReceitaId"] = "Unknown";
+
             return View();
         }
 
         public IActionResult Tutorial()
         {
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View();
         }
 
         public IActionResult EmentaSemanal()
         {
             ViewData["Message"] = "Your application description page.";
-
+            var sidut = HttpContext.User.Identity.Name;
+            int idUt = Int32.Parse(sidut);
+            ViewData["idUser"] = idUt;
             return View();
         }
 
         public IActionResult SobreCozinhados()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
 
         public IActionResult Privacidade()
         {
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View();
         }
 
         public IActionResult ListaCompras()
         {
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View();
         }
 
@@ -91,6 +103,7 @@ namespace SweetChef.Controllers
             }
             ViewData["ReceitaId"] = id;
             ViewData["ReceitaNome"] = receita.Nome;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
@@ -104,6 +117,7 @@ namespace SweetChef.Controllers
             }
             ViewData["Id"] = id;
             ViewData["Nome"] = ingrediente.Nome;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
@@ -117,6 +131,7 @@ namespace SweetChef.Controllers
             }
             ViewData["Id"] = id;
             ViewData["Nome"] = utensilio.Nome;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
@@ -132,6 +147,7 @@ namespace SweetChef.Controllers
             ViewData["ReceitaNome"] = receita.Nome;
             ViewData["UltimoPasso"] = ultimoPasso;
             ViewData["tempo"] = tempo;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
@@ -147,6 +163,7 @@ namespace SweetChef.Controllers
             ViewData["ReceitaNome"] = receita.Nome;
             ViewData["ReceitaDuracao"] = receita.Tempodeespera + receita.Tempodepreparacao;
             ViewData["tempo"] = tempo / 60000;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
         }
@@ -154,7 +171,16 @@ namespace SweetChef.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private String GetNomeUtilizador()
+        {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUt = Int32.Parse(sidut);
+            return _context.Utilizador.Where(p => p.Id == idUt).Select(u => u.Nome).First();
         }
     }
 }

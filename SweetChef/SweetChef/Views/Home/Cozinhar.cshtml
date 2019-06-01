@@ -86,7 +86,7 @@
         const dificuldadeColor = [, "success", "warning", "danger"];
 
         // receitas
-        $.getJSON("/api/Receita", (data) => {
+        $.getJSON("/api/Receita/", (data) => {
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;

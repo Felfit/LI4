@@ -3,8 +3,85 @@
 }
 <h2>@ViewData["Title"]</h2>
 <p>Selecione a data das receitas que pretende visualizar</p>
-<form target="receitas" class="form-inline" method="get" action="@Url.Action("ReceitaSemanalReceitas", "Home")">
-    <input type="date" name="semana" class="form-control mr-1"/>
-    <input type="submit" value="Procurar" class="btn btn-primary"/>
+
+<script>
+    $(function () {
+        function gerarReceita() {
+            return $($("#receitaTemplate").html());
+        }
+        const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
+        const dificuldadeColor = [, "success", "warning", "danger"];
+        $("form").on("submit", function(e) {
+            e.preventDefaul()
+            $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]/data=${$("input").val()}`, (data) => {
+                //console.log($("input").val());
+                //alerta;
+                for (const receita of data) {
+                    let receitaElement = gerarReceita();
+                    window.receita = receitaElement;
+                    receitaElement.find(".receitaNome").text(receita.nome);
+                    receitaElement.find(".receitaImagem").attr("src", receita.imagemLink);
+                    receitaElement.find(".receitaDificuldade").addClass("text-" + dificuldadeColor[receita.dificuldade]);
+                    receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
+                    receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
+                    receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
+                    receitaElement.appendTo("#ementaRow");
+                    console.log(receitaElement);
+                }
+                $(".receitasPlaceholder").remove();
+            });
+            return false;});
+    });
+</script>
+
+<form class="form-inline">
+    <input type="date" name="semana" class="form-control mr-1" />
+    <input type="submit" value="Procurar" class="btn btn-primary" />
 </form>
-<iframe name="receitas" class="w-100 border-0" style="height: 20em" src="@Url.Action("ReceitaSemanalReceitas", "Home")"></iframe>
+
+<h2>Ementa <i class="fas fa-star text-warning"></i></i></h2>
+<div class="container-fluid horizontal-scroll py-2">
+    <div class="row flex-row flex-nowrap" id="ementaRow">
+        <template id="receitaTemplate">
+            <div class="receita">
+                <div class="card">
+                    <img class="card-img-top receitaImagem">
+                    <i class="fas fa-star text-warning fav-icon"></i>
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                        <div class="row text-black-50 text-center">
+                            <div class="col receitaDificuldade">
+                                <i class="fas fa-signal"></i>
+                                <span class="receitaDificuldadeTexto"></span>
+                            </div>
+                            <div class="col">
+                                <i class="far fa-clock"></i>
+                                <span class="receitaTempo"></span>&nbsp;min
+                            </div>
+                            <a class="stretched-link receitaLink"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <div class="receitasPlaceholder">
+            <div class="receita">
+                <div class="card">
+                    <img class="card-img-top receitaImagem bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                        <div class="row text-black-50 text-center">
+                            <div class="col receitaDificuldade">
+                                <i class="fas fa-signal"></i>
+                            </div>
+                            <div class="col">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <a class="stretched-link receitaLink"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
