@@ -19,10 +19,10 @@ INSERT INTO Ingrediente
 	VALUES
 	(7, 'bolacha maria', 'https://images.vidaativa.pt/articles/850_400_bolachas-maria_1516979484.jpg'),
 	(2, 'manteiga', 'https://www.independent.ie/business/farming/article36475185.ece/ALTERNATES/h342/FIN_2013-12-19_BUS_007_30031725_I1.JPG'),
-	(2, 'açucar fino', 'https://images.immediate.co.uk/production/volatile/sites/4/2018/08/iStock_63854727_LARGE-a43c35e.jpg?quality=45&resize=960,413'),
+	(2, 'açúcar fino', 'https://images.immediate.co.uk/production/volatile/sites/4/2018/08/iStock_63854727_LARGE-a43c35e.jpg?quality=45&resize=960,413'),
 	(7, 'ovo', 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Egg_upright.jpg'),
 	(5, 'café' , 'https://www.gannett-cdn.com/presto/2018/11/21/USAT/55c6954d-2d02-4c41-a61f-b7d302d32658-YL_FLAG_coffee.JPG?width=534&height=712&fit=bounds&auto=webp'),
-	(7, 'grao de café', 'https://5.imimg.com/data5/XK/JC/MY-12108908/coffee-beans-750-to-850-kg-500x500.jpg'),
+	(7, 'grão de café', 'https://5.imimg.com/data5/XK/JC/MY-12108908/coffee-beans-750-to-850-kg-500x500.jpg'),
 	(2, 'bolacha ralada', 'http://3.bp.blogspot.com/_lW5crvJoV4s/Se9-eq3Lj5I/AAAAAAAAAMY/BDDWnXQNtOQ/s400/DSC04372.JPG');
 
 INSERT INTO Utensilio
