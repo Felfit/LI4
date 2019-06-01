@@ -4,6 +4,80 @@
 <h2>@ViewData["Title"]</h2>
 <p>Selecione a data das receitas que pretende visualizar</p>
 
+<style>
+    .dropdown-placeholder.dropdown-toggle::after {
+        position: absolute;
+        margin: 0.655em;
+        right: 0;
+    }
+
+    .horizontal-scroll {
+        overflow-y: hidden;
+        overflow-x: auto;
+    }
+
+    .card-img-top {
+        height: 9em;
+    }
+
+    .receita {
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+
+        .receita > .card {
+            width: 16em;
+        }
+
+    .fav-icon {
+        position: absolute;
+        right: 0.5em;
+        top: 0.5em;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar-thumb {
+        background: #e1e1e1;
+        border: 0px none #000;
+        border-radius: 50px;
+    }
+
+        .horizontal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+
+        .horizontal-scroll::-webkit-scrollbar-thumb:active {
+            background: #666;
+        }
+
+    .horizontal-scroll::-webkit-scrollbar-track {
+        background: transparent;
+        border: 0px none #000;
+        border-radius: 50px;
+    }
+
+        .horizontal-scroll::-webkit-scrollbar-track:hover {
+            background: transparent;
+        }
+
+        .horizontal-scroll::-webkit-scrollbar-track:active {
+            background: #ddd;
+        }
+
+    .horizontal-scroll::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+</style>
+
 <script>
     $(function () {
         function gerarReceita() {
@@ -11,10 +85,12 @@
         }
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
-        $("form").on("submit", function (e) {
+        $("form").on("submit", function () {
             $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&data=${$("input").val()}`, (data) => {
+                $("#ementaRow").html("");
                 console.log($("input").val());
-                for (const receita of data) {
+                for (const ementa of data) {
+                    const receita = ementa.receita;
                     let receitaElement = gerarReceita();
                     window.receita = receitaElement;
                     receitaElement.find(".receitaNome").text(receita.nome);
@@ -23,10 +99,13 @@
                     receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
                     receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                     receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
-                    receitaElement.appendTo("#ementaRow");
-                    console.log(receitaElement);
+                    if ($(`.group-date[data-data=${ementa.data}]`).empty()) {
+                        let groupTemplate = $($("#groupTemplate").html());
+                        groupTemplate.find("h2.group-data").data("data", ementa.data).text(ementa.data);
+                        groupTemplate.find(".ementaRow").data("data", ementa.data);
+                    }
+                    receitaElement.appendTo("#ementaRow[data-data=${ementa.data}]");
                 }
-                $(".receitasPlaceholder").remove();
             });
             return false;
         });
@@ -38,49 +117,31 @@
     <input type="submit" value="Procurar" class="btn btn-primary" />
 </form>
 
-<h2>Ementa <i class="fas fa-star text-warning"></i></i></h2>
-<div class="container-fluid horizontal-scroll py-2">
-    <div class="row flex-row flex-nowrap" id="ementaRow">
-        <template id="receitaTemplate">
-            <div class="receita">
-                <div class="card">
-                    <img class="card-img-top receitaImagem">
-                    <i class="fas fa-star text-warning fav-icon"></i>
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                        <div class="row text-black-50 text-center">
-                            <div class="col receitaDificuldade">
-                                <i class="fas fa-signal"></i>
-                                <span class="receitaDificuldadeTexto"></span>
-                            </div>
-                            <div class="col">
-                                <i class="far fa-clock"></i>
-                                <span class="receitaTempo"></span>&nbsp;min
-                            </div>
-                            <a class="stretched-link receitaLink"></a>
-                        </div>
+<template id="groupTemplate">
+    <h2 class="group-data"></h2>
+    <div class="container-fluid horizontal-scroll py-2">
+        <div class="row flex-row flex-nowrap ementaRow">
+        </div>
+    </div>
+</template>
+<template id="receitaTemplate">
+    <div class="receita">
+        <div class="card">
+            <img class="card-img-top receitaImagem">
+            <div class="card-body">
+                <h5 class="card-title text-center text-truncate receitaNome"></h5>
+                <div class="row text-black-50 text-center">
+                    <div class="col receitaDificuldade">
+                        <i class="fas fa-signal"></i>
+                        <span class="receitaDificuldadeTexto"></span>
                     </div>
-                </div>
-            </div>
-        </template>
-        <div class="receitasPlaceholder">
-            <div class="receita">
-                <div class="card">
-                    <img class="card-img-top receitaImagem bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                        <div class="row text-black-50 text-center">
-                            <div class="col receitaDificuldade">
-                                <i class="fas fa-signal"></i>
-                            </div>
-                            <div class="col">
-                                <i class="far fa-clock"></i>
-                            </div>
-                            <a class="stretched-link receitaLink"></a>
-                        </div>
+                    <div class="col">
+                        <i class="far fa-clock"></i>
+                        <span class="receitaTempo"></span>&nbsp;min
                     </div>
+                    <a class="stretched-link receitaLink"></a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</template>
