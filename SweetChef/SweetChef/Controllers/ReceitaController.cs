@@ -150,9 +150,10 @@ namespace SweetChef.Controllers
         {
             try
             {
+                Console.Beep();
                 _context.Receita.Add(r);
                 _context.SaveChanges();
-                return Ok(r);
+                return Redirect("/Home/Editor/" + r.Id);
             }
             catch (Exception e)
             {
@@ -169,7 +170,7 @@ namespace SweetChef.Controllers
             {
                 _context.Receita.Update(r);
                 _context.SaveChanges();
-                return Ok();
+                return Redirect("/Home/Editor/"+r.Id);
             }
             catch (Exception e)
             {

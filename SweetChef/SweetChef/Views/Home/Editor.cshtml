@@ -2,153 +2,166 @@
 @{
     ViewData["Title"] = "Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["ReceitaId"] = "1";
 }
 
 <h2>Editor</h2>
 
 <script>
-    var json = $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-        $("#IdReceita").val(data.info.id);
-        $("#ImagemLinkReceita").val(data.info.imagemLink);
-        $("#VideoLinkReceita").val(data.info.videoLink);
-        $("#DescricaoReceita").val(data.info.descricao);
-        $("#NomeReceita").val(data.info.nome);
-        $("#DificuldadeReceita" + data.info.dificuldade).prop("checked", true);
-        $("#PorcoesReceita").val(data.info.porcoes);
-        $("#TempodepreparacaoReceita").val(data.info.tempodepreparacao);
-        $("#TempodeesperaReceita").val(data.info.tempodeespera);
-        $("#EnergiaReceita").val(data.info.energia);
-        $("#GorduraReceita").val(data.info.gordura);
-        $("#HidratosCarbonoReceita").val(data.info.hidratosCarbono);
-        var k;
-        for (k = 1; k <= data.passos.length; k++){
-            $("#stepSelect").append('<option value='+k+'>'+k+'</option>');
-        }
-
-    });
-    $(document).ready(function () {
-        $("select.ingredSelect").change(function () {
-            var k = $(this).children("option:selected").val();
-            if (k == 'Adicionar Novo') {
-                $('#IngredienteIdEdit').val('');
-                $('#IngIdClass').show();
-                $('#IngredienteQuantEdit').val('');
-                $('#IngSubmitButton').val("Adicionar");
-            }
-            else {
-                var numpasso = $("#NumeroPasso").val();
-                passo = json.responseJSON.passos[numpasso - 1];
-                $('#IngredienteIdEdit').val(passo.ingredientes[k].id);
-                $('#IngIdClass').hide();
-                $('#IngredienteQuantEdit').val(passo.ingredientes[k].quantidade);
-                $('#IngSubmitButton').val("Guardar");
-            }
-        })
-    });
-    
-    $(document).ready(function () {
-        $("select.step").change(function () {
-            var i = $(this).children("option:selected").val();
-            var length = json.responseJSON.passos.length;
-            if (i == "Criar Novo" || length < i) {
-                $("#NumeroPasso").val(length + 1);
-                $("#DescricaoPasso").val("");
-                $("#ImagemLinkPasso").val("");
-                $("#VideoLinkPasso").val("");
-                $("#LinkExternoPasso").val("");
-                $("#DuracaoPasso").val("");
-                $("#AssessoriosPasso").hide();
-            }
-            else {
-                passo = json.responseJSON.passos[i - 1];
-                $("#AssessoriosPasso").show();
-                $("#NumeroPasso").val(i);
-                $("#dpid").val(i);
-                $("#ingpid").val(i);
-                $("#upId").val(i);
-                $("#DescricaoPasso").val(passo.info.descricao);
-                $("#ImagemLinkPasso").val(passo.info.imagemLink);
-                $("#VideoLinkPasso").val(passo.info.videoLink);
-                $("#LinkExternoPasso").val(passo.info.linkExterno);
-                $("#DuracaoPasso").val(passo.info.duracao);
-                $("select.ingredSelect").find('option')
-                    .remove()
-                    .end()
-                    .append('<option>Adicionar Novo</option>')
-                    .val('whatever');
-                $('#IngredienteIdEdit').val('');
-                $('#IngIdClass').show();
-                $('#IngredienteQuantEdit').val('');
-                $('#IngSubmitButton').val("Adicionar");
-                for (var k = 0; k < passo.ingredientes.length; k++){
-                    $("select.ingredSelect").
-                        append('<option value="' + k + '">' + passo.ingredientes[k].nome + '</option>');
-                }
+    if ("@ViewData["ReceitaId"]" != 'Unknown') {
+        var json = $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
+            $("#IdReceita").val(data.info.id);
+            $("#ImagemLinkReceita").val(data.info.imagemLink);
+            $("#VideoLinkReceita").val(data.info.videoLink);
+            $("#DescricaoReceita").val(data.info.descricao);
+            $("#NomeReceita").val(data.info.nome);
+            $("#DificuldadeReceita" + data.info.dificuldade).prop("checked", true);
+            $("#PorcoesReceita").val(data.info.porcoes);
+            $("#TempodepreparacaoReceita").val(data.info.tempodepreparacao);
+            $("#TempodeesperaReceita").val(data.info.tempodeespera);
+            $("#EnergiaReceita").val(data.info.energia);
+            $("#GorduraReceita").val(data.info.gordura);
+            $("#HidratosCarbonoReceita").val(data.info.hidratosCarbono);
+            var k;
+            for (k = 1; k <= data.passos.length; k++) {
+                $("#stepSelect").append('<option value=' + k + '>' + k + '</option>');
             }
         });
-    });
+
+        $(document).ready(function () {
+            $("select.ingredSelect").change(function () {
+                var k = $(this).children("option:selected").val();
+                if (k == 'Adicionar Novo') {
+                    $('#IngredienteIdEdit').val('');
+                    $('#IngIdClass').show();
+                    $('#IngredienteQuantEdit').val('');
+                    $('#IngSubmitButton').val("Adicionar");
+                }
+                else {
+                    var numpasso = $("#NumeroPasso").val();
+                    passo = json.responseJSON.passos[numpasso - 1];
+                    $('#IngredienteIdEdit').val(passo.ingredientes[k].id);
+                    $('#IngIdClass').hide();
+                    $('#IngredienteQuantEdit').val(passo.ingredientes[k].quantidade);
+                    $('#IngSubmitButton').val("Guardar");
+                }
+            })
+        });
+
+        $(document).ready(function () {
+            $("select.step").change(function () {
+                var i = $(this).children("option:selected").val();
+                var length = json.responseJSON.passos.length;
+                if (i == "Criar Novo" || length < i) {
+                    $("#NumeroPasso").val(length + 1);
+                    $("#DescricaoPasso").val("");
+                    $("#ImagemLinkPasso").val("");
+                    $("#VideoLinkPasso").val("");
+                    $("#LinkExternoPasso").val("");
+                    $("#DuracaoPasso").val("");
+                    $("#AssessoriosPasso").hide();
+                }
+                else {
+                    passo = json.responseJSON.passos[i - 1];
+                    $("#AssessoriosPasso").show();
+                    $("#NumeroPasso").val(i);
+                    $("#dpid").val(i);
+                    $("#ingpid").val(i);
+                    $("#upId").val(i);
+                    $("#DescricaoPasso").val(passo.info.descricao);
+                    $("#ImagemLinkPasso").val(passo.info.imagemLink);
+                    $("#VideoLinkPasso").val(passo.info.videoLink);
+                    $("#LinkExternoPasso").val(passo.info.linkExterno);
+                    $("#DuracaoPasso").val(passo.info.duracao);
+                    $("select.ingredSelect").find('option')
+                        .remove()
+                        .end()
+                        .append('<option>Adicionar Novo</option>')
+                        .val('whatever');
+                    $('#IngredienteIdEdit').val('');
+                    $('#IngIdClass').show();
+                    $('#IngredienteQuantEdit').val('');
+                    $('#IngSubmitButton').val("Adicionar");
+                    for (var k = 0; k < passo.ingredientes.length; k++) {
+                        $("select.ingredSelect").
+                            append('<option value="' + k + '">' + passo.ingredientes[k].nome + '</option>');
+                    }
+                }
+            });
+        });
+    }
+    else {
+        $(document).ready(function () {
+            $('#PassosEdr').remove();
+            $('#ReceitaForm').attr("action", "/api/Receita");
+            $('#idReceita').remove();
+        });
+        console.log("R");
+    }
+
 </script>
+
 <div class="container">
     <div id="RecipeEditor" class="container">
-        <div class="col">
-            <form method="post" action="/api/Receita/update">
-                <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
-                <div class="form-group">
-                    Nome:
-                    <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
-                </div>
-                <div class="form-group">
-                    Descrição:
-                    <input name="Descricao" id="DescricaoReceita" class="form-control" type="text" required />
-                </div>
-                <div class="form-group">
-                    Imagem:
-                    <input name="ImagemLink" class="form-control" id="ImagemLinkReceita" type="url" />
-                </div>
-                <div class="form-group">
-                    Video:
-                    <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
-                </div>
-                <div class="form-group">
-                    Dificuldade:
-                    Facil
-                    <input type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
-                    Médio
-                    <input type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
-                    Dificil
-                    <input type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
-                </div>
-                <div class="form-group">
-                    Porções:
-                    <input name="Porcoes" class="form-control" id="PorcoesReceita" type="number" required />
-                </div>
-                <div class="form-group">
-                    Nutricao:
-                    <div class="row">
-                        <div class="col">
-                            Energia:
-                            <input name="Energia" id="EnergiaReceita" class="form-control" type="number" required />
-                        </div>
-                        <div class="col">
-                            Gordura:
-                            <input name="Gordura" id="GorduraReceita" class="form-control" type="number" required />
-                        </div>
-                        <div class="col">
-                            Hidratos de Carbono:
-                            <input name="HidratosCarbono" id="HidratosCarbonoReceita" class="form-control" type="number" required />
+            <div class="col">
+                <form method="post" id="ReceitaForm" action="/api/Receita/update">
+                    <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
+                    <div class="form-group">
+                        Nome:
+                        <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
+                    </div>
+                    <div class="form-group">
+                        Descrição:
+                        <input name="Descricao" id="DescricaoReceita" class="form-control" type="text" required />
+                    </div>
+                    <div class="form-group">
+                        Imagem:
+                        <input name="ImagemLink" class="form-control" id="ImagemLinkReceita" type="url" />
+                    </div>
+                    <div class="form-group">
+                        Video:
+                        <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
+                    </div>
+                    <div class="form-group">
+                        Dificuldade:
+                        Facil
+                        <input type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
+                        Médio
+                        <input type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
+                        Dificil
+                        <input type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
+                    </div>
+                    <div class="form-group">
+                        Porções:
+                        <input name="Porcoes" class="form-control" id="PorcoesReceita" type="number" required />
+                    </div>
+                    <div class="form-group">
+                        Nutricao:
+                        <div class="row">
+                            <div class="col">
+                                Energia:
+                                <input name="Energia" id="EnergiaReceita" class="form-control" type="number" required />
+                            </div>
+                            <div class="col">
+                                Gordura:
+                                <input name="Gordura" id="GorduraReceita" class="form-control" type="number" required />
+                            </div>
+                            <div class="col">
+                                Hidratos de Carbono:
+                                <input name="HidratosCarbono" id="HidratosCarbonoReceita" class="form-control" type="number" required />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Adicionar">
-                </div>
-            </form>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary value="Adicionar">
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+
     <br />
-    <h2>Passos</h2>
-    <div id="RecipeEditor" class="container">
+
+    <div id="PassosEdr" class="container">
+        <h2>Passos</h2>
         <div class="col">
             <form method="POST" action="/api/Receita/passo">
                 <div class="form-group">
@@ -184,7 +197,7 @@
                     <input type="number" name="Duracao" class="form-control" id="DuracaoPasso" required />
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Adicionar">
+                    <input type="submit" class="btn btn-primary value="Adicionar">
                 </div>
             </form>
         </div>
@@ -204,7 +217,7 @@
                         <input name="Questao" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Adicionar">
+                        <input type="submit" class="btn btn-primary value="Adicionar">
                     </div>
                 </form>
             </div>
@@ -227,7 +240,7 @@
                         <input type="number" name="Quantidade" id="IngredienteQuantEdit" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <input type="submit" id="IngSubmitButton" value="Adicionar">
+                        <input type="submit" class="btn btn-primary id="IngSubmitButton" value="Adicionar">
                     </div>
                 </form>
             </div>
@@ -242,7 +255,7 @@
                         <input type="number" name="Utensilioid" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Adicionar">
+                        <input type="submit" class="btn btn-primary value="Adicionar">
                     </div>
                 </form>
             </div>

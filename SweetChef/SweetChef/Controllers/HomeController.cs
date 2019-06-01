@@ -43,8 +43,13 @@ namespace SweetChef.Controllers
             return View();
         }
 
-        public IActionResult Editor()
+        public IActionResult Editor(int id)
         {
+
+            if (_context.Receita.Find(id) != null)
+                ViewData["ReceitaId"] = id;
+            else
+                ViewData["ReceitaId"] = "Unknown";
             return View();
         }
 
