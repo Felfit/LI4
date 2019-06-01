@@ -25,7 +25,10 @@ namespace SweetChef.Controllers
         [HttpGet]
         public ActionResult Tags()
         {
-            return Ok(_context.Tag.ToArray());
+            var t = _context.Tag.Select(ts => new { ts.Id, nome = ts.Tag1}).ToArray();
+            if(t.Length == 0)
+                return Ok("[]");
+            return Ok(t);
         }
     }
 }
