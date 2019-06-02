@@ -100,8 +100,9 @@ namespace SweetChef.Controllers
                 int idUt = Int32.Parse(sidut);
                 var ementa= _context.EmentaSemanal.
                    Where(em => em.Utilizadorid == idUt && em.Data >= dataInicial && em.Data <= dataFinal).
-                   Select(em => em.Receita).
+                   Select(em => new { em.Receita, em.Data}).
                    ToList();
+                ementa.Sort((e1, e2) => e1.Data.CompareTo(e2.Data));
                 return Ok(ementa);
             }
             catch (Exception e)
