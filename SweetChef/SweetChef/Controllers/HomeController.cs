@@ -158,7 +158,7 @@ namespace SweetChef.Controllers
             return View();
         }
 
-        public IActionResult Feedback(int id, [FromQuery] int tempo)
+        public IActionResult Feedback(int id, [FromQuery] int tempo, [FromQuery] DateTime data)
         {
             Receita receita = _context.Find<Receita>(id);
             if (receita == null)
@@ -169,6 +169,7 @@ namespace SweetChef.Controllers
             ViewData["ReceitaNome"] = receita.Nome;
             ViewData["ReceitaDuracao"] = receita.Tempodeespera + receita.Tempodepreparacao;
             ViewData["tempo"] = tempo / 60000;
+            ViewData["data"] = data;
             ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
