@@ -622,7 +622,7 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet]
+        
         [Route("logout")]
         [Authorize]
         public async Task<IActionResult> logoutAsync()
