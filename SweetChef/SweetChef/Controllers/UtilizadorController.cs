@@ -592,7 +592,7 @@ namespace SweetChef.Controllers
                 await HttpContext.SignInAsync(principal);
 
                 //Request.HttpContext.
-                return Redirect("/Home/Cozinhar/");
+                return Redirect("/Home/Tutorial/");
             }
             catch
             {
