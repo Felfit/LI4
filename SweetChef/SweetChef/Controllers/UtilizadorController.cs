@@ -141,14 +141,14 @@ namespace SweetChef.Controllers
 
         //Remove uma receita da ementa
         [HttpDelete("ementa")]
-        public IActionResult Delete([FromForm] int idRec, [FromForm] DateTime data)
+        public IActionResult Delete([FromQuery] int idRec, [FromQuery] DateTime data)
         {
             try
             {
                 var sidut = ControllerContext.HttpContext.User.Identity.Name;
                 int idUt = Int32.Parse(sidut);
                 //TODO ver se a ordem está correta 
-                var ementa = _context.EmentaSemanal.Find(idUt, idRec, data);
+                var ementa = _context.EmentaSemanal.Find(data, idRec, idUt);
 
                 if (ementa == null)
                 {
