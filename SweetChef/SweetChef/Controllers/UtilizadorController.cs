@@ -391,11 +391,14 @@ namespace SweetChef.Controllers
             var result = _context.Execucao.
                 Where(e => e.Utilizadorid == idUt).
                 GroupBy(e => e.Receitaid).
-                Select(ce => new { numerodevezes = ce.Count(), lastDate = ce.Max(e => e.Data), ce.FirstOrDefault().Receita}).
+                Select(ce => new { numerodevezes = ce.Count(), lastDate = ce.Max(e => e.Data),
+                                   ce.FirstOrDefault().Receita, ce.FirstOrDefault().Receita.Tempodepreparacao, tempoexecucao = ce.Min(e => e.DuracaoTotal)}).
                 ToList();
+            result.Sort( (e1,e2) => e2.lastDate.CompareTo(e1.lastDate));
             return Ok(result);
         }
 
+     
         [HttpGet("estatisticas/temposMédios")]
         public ActionResult GetTemposTotalMediosExecucaoPorReceita() {
             var sidut = ControllerContext.HttpContext.User.Identity.Name;
@@ -425,6 +428,7 @@ namespace SweetChef.Controllers
             var result = _context.Execucao.
                 Where(e => e.Utilizadorid == idUt).
                 SelectMany(e => e.Receita.ReceitaIngrediente).
+                Include("Receita.ReceitaIngrediente.Ingrediente.Unidade").
                 GroupBy(ri => ri.Ingredienteid).
                 Select(cri => new { quantidade = cri.Sum(s => s.Quantidade) ,
                                     numerodeVezes = cri.Count(),
@@ -432,8 +436,33 @@ namespace SweetChef.Controllers
                                     unidade = cri.FirstOrDefault().Ingrediente.Unidade.Nome
                 }).
                 ToList();
+            result.Sort((i1, i2) => i2.numerodeVezes.CompareTo(i1.numerodeVezes));
             return Ok(result);
         }
+
+        [HttpGet("tagsUsadas")]
+        public ActionResult GetTagsUsadas()
+        {
+            var sidut = ControllerContext.HttpContext.User.Identity.Name;
+            int idUt = Int32.Parse(sidut);
+            var user = _context.Utilizador.Find(idUt);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var result = _context.Execucao.
+                Where(e => e.Utilizadorid == idUt).
+                SelectMany(e => e.Receita.TagReceita).
+                GroupBy(tr => tr.Tagid).
+                Select(tu => new {
+                    numerodeVezes = tu.Count(),
+                    tag = tu.FirstOrDefault().Tag,
+                }).
+                ToList();
+            result.Sort((t1, t2) => t2.numerodeVezes.CompareTo(t1.numerodeVezes));
+            return Ok(result);
+        }
+
 
         //Gera lista de compras para os próximos sete dias
         [HttpGet("listaCompras")]

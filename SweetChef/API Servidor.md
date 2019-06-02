@@ -50,11 +50,13 @@
 * api/Utilizador/passoFeedback/{idReceita}/{idPasso}/
   * Retorna o feedback do utilizador relativo a um passo
 * api/Utilizador/receitasExecutadas
-  * Retorna as receitas executadas pelo utilizador, número de vezes que foram feitas e data da ultima execução 
+  * Retorna as receitas executadas pelo utilizador, número de vezes que foram feitas e data da ultima execução, tempo de preparação e duração total mínima. Tudo ordenado por data
 * api/Utilizador/estatisticas/temposMédios
   * Retorna Receitas executadas com os tempos médios de execução do utilizador
 * api/Utilizador/ingredientesUsados
-  * Retorna lista de Ingredientes usados com número de vezes e quantidade utilizada
+  * Retorna lista de Ingredientes usados com número de vezes e quantidade utilizada. Tudo ordenado decrescentemente pelo nº de utilização
+* api/Utilizador/tagsUsadas
+  * Retorna lista de tags usados com número de vezes que foi utilizada, ordenadas decrescentemente 
 * api/Utilizador/listaCompras
   * Retorna a lista de Ingredientes necessários para os próximos 7 dias da semana
 * api/Utilizador/closestStore/{lat},{lon}
