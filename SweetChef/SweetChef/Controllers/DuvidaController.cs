@@ -78,6 +78,20 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult getDuvidas()
+        {
+            try
+            {
+                return Ok(_context.Duvida.ToArray());
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         // api/duvida
         [HttpPost]
         public ActionResult addDuvida([FromForm] Duvida d)
