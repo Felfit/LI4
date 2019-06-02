@@ -144,7 +144,7 @@
             $(".receitasPlaceholder").remove();
         });
 
-        // pesquisa
+        // tendências
         $.getJSON("/api/Receita/", (data) => {
             if (data.length == 0) {
                 $("#tendenciasGroup").hide();
