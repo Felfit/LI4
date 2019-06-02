@@ -329,7 +329,10 @@ namespace SweetChef.Controllers
                 UtilizadorPasso u = _context.UtilizadorPasso.Find(idUt,idPasso,idReceita);
                 if (u == null)
                 {
-                    return NotFound();
+                    u = new UtilizadorPasso();
+                    u.Utilizadorid = idUt;
+                    u.Passoid = idPasso;
+                    u.PassoReceitaid = idReceita;
                 }
                 return Ok(u);
             }
