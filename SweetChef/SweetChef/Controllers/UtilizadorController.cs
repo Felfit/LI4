@@ -61,7 +61,7 @@ namespace SweetChef.Controllers
             }
         }
         //Create Execução
-        [HttpPost("restricaoAlimentar")]
+        [HttpPost("execucao")]
         public ActionResult PostExecucao([FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
         {
             try
