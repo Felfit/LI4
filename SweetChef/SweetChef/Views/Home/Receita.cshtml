@@ -13,19 +13,18 @@
                     url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
                     type: 'PUT',
                     data: "favorito=False",
-                    success: function(data) {
-                        $("#favorito").removeClass("fas fa-star")
+                    success: function () {
+                        $("#favorito").removeClass("fas fa-star");
                         $("#favorito").addClass("far fa-star");
                     }
                 });
-
             } else {
                 $.ajax({
                     url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
                     type: 'PUT',
                     data: "favorito=True",
-                    success: function(data) {
-                        $("#favorito").removeClass("far fa-star")
+                    success: function() {
+                        $("#favorito").removeClass("far fa-star");
                         $("#favorito").addClass("fas fa-star");
                     }
                 });
