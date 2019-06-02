@@ -61,7 +61,7 @@ namespace SweetChef.Controllers
             }
         }
         //Create Execução
-        [HttpPost("restricaoAlimentar")]
+        [HttpPost("execucao")]
         public ActionResult PostExecucao([FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
         {
             try
@@ -592,7 +592,7 @@ namespace SweetChef.Controllers
                 await HttpContext.SignInAsync(principal);
 
                 //Request.HttpContext.
-                return Redirect("/Home/Cozinhar/");
+                return Redirect("/Home/Tutorial/");
             }
             catch
             {
@@ -622,7 +622,7 @@ namespace SweetChef.Controllers
             }
         }
 
-        [HttpGet]
+        
         [Route("logout")]
         [Authorize]
         public async Task<IActionResult> logoutAsync()

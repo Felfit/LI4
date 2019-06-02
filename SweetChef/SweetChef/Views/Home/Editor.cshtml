@@ -124,15 +124,21 @@
             <div class="col">
                 <form method="post" id="ReceitaForm" action="/api/Receita/update">
                     <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
-                    <input id="TempodepreparacaoReceita" name="tempodepreparacao" hidden />
-                    <input id="TempodeesperaReceita" name="tempodeespera" hidden />
                     <div class="form-group">
                         Nome:
                         <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
                     </div>
                     <div class="form-group">
                         Descrição:
-                        <input name="Descricao" id="DescricaoReceita" class="form-control" type="text" required />
+                        <textarea name="Descricao" id="DescricaoReceita" class="form-control" type="text" required ></textarea>
+                    </div>
+                    <div class="form-group">
+                        Tempo de preparação:
+                        <input id="TempodepreparacaoReceita" class="form-control" type="number" name="tempodepreparacao"  required/>
+                    </div>
+                    <div class="form-group">
+                        Tempo de Espera:
+                        <input id="TempodeesperaReceita" class="form-control" type="number" name="tempodeespera" required/>
                     </div>
                     <div class="form-group">
                         Imagem:
@@ -187,7 +193,7 @@
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary value="Adicionar">
                     </div>
-                </form>
+</form>
             </div>
         </div>
 
@@ -211,7 +217,7 @@
                 </div>
                 <div class="form-group">
                     Descricao:
-                    <input type="text" name="Descricao" id="DescricaoPasso" class="form-control" required />
+                    <textarea type="text" name="Descricao" id="DescricaoPasso" class="form-control" required ></textarea>
                 </div>
                 <div class="form-group">
                     Imagem:
