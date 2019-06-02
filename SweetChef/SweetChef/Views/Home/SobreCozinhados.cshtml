@@ -11,24 +11,17 @@
                 $("#receitas").after("<center>Não existe receitas</center>");
             }
             for (const receita of data) {
-                var newLine = "<tr>";
-                for (const dado of receita) {
-                    newLine += `<td>${dado}</td>`;
-                }
-                newLine += "</tr>";
+                var newLine = `<tr><td>${new Date(receita.lastDate).toLocaleDateString("pt-PT")}</td><td>${receita.receita.nome}</td><td>${receita.numerodevezes}</td><td>${receita.tempodepreparacao} min</td><td>${receita.tempoexecucao} min</td></tr>`;
                 $(newLine).appendTo("#receitas tbody")
             }
         });
         $.getJSON("/api/Utilizador/ingredientesUsados", (data) => {
+            console.log(data);
             if (data.length == 0) {
                 $("#ingredientes").after("<center>Não existe ingredientes</center>");
             }
             for (const ingrediente of data) {
-                var newLine = "<tr>";
-                for (const dado of ingrediente) {
-                    newLine += `<td>${dado}</td>`;
-                }
-                newLine += "</tr>";
+                var newLine = `<tr><td>${ingrediente.ingrediente.nome}</td><td>${ingrediente.numerodeVezes}</td></tr>`;
                 $(newLine).appendTo("#ingredientes tbody")
             }
         });
@@ -38,11 +31,7 @@
                 $("#etiquetas").after("<center>Não existe etiquetas</center>");
             }
             for (const tag of data) {
-                var newLine = "<tr>";
-                for (const dado of tag) {
-                    newLine += `<td>${dado}</td>`;
-                }
-                newLine += "</tr>";
+                var newLine = `<tr><td>${tag.tag.tag1}</td><td>${tag.numerodeVezes}</td></tr>`;
                 $(newLine).appendTo("#etiquetas tbody")
             }
         });

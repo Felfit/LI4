@@ -100,9 +100,10 @@
             dataFinal = dataFinal.yyyymmdd();
             $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&dataInicial=${$("input").val()}&dataFinal=${dataFinal}`, (data) => {
                 $("#resultadoEmentaSemanal").html("");
+                let datas = Object.create(null);
                 for (const ementa of data) {
-                    const receita = ementa.receita || ementa;
-                    const ementaData = ementa.data || $("input").val();
+                    const receita = ementa.receita;
+                    const ementaData = ementa.data;
                     let receitaElement = gerarReceita();
                     receitaElement.find(".receitaNome").text(receita.nome);
                     receitaElement.find(".receitaImagem").attr("src", receita.imagemLink);
@@ -111,17 +112,18 @@
                     receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                     receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                     receitaElement.find(".removerEmenta").data({
-                        "id": ementa.id,
+                        "id": receita.id,
                         "data": ementaData
                     });
-                    if ($(`.ementaRow#emeta${ementaData}`).empty()) {
+                    if (!datas[ementaData]) {
                         let groupTemplate = $($("#groupTemplate").html());
                         groupTemplate.find("h2").text(new Date(ementaData).toLocaleDateString("pt-PT"));
                         window.group = groupTemplate;
-                        groupTemplate.find(".ementaRow").attr("id", `emeta${ementaData}`);
+                        groupTemplate.find(".ementaRow").attr("id", `ementa${new Date(ementaData).getTime()}`);
                         groupTemplate.appendTo("#resultadoEmentaSemanal");
+                        datas[ementaData] = true;
                     }
-                    receitaElement.appendTo(`.ementaRow#emeta${ementaData}`);
+                    receitaElement.appendTo(`.ementaRow#ementa${new Date(ementaData).getTime()}`);
                     $(".removerEmenta").on("click", function () {
                         const idReceita = $(this).data("id");
                         const data = $(this).data("data");
@@ -164,7 +166,7 @@
 <template id="receitaTemplate">
     <div class="receita">
         <div class="card">
-            <i class="fas fa-times text-danger fav-icon removerEmenta" style="z-index: 100"></i>
+            <i class="fas fa-times text-danger fav-icon removerEmenta cursor-pointer" style="z-index: 100"></i>
             <img class="card-img-top receitaImagem">
             <div class="card-body">
                 <h5 class="card-title text-center text-truncate receitaNome"></h5>
