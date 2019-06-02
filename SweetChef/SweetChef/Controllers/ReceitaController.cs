@@ -115,7 +115,6 @@ namespace SweetChef.Controllers
             {
                 _context.Passo.Add(p);
                 var r = _context.Receita.Find(p.Receitaid);
-                r.Tempodepreparacao += p.Duracao;
                 _context.Receita.Update(r);
                 _context.SaveChanges();
                 return Redirect("/Home/Editor/"+p.Receitaid+"?passo="+p.Numero);
