@@ -149,7 +149,6 @@ namespace SweetChef.Controllers
         {
             try
             {
-                Console.Beep();
                 _context.Receita.Add(r);
                 _context.SaveChanges();
                 return Redirect("/Home/Editor/" + r.Id);

@@ -124,6 +124,8 @@
             <div class="col">
                 <form method="post" id="ReceitaForm" action="/api/Receita/update">
                     <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
+                    <input id="TempodepreparacaoReceita" name="tempodepreparacao" hidden />
+                    <input id="TempodeesperaReceita" name="tempodeespera" hidden />
                     <div class="form-group">
                         Nome:
                         <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
@@ -140,7 +142,7 @@
                         Video:
                         <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
                     </div>
-                        <label>Dificuldade:</label>
+                    <label>Dificuldade:</label>
                     <div class="form-group row">
                         <div class="form-check m-3">
                             <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
