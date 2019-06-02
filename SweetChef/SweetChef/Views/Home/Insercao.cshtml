@@ -5,10 +5,186 @@
 
 <!DOCTYPE html>
 <script>
+    var unidades = $.getJSON("/api/ingrediente/unidade", (data) => {
+        for (var k = 0; k < data.length; k++) {
+            $("#unitSelectForm").append("<option value=\""+data[k].id+"\">"+data[k].nome+"</option>")
+        }
+    });
+
+    var ingredientes = $.getJSON("/api/ingrediente", (data) => {
+        $("#ingSelectForm").append("<option value=0>Adicionar Novo</option>");
+        for (var k = 0; k < data.length; k++) {
+            $("#ingSelectForm").append("<option posarray=" + k + " value=\"" + data[k].id + "\">" + data[k].nome + "</option>")
+        }
+    });
+    
+    var utensilios = $.getJSON("/api/utensilio", (data) => {
+        $("#utenSelectForm").append("<option value=0>Adicionar Novo</option>");
+        for (var k = 0; k < data.length; k++) {
+            $("#utenSelectForm").append("<option posarray=" + k + " value=\"" + data[k].id + "\">" + data[k].nome + "</option>")
+        }
+    });
+
+    var duvidas = $.getJSON("/api/duvida", (data) => {
+        $("#duvidaSelectForm").append("<option value=0>Adicionar Novo</option>");
+        for (var k = 0; k < data.length; k++) {
+            $("#duvidaSelectForm").append("<option posarray=" + k + " value=\"" + data[k].id + "\">" + data[k].titulo + "</option>")
+        }
+    });
+
+    // Preenche os forms quando mudada a seleção Ingredientes
+    $(document).ready(function () {
+        $("#ingSelectForm").change(function () {
+            if ($("#ingSelectForm").val() == "0") {
+                $("#ingNome").val("");
+                $("#ingNomeGroup").show();
+                $("#ingImagem").val("");
+                $("#unitSelectForm").val(0);
+            }
+            else {
+                var k = $("#ingSelectForm").children("option:selected").attr("posarray");
+                $("#ingNome").val(ingredientes.responseJSON[k].nome);
+                $("#ingNomeGroup").hide();
+                $("#ingImagem").val(ingredientes.responseJSON[k].imageLink);
+                $("#unitSelectForm").val(ingredientes.responseJSON[k].unidade.id);
+            }
+        });
+    });
+
+    //Custom Submit Ingrediente
+    $(document).ready(function () {
+        $('#ingForm').submit(function (e) {
+            e.preventDefault();
+            var t = "PUT";
+            if ($("#ingSelectForm").val() == "0")
+                t = "POST";
+            $.ajax({
+              url: '/api/ingrediente',
+              type: t,
+              data: $("#ingForm").serialize(),
+                success: function (data) {
+                    if (t == "PUT") {
+                        var k = $("#ingSelectForm").children("option:selected").attr("posarray");
+                        ingredientes.responseJSON[k].nome = $("#ingNome").val();
+                        ingredientes.responseJSON[k].imageLink = $("#ingImagem").val();
+                        ingredientes.responseJSON[k].unidade.id = $("#unitSelectForm").val();
+                        $("#ingSelectForm").children("option:selected").html(ingredientes.responseJSON[k].nome);
+                        alert("Ingrediente Atualizado");
+                    }
+                    else {
+                       
+                    }
+                }
+            });
+            if (t == "POST") {
+                    location.reload();
+            }
+        });
+    });
 
 
+    // Preenche os forms quando mudada a seleção Utensilios
+    $(document).ready(function () {
+        $("#utenSelectForm").change(function () {
+            if ($("#utenSelectForm").val() == "0") {
+                $("#utenNome").val("");
+                $("#utenNomeForm").show();
+                $("#utenImagem").val("");
+                $("#utenSelectForm").val(0);
+            }
+            else {
+                var k = $("#utenSelectForm").children("option:selected").attr("posarray");
+                $("#utenNome").val(ingredientes.responseJSON[k].nome);
+                $("#utenNomeForm").hide();
+                $("#utenImagem").val(ingredientes.responseJSON[k].imageLink);
+                $("#utentSelectForm").val(ingredientes.responseJSON[k].unidade.id);
+            }
+        });
+    });
+    
+    //Custom Submit Utensilio
+    $(document).ready(function () {
+        $('#utenForm').submit(function (e) {
+            e.preventDefault();
+            var t = "PUT";
+            if ($("#utenSelectForm").val() == "0")
+                t = "POST";
+            $.ajax({
+                url: '/api/ingrediente/utensilio',
+                type: t,
+                data: $("#utenForm").serialize(),
+                success: function (data) {
+                    if (t == "PUT") {
+                        var k = $("#utenSelectForm").children("option:selected").attr("posarray");
+                        utensilios.responseJSON[k].nome = $("#utenNome").val();
+                        utensilios.responseJSON[k].imageLink = $("#utenImagem").val();
+                        $("#utenSelectForm").children("option:selected").html(utensilios.responseJSON[k].nome);
+                        alert("Utensílio Atualizado");
+                    }
+                    else {
 
+                    }
+                }
+            });
+            if (t == "POST") {
+                location.reload();
+            }
+        });
+    });
 
+    // Preenche os forms quando mudada a seleção Dúvidas
+    $(document).ready(function () {
+        $("#duvidaSelectForm").change(function () {
+            if ($("#duvidaSelectForm").val() == "0") {
+                $("#duvidaTitulo").val("");
+                $("#duvidaImagem").val("");
+                $("#duvidaVideo").val("");
+                $("#duvidaLink").val("");
+                $("#duvidaExplicacao").val("");
+            }
+            else {
+                var k = $("#duvidaSelectForm").children("option:selected").attr("posarray");
+                console.log(k);
+                $("#duvidaTitulo").val(duvidas.responseJSON[k].titulo);
+                $("#duvidaImagem").val(duvidas.responseJSON[k].imagemLink);
+                $("#duvidaVideo").val(duvidas.responseJSON[k].videoLink);
+                $("#duvidaLink").val(duvidas.responseJSON[k].linkexterno);
+                $("#duvidaExplicacao").val(duvidas.responseJSON[k].explicacao);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('#DuvidaForm').submit(function (e) {
+            e.preventDefault();
+            var t = "PUT";
+            if ($("#duvidaSelectForm").val() == "0")
+                t = "POST";
+            $.ajax({
+                url: '/api/duvida',
+                type: t,
+                data: $("#DuvidaForm").serialize(),
+                success: function (data) {
+                    if (t == "PUT") {
+                        var k = $("#duvidaSelectForm").children("option:selected").attr("posarray");
+                        duvidas.responseJSON[k].titulo = $("#duvidaTitulo").val();
+                        duvidas.responseJSON[k].imagemLink = $("#duvidaImagem").val();
+                        duvidas.responseJSON[k].videoLink = $("#duvidaVideo").val();
+                        duvidas.responseJSON[k].linkexterno = $("#duvidaLink").val();
+                        duvidas.responseJSON[k].explicacao = $("#duvidaExplicacao").val();
+                        $("#duvidaSelectForm").children("option:selected").html(duvidas.responseJSON[k].titulo);
+                        alert("Duvida Atualizada");
+                    }
+                    else {
+
+                    }
+                }
+            });
+            if (t == "POST") {
+                location.reload();
+            }
+        });
+    });
 </script>
 
 
@@ -16,35 +192,31 @@
 
     <div class="col">
         <label>Adicionar Dúvida</label>
-        <form method="POST" id="DuvidaForm" action="/api/duvida">
+        <form id="DuvidaForm">
             <div class="form-group">
-                <label for="exampleFormControlSelect1">Selecionar Passo:</label>
-                <select class="form-control duvida" id="stepSelect">
-                    <option>Criar Novo</option>
+                <label for="exampleFormControlSelect1">Selecionar Dúvida:</label>
+                <select class="form-control duvida" name="id" id="duvidaSelectForm">
                 </select>
             </div>
             <div class="form-group">
-                <input value="1" name="idDuvida" class="form-control" hidden />
-            </div>
-            <div class="form-group">
                 Titulo:
-                <input type="text" name="Titulo" id="TituloDuvida" class="form-control" required />
+                <input type="text" name="Titulo" id="duvidaTitulo" class="form-control" required />
             </div>
             <div class="form-group">
                 Imagem:
-                <input type="url" name="ImagemLink" class="form-control" id="ImagemLinkDuvida" />
+                <input type="url" name="ImagemLink" class="form-control" id="duvidaImagem" />
             </div>
             <div class="form-group">
                 Video:
-                <input type="url" name="VideoLink" class="form-control" id="VideoLinkDuvida" />
+                <input type="url" name="VideoLink" class="form-control" id="duvidaVideo" />
             </div>
             <div class="form-group">
                 Link Externo:
-                <input type="url" name="Linkexterno" class="form-control" id="LinkExternoDuvida" />
+                <input type="url" name="Linkexterno" class="form-control" id="duvidaLink" />
             </div>
             <div class="form-group">
                 Explicação:
-                <input type="text" name="Explicacao" class="form-control" id="ExplicacaoDuvida" required />
+                <input type="text" name="Explicacao" class="form-control" id="duvidaExplicacao" required />
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary value="Adicionar">
@@ -53,22 +225,27 @@
     </div>
 
     <div class="col">
-        <label>Adicionar Ingrediente</label>
-        <form method="POST" id="ingForm" action="api/ingrediente">
+        <label>Editar Ingrediente</label>
+        <form  id="ingForm">
             <div class="form-group">
+                <label for="">Ingrediente:</label>
+                <select class="form-control" name="id" id="ingSelectForm">                  
+                </select>
+            </div>
+            <div class="form-group" id="ingNomeGroup">
                 <label> Nome:</label>
-                <input class="form-control" type="text" name="Nome" class="form-control" required />
+                <input class="form-control" type="text" id="ingNome" name="Nome" class="form-control" required />
             </div>
             <div class="form-group">
                 <label> Imagem:</label>
-                <input class="form-control" type="url" name="ImageLink" class="form-control" required />
+                <input class="form-control" type="url" id="ingImagem" name="ImageLink" class="form-control" required />
             </div>
             <div class="form-group">
-                <label for="">Unidade</label>
-                <select class="form-control" name="unidadeId" id="exampleFormControlSelect1"></select>
+                <label for="">Unidade:</label>
+                <select class="form-control" name="unidadeId" id="unitSelectForm"></select>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary value="Adicionar">
+                <button class="btn btn-primary value="Adicionar">Adicionar</button>
             </div>
         </form>
     </div>
@@ -77,14 +254,18 @@
         <label>
             Adicionar Utensílios
         </label>
-        <form method="POST" id="ingForm" action="api/Utensilio">
+        <form id="utenForm">
             <div class="form-group">
+                <label for="">Utensilio:</label>
+                <select class="form-control" name="Id" id="utenSelectForm"></select>
+            </div>
+            <div class="form-group" id="utenNomeForm">
                 <label> Nome:</label>
-                <input class="form-control" type="text" name="Nome" class="form-control" required />
+                <input class="form-control" id="utenNome" type="text" name="Nome" class="form-control" required />
             </div>
             <div class="form-group">
                 <label> Imagem:</label>
-                <input class="form-control" type="url" name="ImageLink" class="form-control" required />
+                <input class="form-control" id="utenImagem" type="url" name="ImageLink" class="form-control" required />
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary value="Adicionar">
@@ -110,7 +291,7 @@
 
     <div class="col">
         <label>
-            Adicionar Unidade
+            Adicionar Unidade:
         </label>
         <form method="POST" id="ingForm" action="api/ingrediente/unidade">
             <div class="form-group">

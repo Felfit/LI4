@@ -62,7 +62,7 @@
 * api/Utilizador/closestStore/{lat},{lon}
   * Retorna as coordenadas da loja mais próxima
 * api/Utilizador/ementa?idUt=...&dataInicial=...&dataFinal=...
-  * Retorna a ementa de uma determinada data
+  * Retorna todas as receitas dentro do intervalo e associadas a elas a data. Tudo ordenado crescentemente
 
 
 ###POST

@@ -26,13 +26,17 @@ namespace SweetChef.Controllers
        
 
         [HttpPost]
-        public ActionResult PostUtensilio(string nome, string imagem){
-            if (_context.Utensilio.Where(us => us.Nome == nome).Count() > 0)
+        public ActionResult PostUtensilio([FromQuery]Utensilio u){
+            if (_context.Utensilio.Where(us => us.Nome == u.Nome).Count() > 0)
                 return BadRequest();
-            Utensilio u = new Utensilio();
-            u.Nome = nome;
-            u.ImageLink = imagem;
             _context.Utensilio.Add(u);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpPost]
+        public ActionResult PutUtensilio([FromQuery]Utensilio u)
+        {
+            _context.Utensilio.Update(u);
             _context.SaveChanges();
             return Ok();
         }

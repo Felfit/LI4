@@ -18,7 +18,7 @@
                         $("#favorito").addClass("far fa-star");
                     }
                 });
-                
+
             } else {
                 $.ajax({
                     url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
@@ -29,6 +29,23 @@
                         $("#favorito").addClass("fas fa-star");
                     }
                 });
+            }
+        });
+    }
+
+    function atualizarMinhaClass() {
+        let input = $("#inputMinhaClass").val()
+        $.ajax({
+            url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
+            type: 'PUT',
+            data: "rating=" + input,
+            success: function(data) {
+                $("#minhaClass").text("⭐".repeat(input));
+
+                $.getJSON("/api/Receita/opinioes/@ViewData["ReceitaId"]", (data) => {
+                $("#mediaClass").text("⭐".repeat(Math.round(data.media)) + "(" + data.media + ")");
+                $("#numClass").text(data.numRatings + " avaliações");
+            });
             }
         });
     }
@@ -62,15 +79,16 @@
                 $("#numClass").text(data.numRatings + " avaliações");
             });
 
-            // favorita e minha classificação
+
             $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
+                // favorita
                 if (dataFav.favorito) {
                     $("#favorito").addClass("fas fa-star");
                 } else {
                     $("#favorito").addClass("far fa-star");
                 }
+                // minha classificação
                  $("#minhaClass").text("⭐".repeat(dataFav.rating));
-
             });
 
             // descrição
@@ -124,67 +142,43 @@
 
 <!-- Caracteristicas gerais -->
 <div class="row">
-
+    <!-- Porções -->
     <div class="col text-center">
         <span>Porções</span><br />
         <i class="fas fa-user"></i><br />
         <span id="porcoes"></span><br />
     </div>
-
+    <!-- Tempo de preparação -->
     <div class="col text-center">
         <span>Preparação</span><br />
         <i class="fas fa-clock"></i><br />
         <span id="preparacao"></span><br />
     </div>
-
+    <!-- Tempo de cozedura -->
     <div class="col text-center">
         <span>Cozedura</span><br />
         <i class="fas fa-fire"></i><br />
         <span id="cozedura"></span><br />
     </div>
-
+    <!-- Dificuldade -->
     <div class="col text-center" id="dificuldadeDiv">
         <span>Dificuldade</span><br />
         <i class="fas fa-signal"></i><br />
         <span id="dificuldade"></span><br />
     </div>
-
+    <!-- Classificação média -->
     <div class="col text-center">
         <span>Classificação</span><br />
         <span id="mediaClass"></span><br />
         <span id="numClass"></span><br />
     </div>
-
+    <!-- Minha classificação -->
     <div class="col text-center">
         <span>Minha class.</span><br />
         <span id="minhaClass"></span><br />
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#avaliarModal">Avaliar</button><br />
+        <a data-toggle="modal" data-target="#avaliarModal" href="#avaliarModal">Avaliar</a><br />
     </div>
-    <div class="modal fade" id="avaliarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Minha classificação da receita</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <div class="m-2">
-                            <input type="number" min="0" max="5" class="form-control" id="inputClassMin" placeholder="Classificação">
-                        </div>
-                        <!-- acabar -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Botão toggle favorito -->
     <div class="col text-center">
         <button type="button" class="m-3 btn btn-outline-warning btn-lg" onclick="toggleFavorita()"><i id="favorito" class=""></i><br /></button>
     </div>
@@ -194,9 +188,8 @@
 
 <!-- Imagem/Vídeo | Descrição e botões -->
 <div class="row">
+    <!-- Imagem/Vídeo -->
     <div class="col-lg-8 order-lg-0">
-
-        <!-- Imagem/Vídeo -->
         <div id="carouselIndicators" class="row my-2 mx-0 carousel slide" data-ride="carousel" data-interval="false">
             <ol class="carousel-indicators">
                 <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
@@ -225,17 +218,19 @@
         </div>
     </div>
 
-    <!-- Descrição e botões -->
+    <!-- Descrição | Começar passo a passo | Adicionar à ementa semanal -->
     <div class="col-lg-4 order-lg-1">
-        <a class="btn btn-primary mb-3 w-100 mt-2" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar passo a passo</a>
-        <a class="btn btn-secondary mb-3 w-100" data-toggle="modal" data-target="#ementaSemanal" href="#ementaSemanal">Adicionar à ementa semanal</a> <!-- Fazer -->
+        <a class="btn btn-primary mb-3 w-100 mt-2" href="@Url.Action("PassoAPasso", "Home", new { id = ViewData["ReceitaId"]})">Começar acompanhamento passo a passo</a>
+        <a class="btn btn-secondary mb-3 w-100" data-toggle="modal" data-target="#ementaSemanal" href="#ementaSemanal">Adicionar à ementa semanal</a>
         <p id="descricao"></p>
     </div>
 </div>
 
 <hr />
 
+<!-- Preparação | Tabela nutricional | Ingredientes | Utensílios -->
 <div class="row mt-2">
+    <!-- Preparação | Tabela nutricional -->
     <div class="col-lg-6">
         <!-- Preparação -->
         <h4>Preparação</h4>
@@ -265,7 +260,7 @@
             </tbody>
         </table>
     </div>
-
+    <!-- Ingredientes | Utensílios -->
     <div class="col-lg-6">
         <!-- Ingredientes -->
         <h4>Ingredientes</h4>
@@ -277,8 +272,7 @@
     </div>
 </div>
 
-
-<!-- Produto -->
+<!-- Modal Ingrediente/Utensílio -->
 <div class="modal fade" id="produto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-100 w-75" role="document">
         <div class="modal-content" style="height: 75vh">
@@ -294,7 +288,33 @@
         </div>
     </div>
 </div>
-<!-- Ementa Semanal -->
+
+<!-- Modal avaliar receita -->
+<div class="modal fade" id="avaliarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Minha classificação da receita</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="m-2">
+                        <input type="number" min="0" max="5" class="form-control" id="inputMinhaClass">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="atualizarMinhaClass()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ementa Semanal -->
 <div class="modal fade" id="ementaSemanal" tabindex="-1" role="dialog" aria-hidden="true">
     <script>
         $(() => {
@@ -313,8 +333,8 @@
             </div>
             <div class="modal-body">
                 <form id="ementaSemanalForm">
-                    <input type="hidden" name="idRec" value="@ViewData["ReceitaId"]"/>
-                    <input id="dataEmentaSemanal" type="date" name="data" class="form-control" required/>
+                    <input type="hidden" name="idRec" value="@ViewData["ReceitaId"]" />
+                    <input id="dataEmentaSemanal" type="date" name="data" class="form-control" required />
                 </form>
             </div>
             <div class="modal-footer">
