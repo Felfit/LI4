@@ -79,6 +79,15 @@
 </style>
 
 <script>
+    Date.prototype.yyyymmdd = function () {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+
+        return [this.getFullYear(),
+        (mm > 9 ? '' : '0') + mm,
+        (dd > 9 ? '' : '0') + dd
+        ].join('-');
+    };
     $(function () {
         function gerarReceita() {
             return $($("#receitaTemplate").html());
@@ -86,25 +95,49 @@
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
         const dificuldadeColor = [, "success", "warning", "danger"];
         $("form").on("submit", function () {
-            $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&data=${$("input").val()}`, (data) => {
-                $("#ementaRow").html("");
-                console.log($("input").val());
+            let dataFinal = new Date($("input").val());
+            dataFinal.setDate(dataFinal.getDate() + 7);
+            dataFinal = dataFinal.yyyymmdd();
+            $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&dataInicial=${$("input").val()}&dataFinal=${dataFinal}`, (data) => {
+                $("#resultadoEmentaSemanal").html("");
                 for (const ementa of data) {
-                    const receita = ementa.receita;
+                    const receita = ementa.receita || ementa;
+                    const ementaData = ementa.data || $("input").val();
                     let receitaElement = gerarReceita();
-                    window.receita = receitaElement;
                     receitaElement.find(".receitaNome").text(receita.nome);
                     receitaElement.find(".receitaImagem").attr("src", receita.imagemLink);
                     receitaElement.find(".receitaDificuldade").addClass("text-" + dificuldadeColor[receita.dificuldade]);
                     receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
                     receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                     receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
-                    if ($(`.group-date[data-data=${ementa.data}]`).empty()) {
+                    receitaElement.find(".removerEmenta").data({
+                        "id": ementa.id,
+                        "data": ementaData
+                    });
+                    if ($(`.ementaRow#emeta${ementaData}`).empty()) {
                         let groupTemplate = $($("#groupTemplate").html());
-                        groupTemplate.find("h2.group-data").data("data", ementa.data).text(ementa.data);
-                        groupTemplate.find(".ementaRow").data("data", ementa.data);
+                        groupTemplate.find("h2").text(new Date(ementaData).toLocaleDateString("pt-PT"));
+                        window.group = groupTemplate;
+                        groupTemplate.find(".ementaRow").attr("id", `emeta${ementaData}`);
+                        groupTemplate.appendTo("#resultadoEmentaSemanal");
                     }
-                    receitaElement.appendTo("#ementaRow[data-data=${ementa.data}]");
+                    receitaElement.appendTo(`.ementaRow#emeta${ementaData}`);
+                    $(".removerEmenta").on("click", function () {
+                        const idReceita = $(this).data("id");
+                        const data = $(this).data("data");
+                        $.ajax({
+                            url: `/api/Utilizador/ementa?idRec=${idReceita}&data=${data}`,
+                            method: "DELETE",
+                            success: () => {
+                                const group = $(this).parents(".group-data");
+                                if (group.find(".receita").length == 1) {
+                                    group.remove()
+                                } else {
+                                    $(this).parents(".receita").remove();
+                                }
+                            }
+                        })
+                    });
                 }
             });
             return false;
@@ -116,17 +149,22 @@
     <input type="date" name="semana" class="form-control mr-1" />
     <input type="submit" value="Procurar" class="btn btn-primary" />
 </form>
+<div id="resultadoEmentaSemanal">
 
+</div>
 <template id="groupTemplate">
-    <h2 class="group-data"></h2>
-    <div class="container-fluid horizontal-scroll py-2">
-        <div class="row flex-row flex-nowrap ementaRow">
+    <div class="group-data mt-2">
+        <h2></h2>
+        <div class="container-fluid horizontal-scroll py-2">
+            <div class="row flex-row flex-nowrap ementaRow">
+            </div>
         </div>
     </div>
 </template>
 <template id="receitaTemplate">
     <div class="receita">
         <div class="card">
+            <i class="fas fa-times text-danger fav-icon removerEmenta" style="z-index: 100"></i>
             <img class="card-img-top receitaImagem">
             <div class="card-body">
                 <h5 class="card-title text-center text-truncate receitaNome"></h5>

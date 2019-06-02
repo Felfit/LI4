@@ -74,6 +74,8 @@ namespace SweetChef.Controllers
             var sidut = HttpContext.User.Identity.Name;
             int idUt = Int32.Parse(sidut);
             ViewData["idUser"] = idUt;
+            ViewData["NomeUtilizador"] = GetNomeUtilizador();
+
             return View();
         }
 

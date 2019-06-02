@@ -100,8 +100,9 @@ namespace SweetChef.Controllers
                 int idUt = Int32.Parse(sidut);
                 var ementa= _context.EmentaSemanal.
                    Where(em => em.Utilizadorid == idUt && em.Data >= dataInicial && em.Data <= dataFinal).
-                   Select(em => em.Receita).
+                   Select(em => new { em.Receita, em.Data}).
                    ToList();
+                ementa.Sort((e1, e2) => e1.Data.CompareTo(e2.Data));
                 return Ok(ementa);
             }
             catch (Exception e)
@@ -141,14 +142,14 @@ namespace SweetChef.Controllers
 
         //Remove uma receita da ementa
         [HttpDelete("ementa")]
-        public IActionResult Delete([FromForm] int idRec, [FromForm] DateTime data)
+        public IActionResult Delete([FromQuery] int idRec, [FromQuery] DateTime data)
         {
             try
             {
                 var sidut = ControllerContext.HttpContext.User.Identity.Name;
                 int idUt = Int32.Parse(sidut);
                 //TODO ver se a ordem está correta 
-                var ementa = _context.EmentaSemanal.Find(idUt, idRec, data);
+                var ementa = _context.EmentaSemanal.Find(data, idRec, idUt);
 
                 if (ementa == null)
                 {
