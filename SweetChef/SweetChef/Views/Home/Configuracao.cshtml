@@ -33,9 +33,9 @@
                 id = Number($(this).attr("id").slice(12))
                 console.log("ID: " + id)
                 $.ajax({
-                    url: '/api/Utilizador/configuracao',
-                    type: 'PUT',
-                    data: "likes=" + id,
+                    url: 'api/utilizador/configuracao/preferida',
+                    type: 'POST',
+                    data: "preferida=" + id,
                     success: function(data) {
                         console.log("SIM")
                     },

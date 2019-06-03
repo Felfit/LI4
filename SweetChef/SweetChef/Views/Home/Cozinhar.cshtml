@@ -155,6 +155,10 @@
 
         // favoritas
         $.getJSON("/api/Utilizador/favoritas", (data) => {
+            if (data.length == 0) {
+                $("#favoritosGroup").remove();
+                return;
+            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -171,6 +175,10 @@
 
         // sugestões
         $.getJSON("/api/Receita/recomendadas", (data) => {
+            if (data.length == 0) {
+                $("#sugestoesGroup").remove();
+                return;
+            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -187,6 +195,10 @@
 
         // descoberta
         $.getJSON("/api/Receita/descoberta", (data) => {
+            if (data.length == 0) {
+                $("#descobertasGroup").remove();
+                return;
+            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -204,6 +216,7 @@
         // tendencias
         $.getJSON("/api/Receita/tendencias", (data) => {
             for (const receita of data) {
+                if (data.length == 0) return;
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
                 receitaElement.find(".receitaNome").text(receita.nome);
@@ -215,6 +228,14 @@
                 receitaElement.appendTo("#tendenciasRow");
             }
             $("#tendenciasGroup").removeClass("d-none");
+        });
+
+        $(".checkbox-one").on("change", function () {
+            let group = $(this).data("group");
+            let checked = $(this).prop("checked");
+            $(`.checkbox-one[data-group="${group}"]`).prop("checked", false);
+            console.log($(`.checkbox-one[data-group="${group}"]`));
+            $(this).prop("checked", checked);
         });
     });
 </script>
@@ -259,21 +280,50 @@
                 </button>
                 <div class="dropdown-menu w-100" aria-labelledby="dropdownDificuldade">
                     <label class="form-check dropdown-item" for="checkFacil">
-                        <input class="form-check-input" type="checkbox" value="1" id="checkFacil" name="dif">
+                        <input class="form-check-input checkbox-one" data-group="dificuldade" type="checkbox" value="1" id="checkFacil" name="dif">
                         <label class="form-check-label" for="checkFacil">
                             Fácil
                         </label>
                     </label>
                     <label class="form-check dropdown-item" for="checkMedio">
-                        <input class="form-check-input" type="checkbox" value="2" id="checkMedio" name="dif">
+                        <input class="form-check-input checkbox-one" data-group="dificuldade" type="checkbox" value="2" id="checkMedio" name="dif">
                         <label class="form-check-label" for="checkMedio">
                             Médio
                         </label>
                     </label>
                     <label class="form-check dropdown-item" for="checkDificil">
-                        <input class="form-check-input" type="checkbox" value="3" id="checkDificil" name="dif">
+                        <input class="form-check-input checkbox-one" data-group="dificuldade" type="checkbox" value="3" id="checkDificil" name="dif">
                         <label class="form-check-label" for="checkDificil">
                             Difícil
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- dropdown Tempo Máximo -->
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="btn-group my-2 w-100">
+                <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownTempo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tempo Máximo
+                </button>
+                <div class="dropdown-menu w-100" aria-labelledby="dropdownTempo">
+                    <label class="form-check dropdown-item" for="checkRapidas">
+                        <input class="form-check-input checkbox-one" data-group="tempo" type="checkbox" value="15" id="checkRapidas" name="dur">
+                        <label class="form-check-label" for="checkRapidas">
+                            Rápidas (até 15 minutos)
+                        </label>
+                    </label>
+                    <label class="form-check dropdown-item" for="checkMedias">
+                        <input class="form-check-input checkbox-one" data-group="tempo" type="checkbox" value="30" id="checkMedias" name="dur">
+                        <label class="form-check-label" for="checkMedias">
+                            Médias (até 30 minutos)
+                        </label>
+                    </label>
+                    <label class="form-check dropdown-item" for="checkLongas">
+                        <input class="form-check-input checkbox-one" data-group="tempo" type="checkbox" value="60" id="checkLongas" name="dur">
+                        <label class="form-check-label" for="checkLongas">
+                            Longas (até 60 minutos)
                         </label>
                     </label>
                 </div>

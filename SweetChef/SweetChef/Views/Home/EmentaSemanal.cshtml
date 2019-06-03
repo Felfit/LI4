@@ -101,7 +101,7 @@
                 if (data.length != 0)
                 {
                     $("#resultadoEmentaSemanal").html("");
-                    $("#listabutton").show();
+                    $("#listabutton").prop("hidden", false);
                 }
                 let datas = Object.create(null);
                 for (const ementa of data) {
