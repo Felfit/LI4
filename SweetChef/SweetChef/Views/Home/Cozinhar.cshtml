@@ -87,6 +87,7 @@
                 window.etiqueta = etiquetaElement;
                 etiquetaElement.find(".etiquetaNome").text(etiqueta.nome);
                 etiquetaElement.find(".checkEtiqueta").attr("id", "etiqueta" + etiqueta.id);
+                etiquetaElement.find(".checkEtiqueta").attr("value", etiqueta.id);
                 etiquetaElement.find(".labelEtiqueta").attr("for", "etiqueta" + etiqueta.id);
 
                 etiquetaElement.appendTo("#etiquetasMenu");
@@ -186,68 +187,71 @@
 
 
 <!-- Procurar Receita -->
-<form class="form-inline my-2 my-lg-0 form-row">
-    <input class="form-control mx-sm-2 col-9 col-sm-6 col-md-4 col-lg-3" type="search" placeholder="Receita" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Procurar <i class="fas fa-search"></i></button>
-</form>
+<form method="get">
+    <div class="form-inline my-2 my-lg-0 form-row">
+        <input name="query" class="form-control mx-sm-2 col-9 col-sm-6 col-md-4 col-lg-3" type="search" placeholder="Receita" aria-label="Search">
+        <button class="btn btn-primary my-2 my-sm-0" type="submit">Procurar <i class="fas fa-search"></i></button>
+    </div>
 
-<div class="row">
-    <!-- dropdown Etiqueta -->
-    <div class="col-6 col-md-4 col-lg-3">
-        <div class="btn-group my-2 w-100">
-            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownEtiqueta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Etiqueta
-            </button>
-            <div class="dropdown-menu w-100 overflow-auto" style="height: 10em" aria-labelledby="dropdownEtiqueta" id="etiquetasMenu">
 
-                <template id="etiquetaTemplate">
+    <div class="row">
+        <!-- dropdown Etiqueta -->
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="btn-group my-2 w-100">
+                <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownEtiqueta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Etiqueta
+                </button>
+                <div class="dropdown-menu w-100 overflow-auto" style="height: 10em" aria-labelledby="dropdownEtiqueta" id="etiquetasMenu">
+
+                    <template id="etiquetaTemplate">
+                        <label class="form-check-label labelEtiqueta form-check dropdown-item">
+                        <input class="form-check-input checkEtiqueta" type="checkbox" name="tags">
+                        <span class="etiquetaNome"></span>
+                        </label>
+                    </template>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- dropdown Dificuldade -->
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="btn-group my-2 w-100">
+                <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownDificuldade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dificuldade
+                </button>
+                <div class="dropdown-menu w-100" aria-labelledby="dropdownDificuldade">
                     <div class="form-check dropdown-item">
-                        <input class="form-check-input checkEtiqueta" type="checkbox" value="">
-                        <label class="form-check-label labelEtiqueta">
-                            <span class="etiquetaNome"></span>
+                        <input class="form-check-input" type="checkbox" value="1" id="checkFacil" name="dif">
+                        <label class="form-check-label" for="checkFacil">
+                            Fácil
                         </label>
                     </div>
-                </template>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- dropdown Dificuldade -->
-    <div class="col-6 col-md-4 col-lg-3">
-        <div class="btn-group my-2 w-100">
-            <button class="btn btn-secondary btn-sm dropdown-toggle dropdown-placeholder text-truncate w-100" type="button" id="dropdownDificuldade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dificuldade
-            </button>
-            <div class="dropdown-menu w-100" aria-labelledby="dropdownDificuldade">
-                <div class="form-check dropdown-item">
-                    <input class="form-check-input" type="checkbox" value="" id="checkFacil">
-                    <label class="form-check-label" for="checkFacil">
-                        Fácil
-                    </label>
-                </div>
-                <div class="form-check dropdown-item">
-                    <input class="form-check-input" type="checkbox" value="" id="checkMedio">
-                    <label class="form-check-label" for="checkMedio">
-                        Médio
-                    </label>
-                </div>
-                <div class="form-check dropdown-item">
-                    <input class="form-check-input" type="checkbox" value="" id="checkDificil">
-                    <label class="form-check-label" for="checkDificil">
-                        Difícil
-                    </label>
+                    <div class="form-check dropdown-item">
+                        <input class="form-check-input" type="checkbox" value="2" id="checkMedio" name="dif">
+                        <label class="form-check-label" for="checkMedio">
+                            Médio
+                        </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                        <input class="form-check-input" type="checkbox" value="3" id="checkDificil" name="dif">
+                        <label class="form-check-label" for="checkDificil">
+                            Difícil
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- toggle inicial -->
-    <div class="col-6 col-md-4 col-lg-2">
-        <a href="#" class="btn btn-secondary btn-sm active my-2" role="button" aria-pressed="true">Favoritos e Sugestões</a>
-    </div>
+        <!-- toggle inicial -->
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="#" class="btn btn-secondary btn-sm active my-2" role="button" aria-pressed="true">Favoritos e Sugestões</a>
+        </div>
 
-</div>
+    </div>
+</form>
+
+
 
 <hr />
 

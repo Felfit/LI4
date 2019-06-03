@@ -15,30 +15,32 @@
             window.etiqueta = element;
             element.find(".textTemplate").text(etiqueta.nome);
             element.find(".checkTemplate").attr("id", "etiquetaPref" + etiqueta.id);
-            element.find(".checkTemplate").addClass("etiquetaPref");
             element.find(".labelTemplate").attr("for", "etiquetaPref" + etiqueta.id);
             element.appendTo("#etiquetasMenuPref");
             
             element = $($("#checkboxTemplate").html());
             window.etiqueta = element;
             element.find(".textTemplate").text(etiqueta.nome);
-            element.find(".checkTemplate").attr("id", "etiquetaExc" + etiqueta.id);
-            element.find(".checkTemplate").addClass("etiquetaExc");
-            element.find(".labelTemplate").attr("for", "etiquetaExc" + etiqueta.id);
+            element.find(".checkTemplate").attr("id", "etiquetaExcl" + etiqueta.id);
+            element.find(".labelTemplate").attr("for", "etiquetaExcl" + etiqueta.id);
             element.appendTo("#etiquetasMenuExc");
-
-
         }
 
-        $(".etiquetaPref").on("change", function () {
+        $(".checkTemplate").on("change", function () {
+
+
             if ($(this).prop("checked")) {
-                id = $(this).attr("id") // acabar
+                id = Number($(this).attr("id").slice(12))
+                console.log("ID: " + id)
                 $.ajax({
-                    url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
+                    url: '/api/Utilizador/configuracao',
                     type: 'PUT',
                     data: "likes=" + id,
                     success: function(data) {
-
+                        console.log("SIM")
+                    },
+                    fail: function () {
+                        console.log("NAO")
                     }
                 });
             } else {
@@ -57,7 +59,6 @@
             element.find(".checkTemplate").addClass("ingrediente");
             element.find(".labelTemplate").attr("for", "ingrediente" + ingrediente.id);
             element.appendTo("#ingredientesMenu");
-            
         }
     });
 
