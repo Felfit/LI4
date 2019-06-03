@@ -224,7 +224,7 @@ namespace SweetChef.Controllers
                 if (str != null)
                     receitas = receitas.Where(x => (x.Nome.Equals(str))); 
                 if (dur.HasValue)
-                    receitas = receitas.Where(x => (x.Tempodepreparacao + x.Tempodeespera <= dur.Value));
+                    receitas = receitas.Where(x => (x.Tempodepreparacao <= dur.Value));
                 if (tags.Count != 0)
                 {
                     foreach (int i in tags)
