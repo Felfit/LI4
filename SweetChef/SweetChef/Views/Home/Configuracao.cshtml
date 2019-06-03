@@ -5,6 +5,8 @@
 <h3>@ViewData["Message"]</h3>
 
 <script>
+
+
     // etiquetas
     $.getJSON("/api/Tag", (data) => {
         for (const etiqueta of data) {
@@ -13,6 +15,7 @@
             window.etiqueta = element;
             element.find(".textTemplate").text(etiqueta.nome);
             element.find(".checkTemplate").attr("id", "etiquetaPref" + etiqueta.id);
+            element.find(".checkTemplate").addClass("etiquetaPref");
             element.find(".labelTemplate").attr("for", "etiquetaPref" + etiqueta.id);
             element.appendTo("#etiquetasMenuPref");
             
@@ -20,10 +23,28 @@
             window.etiqueta = element;
             element.find(".textTemplate").text(etiqueta.nome);
             element.find(".checkTemplate").attr("id", "etiquetaExc" + etiqueta.id);
+            element.find(".checkTemplate").addClass("etiquetaExc");
             element.find(".labelTemplate").attr("for", "etiquetaExc" + etiqueta.id);
             element.appendTo("#etiquetasMenuExc");
-            
+
+
         }
+
+        $(".etiquetaPref").on("change", function () {
+            if ($(this).prop("checked")) {
+                id = $(this).attr("id") // acabar
+                $.ajax({
+                    url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
+                    type: 'PUT',
+                    data: "likes=" + id,
+                    success: function(data) {
+
+                    }
+                });
+            } else {
+                console.log("nao checked" + $(this).attr("id"))
+            }
+        })
     });
 
     $.getJSON("/api/ingrediente", (data) => {
@@ -33,6 +54,7 @@
             window.ingrediente = element;
             element.find(".textTemplate").text(ingrediente.nome);
             element.find(".checkTemplate").attr("id", "ingrediente" + ingrediente.id);
+            element.find(".checkTemplate").addClass("ingrediente");
             element.find(".labelTemplate").attr("for", "ingrediente" + ingrediente.id);
             element.appendTo("#ingredientesMenu");
             
@@ -40,11 +62,14 @@
     });
 
 
+
+
 </script>
 
 <h4>Preferências das sugestões</h4>
 <div class="container">
 
+    <!-- template -->
     <template id="checkboxTemplate">
         <div class="form-check">
             <input class="form-check-input checkTemplate" type="checkbox" value="">

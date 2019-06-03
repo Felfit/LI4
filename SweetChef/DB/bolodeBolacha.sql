@@ -23,7 +23,7 @@ INSERT INTO Ingrediente
 	(7, 'ovo', 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Egg_upright.jpg'),
 	(5, 'café' , 'https://www.gannett-cdn.com/presto/2018/11/21/USAT/55c6954d-2d02-4c41-a61f-b7d302d32658-YL_FLAG_coffee.JPG?width=534&height=712&fit=bounds&auto=webp'),
 	(7, 'grão de café', 'https://5.imimg.com/data5/XK/JC/MY-12108908/coffee-beans-750-to-850-kg-500x500.jpg'),
-	(2, 'bolacha ralada', 'http://3.bp.blogspot.com/_lW5crvJoV4s/Se9-eq3Lj5I/AAAAAAAAAMY/BDDWnXQNtOQ/s400/DSC04372.JPG');
+	(2, 'iogurte', 'http://3.bp.blogspot.com/_lW5crvJoV4s/Se9-eq3Lj5I/AAAAAAAAAMY/BDDWnXQNtOQ/s400/DSC04372.JPG');
 
 INSERT INTO Utensilio
 	(nome, imageLink)
@@ -39,13 +39,12 @@ INSERT INTO Utensilio
 INSERT INTO Receita_Ingrediente
 	(quantidade, Receitaid, Ingredienteid)
 	VALUES
-	(36, 1, 1),
+	(44, 1, 1),
 	(250, 1, 2),
 	(250, 1, 3),
 	(3, 1, 4),
 	(500, 1, 5),
-	(20, 1 , 6),
-	(100, 1, 7);
+	(20, 1 , 6);
 
 INSERT INTO Utensilio_Receita
 	(Receitaid, Utensilioid)
@@ -75,7 +74,7 @@ INSERT INTO Duvida
 	VALUES
 	('Gema', null, 'https://sitedoovo.com.br/wp-content/uploads/2019/02/gema-do-ovo.jpg', null, 'A gema está situada centralmente no interior do ovo e possui uma forma esférica. É nela que se concentra a parte mais gordurosa e calórica do ovo'),
 	('Clara', null, 'https://www.mundoboaforma.com.br/wp-content/uploads/2015/07/Eggwhite-614x330.jpg', null, 'A clara trata-se de uma substância aquosa e viscosa, praticamente transparente e sem odor próprio. A clara é rica em proteínas e é de alta digestão.'),
-	('Separar gema da clara', 'https://www.youtube.com/watch?v=tx72s86URhA', '/images/duvidas/ovosGema.PNG', null, null),
+	('Separar gema da clara', 'https://www.youtube.com/watch?v=tx72s86URhA', null, null, null),
 	('Mistura homogénea', null, null, null, 'Misturas homogêneas são aquelas em que não se consegue perceber a diferença entre duas ou mais substâncias. Exemplos destas misturas são a água salgada e o ar'),
 	('Barrar', null, 'https://4men.pt/wp-content/uploads/2019/01/0f95b97c47b9affa49e5bb97f55d5cbc-754x394.jpg', null, 'Cobrir, normalmente, um objeto sólido com algum tipo de mistura pegajosa'),
 	('Bolacha ralada', 'https://www.youtube.com/embed/OD9Rp-UJNG4?start=12&end=25', null, null, null),
@@ -103,7 +102,7 @@ INSERT INTO Passo_Ingrediente
 	(6, 4, 1, 1),
 	(6, 5, 1, 1),
 	(30, 6, 1, 1),
-	(100, 8, 1, 7),
+	(8, 8, 1, 1),
 	(20, 8, 1, 6);
 
 INSERT INTO Utensilio_Passo
