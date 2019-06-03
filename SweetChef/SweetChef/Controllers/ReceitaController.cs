@@ -212,7 +212,7 @@ namespace SweetChef.Controllers
         }
 
         [HttpGet("filtradas")]
-        public ActionResult GetReceitasFiltradas([FromQuery] int? dif, [FromQuery]int? dur, [FromQuery] List<int> tags)
+        public ActionResult GetReceitasFiltradas([FromQuery] string str, [FromQuery] int? dif, [FromQuery]int? dur, [FromQuery] List<int> tags)
         {
             try
             {
@@ -220,7 +220,8 @@ namespace SweetChef.Controllers
                                 Include("TagReceita.Tag").ToList().
                                 Where(x => (!dur.HasValue || x.Tempodepreparacao + x.Tempodeespera <= dur.Value)
                                            && (!dif.HasValue || x.Dificuldade == dif.Value)
-                                           && (tags.Count == 0 || ContainsTag(x.TagReceita, tags)));
+                                           && (tags.Count == 0 || ContainsTag(x.TagReceita, tags))
+                                           && (x.Nome.Equals(str) || str==null));
      
                 return Ok(receitas);
             }

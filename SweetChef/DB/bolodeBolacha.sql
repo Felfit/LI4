@@ -1,7 +1,7 @@
 ﻿INSERT INTO Receita
 	(imagemLink, videoLink, descricao, nome, dificuldade, porcoes, tempodepreparacao, tempodeespera, energia, gordura, hidratosCarbono)
 	VALUES 
-	('https://www.saborintenso.com/attachments/videos-doces/377d1252681021-bolo-bolacha-bolo-bolacha-3.jpg', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=35&end=267', 'Ninguém resiste a um bolo de bolacha cremoso, venha daí e prepare a nossa receita de bolo de bolacha simples e fácil de fazer. Se for dia de festa, este bolo vai fazer sucesso. Experimente e tenha um dia em grande!', 'Bolo de Bolacha', 2, 12, 40, 120, 350, 25, 40);
+	('https://www.saborintenso.com/attachments/videos-doces/377d1252681021-bolo-bolacha-bolo-bolacha-3.jpg', '/videos/boloBolacha/ReceitaToda.mp4', 'Ninguém resiste a um bolo de bolacha cremoso, venha daí e prepare a nossa receita de bolo de bolacha simples e fácil de fazer. Se for dia de festa, este bolo vai fazer sucesso. Experimente e tenha um dia em grande!', 'Bolo de Bolacha', 2, 12, 40, 120, 350, 25, 40);
 
 INSERT INTO Unidade
 	(nome)
@@ -59,14 +59,14 @@ INSERT INTO Utensilio_Receita
 INSERT INTO Passo 
 	(numero, Receitaid, duracao, descricao, imagemLink, videoLink, linkExterno)
 	VALUES
-	(1, 1, 5, 'Bata a manteiga até ficar um creme branco', '/images/boloDeBolacha/bater.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=46&end=53', null),
-	(2, 1, 2, 'Junte açúcar ao creme e continue a bater', '/images/boloDeBolacha/beterComAcucar.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=60&end=72', null),
-	(3, 1, 3, 'Junte as gemas de ovos uma de cada vez ao creme enquanto continua a bater até ficar homogéneo', '/images/boloDeBolacha/baterComOvos.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=85&end=101', null),
-	(4, 1, 2, 'Passe 6 bolachas maria por café, uma de cada vez', '/images/boloDeBolacha/molhar.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=111&end=115', null),
+	(1, 1, 5, 'Bata a manteiga até ficar um creme branco', '/images/boloDeBolacha/bater.PNG', '/videos/boloBolacha/passo1.mp4', null),
+	(2, 1, 2, 'Junte açúcar ao creme e continue a bater', '/images/boloDeBolacha/beterComAcucar.PNG', '/videos/boloBolacha/passo2.mp4', null),
+	(3, 1, 3, 'Junte as gemas de ovos uma de cada vez ao creme enquanto continua a bater até ficar homogéneo', '/images/boloDeBolacha/baterComOvos.PNG', '/videos/boloBolacha/passo3.mp4', null),
+	(4, 1, 2, 'Passe 6 bolachas maria por café, uma de cada vez', '/images/boloDeBolacha/molhar.PNG', '/videos/boloBolacha/passo4.mp4', null),
 	(5, 1, 2, 'Coloque as bolachas no centro do suporte para bolos e barre o topo com o creme', '/images/boloDeBolacha/semiMonte.PNG', null, null),
-	(6, 1, 20, 'Repita os dois passos anteriores, para formar as várias camadas do bolo até acabarem as bolachas', '/images/boloDeBolacha/monte.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=128&end=198', null),
-	(7, 1, 4, 'Cubra o bolo com o creme restante', '/images/boloDeBolacha/quaseBom.PNG', 'https://www.youtube.com/embed/8g-PC_lMMSo?start=205&end=226', null),
-	(8, 1, 2, 'Decore o resultado com a bolacha ralada e com os grãos de café', 'https://www.saborintenso.com/attachments/videos-doces/377d1252681021-bolo-bolacha-bolo-bolacha-3.jpg', null, null),
+	(6, 1, 20, 'Repita os dois passos anteriores, para formar as várias camadas do bolo até acabarem as bolachas', '/images/boloDeBolacha/monte.PNG', '/videos/boloBolacha/passo6.mp4', null),
+	(7, 1, 4, 'Cubra o bolo com o creme restante', '/images/boloDeBolacha/quaseBom.PNG', '/videos/boloBolacha/passo7.mp4', null),
+	(8, 1, 2, 'Decore o resultado com a bolacha ralada e com os grãos de café', 'https://www.saborintenso.com/attachments/videos-doces/377d1252681021-bolo-bolacha-bolo-bolacha-3.jpg', '/videos/boloBolacha/', null),
 	(9, 1, 120, 'Leve ao frigorifico durante 2 horas até ficar fresco','https://www.saborintenso.com/attachments/videos-doces/377d1252681021-bolo-bolacha-bolo-bolacha-3.jpg', null, null);
 
 INSERT INTO Duvida
