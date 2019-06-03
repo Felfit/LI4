@@ -564,13 +564,14 @@ namespace SweetChef.Controllers
             var result = _context.EmentaSemanal.
                 Where(es => es.Data >= DateTime.Today && es.Data < DateTime.Today.AddDays(7)).
                 SelectMany(es => es.Receita.ReceitaIngrediente).
+                Include(r => r.Ingrediente).
+                ThenInclude(i => i.Unidade).
                 GroupBy(ri => ri.Ingredienteid).
                 Select(cri => new {
                     quantidade = cri.Sum(s => s.Quantidade),
-                    ingrediente = cri.FirstOrDefault().Ingrediente,
-                    unidade = cri.FirstOrDefault().Ingrediente.Unidade.Nome
+                    ingrediente = cri.FirstOrDefault().Ingrediente
                 }).
-                ToList();
+                ToArray();
             return Ok(result);
         }
 
