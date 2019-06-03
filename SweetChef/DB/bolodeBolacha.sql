@@ -84,14 +84,14 @@ INSERT INTO Duvida
 INSERT INTO Passo_Dúvida
 	(Passoid, PassoReceitaid, Dúvidaid, questao)
 	VALUES
-	(3, 1, 1, 'Sabes que que parte do ovo é a gema?'),
-	(3, 1, 2, 'E o que é uma clara?'),
+	(3, 1, 1, 'Que parte do ovo é a gema?'),
+	(3, 1, 2, 'O o que é a clara do ovo?'),
 	(3, 1, 3, 'Como é que posso separar a clara da gema?'),
-	(3, 1, 4, 'Homogénea? Nunca ouvi...'),
-	(5, 1, 5, 'Nunca ninguém te ensiou o que é barrar?'),
-	(8, 1, 6, 'Queres uma ideia de como partir bolachas?'),
-	(8, 1, 7, 'Não econtrei café na dispensa e agora?'),
-	(9, 1, 8, 'Porque não levar ao forno?');
+	(3, 1, 4, 'O que é uma mistura Homogénea?'),
+	(5, 1, 5, 'Como é que se barra algo?'),
+	(8, 1, 6, 'Como é que posso partir bolachas?'),
+	(8, 1, 7, 'Quer uma alternativa ao grão de café'),
+	(9, 1, 8, 'Porque levar ao frigorífico?');
 
 INSERT INTO Passo_Ingrediente
 	(quantidade, Passoid, PassoReceitaid, Ingredienteid)
