@@ -88,6 +88,14 @@
     .list-group-item.active a {
         color: white;
     }
+
+    .carousel-control-prev-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' stroke='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+    }
+
+    .carousel-control-next-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' stroke='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+    }
 </style>
 
 <script>
@@ -157,13 +165,13 @@
 
     function destacarUsados(passoAtual) {
         classDestaque = "active";
-        $("#ingredientes li").removeClass(classDestaque);
-        $("#utensilios li").removeClass(classDestaque);
+        $("#ingredientes li").hide();
+        $("#utensilios li").hide();
         for (const { id } of passoAtual.ingredientes) {
-            $(`#ingredientes li[data-id=${id}]`).addClass(classDestaque);
+            $(`#ingredientes li[data-id=${id}]`).show();
         }
         for (const { id } of passoAtual.utensilios) {
-            $(`#utensilios li[data-id=${id}]`).addClass(classDestaque);
+            $(`#utensilios li[data-id=${id}]`).show();
         }
     }
 
@@ -194,6 +202,17 @@
         inicializarPasso();
     }
 
+    function atualizarComentario() {
+        $.getJSON(`/api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/`, (data) => {
+            if (data.comentario) {
+                $("#comentarioBox").show();
+                $("#comentarioText").text(data.comentario);
+            } else {
+                $("#comentarioBox").hide();
+            }
+        }).fail(() => { $("#comentarioBox").hide(); });
+    }
+
     function showProduto(id, nome, tipo) {
             $("#produtoTitle").text(nome);
             $("#produtoIframe").css("opacity","0").attr("src", `/Home/${tipo}/${id}`).on("load", function () {
@@ -212,6 +231,21 @@
         }
 
         destacarUsados(receita.passoAtual);
+        atualizarComentario();
+        /*
+        if ($("#audio").hasClass("btn-success")) {
+            var voice = speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
+            var utter = new SpeechSynthesisUtterance(receita.passoAtual.info.descricao);
+            console.log(receita.passoAtual.info.descricao);
+            utter.voice = voice;
+            speechSynthesis.speak(utter);
+        }
+        */
+
+        
+
+        $("#duracaoPasso").text(`${receita.passoAtual.info.duracao} min`);
+        $("#temporizadorTempo").val(receita.passoAtual.info.duracao);
 
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
         if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
@@ -259,7 +293,7 @@
                 indiceDuvida++;
             }
             receita.passoAtual.ajudas = duvidas.map(k => k["dúvida"]);
-        }).fail((err) => {
+        }).fail(() => {
             alert("Não foi possível obter a dúvida");
         });;
     }
@@ -340,6 +374,7 @@
                 url: `/api/Utilizador/passoFeedback/@ViewData["ReceitaId"]/${receita.passoAtualIndice + 1}/?comentario=${$("#passoComentario").val()}`,
                 type: 'PUT',
             }).fail(() => alert("Não foi possível guardar o comentário"));
+            $("#comentarioText").text($("#passoComentario").val());
         });
         //Collapse
         if ($(window).width() >= 1200) {
@@ -349,17 +384,23 @@
 </script>
 
 <div id="conteudoPlaceholder" class="h-100">
-    <h1 class="m-auto d-table">A carregar a receita...</h1>
+    <h1 class="m-auto d-table my-auto">A carregar a receita...</h1>
 </div>
 <div class="h-100" id="conteudo" style="display: none">
-    <h1 id="nomeReceita">@ViewData["ReceitaNome"]</h1>
+    <h1>
+        <span id="nomeReceita">@ViewData["ReceitaNome"]</span>
+        <span style="float: right; font-size: 0.6em; font-weight: 100;">
+            <i class="fas fa-clock text-primary"></i>
+            <span id="duracaoPasso"></span>
+        </span>
+    </h1>
     <div class="row" id="passoContainer">
-        <div class="col-xl-6 order-xl-2 h-100 vertical-scroll">
+        <div class="col-xl-9 order-xl-2 h-100 vertical-scroll">
             <!--src = receita.passoAtual.info.imagemLink-->
             <div id="passoMedia" style="height:20em" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
                 <div class="carousel-inner h-100">
                     <div class="carousel-item active" id="passoImagemItem">
-                        <img class="img-fluid rounded mx-auto d-block" id="passoImagem" />
+                        <img class="img-fluid rounded d-block mx-auto" id="passoImagem" />
                     </div>
                     <div class="carousel-item" id="passoVideoItem">
                         <video id="passoVideo" class="rounded" style="width: 100%;" allowfullscreen controls></video>
@@ -376,140 +417,13 @@
                     </a>
                 </div>
             </div>
-            <p id="passoDescricao">
-                <!--receita.passoAtual.info.descricao-->
-            </p>
-        </div>
-        <div class="col-xl-3 order-xl-3 h-100">
-            <div class="row flex-column mx-0 h-100">
-                <div class="h-25 py-2 order-xl-1">
-                    <div class="row no-gutters">
-                        <div class="col-4 col-xl-6 order-xl-0">
-                            <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
-                        </div>
-                        <div class="col order-xl-2 pt-xl-1">
-                            <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
-                            <script>
-                                $(() => {
-                                    var recognitionActive = false;
-                                    var utterActive = true;
-                                    try {
-                                        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-                                        var recognition = new SpeechRecognition();
-                                        var voice = speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
-                                        recognition.lang = 'pt-PT';
-                                        recognition.interimResults = false;
-                                        recognition.maxAlternatives = 1;
-                                        $("#microfone").click(function () {
-                                            try {
-                                                if (recognitionActive = !recognitionActive) {
-                                                    recognition.start();
-                                                }
-                                            } catch (e) {
-                                                console.log(e);
-                                            } finally {
-                                                $(this)
-                                                    .toggleClass("btn-danger")
-                                                    .toggleClass("btn-success")
-                                                    .children("i")
-                                                    .toggleClass("fa-microphone-slash")
-                                                    .toggleClass("fa-microphone");
-                                            }
-                                        });
-                                        $("#audio").click(function () {
-                                            utterActive = !utterActive;
-                                            $(this)
-                                                .toggleClass("btn-danger")
-                                                .toggleClass("btn-success")
-                                                .children("i")
-                                                .toggleClass("fa-volume-up")
-                                                .toggleClass("fa-volume-mute");
-                                            recognition.start();
-                                        });
-                                        recognition.onresult = (event) => {
-                                            var last = event.results.length - 1;
-                                            var comando = event.results[last][0].transcript.toLowerCase();
-                                            var mensagem = "";
-                                            if (["repetir", "não percebi nada", "passo", "o que é para fazer"].indexOf(comando) > -1) {
-                                                mensagem = $("#passoDescricao").text();
-                                            } else if (["continuar", "próximo", "seguinte"].indexOf(comando) > -1) {
-                                                receita.continuar();
-                                                inicializarPasso();
-                                                atualizaProgressBar(400);
-                                            } else if (["retroceder", "voltar"].indexOf(comando) > -1) {
-                                                receita.retroceder();
-                                                inicializarPasso();
-                                                atualizaProgressBar(400);
-                                            } else if (["último passo", "terminar"].indexOf(comando) > -1) {
-                                                alert("Acabar");
-                                            } else if (["início", "voltar à receita", "voltar a receita"].indexOf(comando) > -1) {
-                                                alert("início");
-                                            } else if (["comentário", "comentários", "nota", "notas"].indexOf(comando) > -1) {
-                                                alert("abrir comentários");
-                                            } else if (["ingrediente", "ingredientes"].indexOf(comando) > -1) {
-                                                mensagem = "Ingredientes: ";
-                                                for (ingrediente of $("#ingredientes > li")) {
-                                                    mensagem += $(ingrediente).text() + "\n";
-                                                }
-                                            } else if (["utensílio", "utensílios"].indexOf(comando) > -1) {
-                                                mensagem = "Utensílios: ";
-                                                for (utensilio of $("#utensilios > li")) {
-                                                    mensagem += $(utensilio).text() + "\n";
-                                                }
-                                            } else if (["ajuda", "ajudas"].indexOf(comando) > -1) {
-                                                mensagem = "Ajudas: ";
-                                                for (ajuda of $("#ajudas > li")) {
-                                                    mensagem += $(ajuda).text() + "\n";
-                                                }
-                                            } else if (new Array($("#ingredientes > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                                $("#produto").modal("show");
-                                                showProduto($(`#ingredientes>li[data-nome=${comando}]`).data("id"), comando, "ingrediente");
-                                                mensagem = "Ingrediente: " + comando;
-                                            } else if (new Array($("#utensilios > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                                $("#produto").modal("show");
-                                                showProduto($(`#utensilios>li[data-nome=${comando}]`).data("id"), comando, "utensilio");
-                                                mensagem = "Utensílio: " + comando;
-                                            } else if (new Array($("#ajudas > li")).map(k => k.clone().children().remove().end().text().toLowerCase()).indexOf(comando) > -1) {
-                                                alert("Abrir ajudas " + comando);
-                                                mensagem = "Ajudas: " + comando;
-                                            }
-                                            console.log(comando);
-                                            if (utterActive) {
-                                                var utter = new SpeechSynthesisUtterance(mensagem);
-                                                utter.voice = voice;
-                                                speechSynthesis.speak(utter);
-                                            }
-                                            console.log('Confidence: ' + event.results[0][0].confidence);
-                                        }
-                                        recognition.onend = function () {
-                                            if (recognitionActive) {
-                                                recognition.start();
-                                            }
-                                        };
-                                    } catch (e) {
-                                        console.log(e);
-                                        $("#microfone").hide();
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col order-xl-2 pt-xl-1">
-                            <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
-                        </div>
-                        <div class="col order-xl-2 pt-xl-1">
-                            <button data-toggle="modal" data-target="#comentarioModel" class="btn btn-warning d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
-                        </div>
-                        <div class="col order-xl-2 pt-xl-1">
-                            <button data-toggle="modal" data-target="#temporizadorModel"  type="button" class="btn btn-primary d-block mx-auto" id="temporizador"><i class="fas fa-hourglass-start"></i></button>
-                        </div>
-                        <div class="col-4 col-xl-6 order-xl-1">
-                            <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
-                        </div>
-                    </div>
+            <p id="passoDescricao" class="text-center" style="font-size: x-large; min-height: 3em"></p>
+            <div class="row">
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary d-block mx-auto" id="retroceder"><i class='fas fa-arrow-left'></i><span class="d-none d-sm-inline-block">&nbsp;Retroceder</span></button>
                 </div>
-                <div class="h-75 vertical-scroll order-xl-0">
-                    <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
-                    <ul id="ajudas" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary d-block mx-auto" id="continuar"><span class="d-none d-sm-inline-block">Continuar&nbsp;</span><i class='fas fa-arrow-right'></i></button>
                 </div>
             </div>
         </div>
@@ -518,6 +432,124 @@
             <ul id="ingredientes" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
             <h4 data-toggle="collapse" data-target="#utensilios" class="collapse-header">Utensílios</h4>
             <ul id="utensilios" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
+            <h4 data-toggle="collapse" data-target="#ajudas" class="collapse-header">Ajudas</h4>
+            <ul id="ajudas" class="list-group list-group-flush mb-1 collapse modal-li"></ul>
+            <div id="comentarioBox" class="mb-2">
+                <h4 data-toggle="collapse" data-target="#comentarioText">Comentário</h4>
+                <p id="comentarioText" class="list-group list-group-flush mb-1 modal-li show"></p>
+            </div>
+            <div class="row no-gutters">
+                <div class="col">
+                    <button type="button" class="btn btn-danger d-block mx-auto" id="microfone"><i class='fas fa-microphone-slash'></i></button>
+                    <script>
+                        $(() => {
+                            var recognitionActive = false;
+                            var utterActive = true;
+                            try {
+                                var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                                var recognition = new SpeechRecognition();
+                                recognition.lang = 'pt-PT';
+                                recognition.interimResults = false;
+                                recognition.maxAlternatives = 1;
+                                $("#microfone").click(function () {
+                                    try {
+                                        if (recognitionActive = !recognitionActive) {
+                                            recognition.start();
+                                        }
+                                    } catch (e) {
+                                        console.log(e);
+                                    } finally {
+                                        $(this)
+                                            .toggleClass("btn-danger")
+                                            .toggleClass("btn-success")
+                                            .children("i")
+                                            .toggleClass("fa-microphone-slash")
+                                            .toggleClass("fa-microphone");
+                                    }
+                                });
+                                $("#audio").click(function () {
+                                    utterActive = !utterActive;
+                                    $(this)
+                                        .toggleClass("btn-danger")
+                                        .toggleClass("btn-success")
+                                        .children("i")
+                                        .toggleClass("fa-volume-up")
+                                        .toggleClass("fa-volume-mute");
+                                    recognition.start();
+                                });
+                                recognition.onresult = (event) => {
+                                    var last = event.results.length - 1;
+                                    var comando = event.results[last][0].transcript.toLowerCase();
+                                    var mensagem = "";
+                                    if (["repetir", "não percebi nada", "passo", "o que é para fazer", "descrição"].indexOf(comando) > -1) {
+                                        mensagem = $("#passoDescricao").text();
+                                    } else if (["continuar", "próximo", "seguinte"].indexOf(comando) > -1) {
+                                        receita.continuar();
+                                        inicializarPasso();
+                                        atualizaProgressBar(400);
+                                    } else if (["retroceder", "voltar"].indexOf(comando) > -1) {
+                                        receita.retroceder();
+                                        inicializarPasso();
+                                        atualizaProgressBar(400);
+                                    } else if (["comentário", "comentários", "nota", "notas"].indexOf(comando) > -1) {
+                                        mensagem = $("#comentarioText").text() || "Este passo não tem comentário"
+                                    } else if (["ingrediente", "ingredientes"].indexOf(comando) > -1) {
+                                        mensagem = "Ingredientes: ";
+                                        for (ingrediente of $("#ingredientes > li:visible")) {
+                                            mensagem += $(ingrediente).text() + "\n";
+                                        }
+                                    } else if (["utensílio", "utensílios"].indexOf(comando) > -1) {
+                                        mensagem = "Utensílios: ";
+                                        for (utensilio of $("#utensilios > li:visible")) {
+                                            mensagem += $(utensilio).text() + ".\n";
+                                        }
+                                    } else if (["ajuda", "ajudas"].indexOf(comando) > -1) {
+                                        mensagem = "Ajudas: ";
+                                        for (ajuda of $("#ajudas > li")) {
+                                            mensagem += $(ajuda).text() + ".\n";
+                                        }
+                                    } else if (new Array($("#ingredientes > li:visible")).map(k => k.children("a").text().toLowerCase()).indexOf(comando) > -1) {
+                                        $("#produto").modal("show");
+                                        showProduto($(`#ingredientes>li[data-nome="${comando}"]`).data("id"), comando, "ingrediente");
+                                        mensagem = "Ingrediente: " + comando;
+                                    } else if (new Array($("#utensilios > li:visible")).map(k => k.children("a").text().toLowerCase()).indexOf(comando) > -1) {
+                                        $("#produto").modal("show");
+                                        showProduto($(`#utensilios>li[data-nome="${comando}"]`).data("id"), comando, "utensilio");
+                                        mensagem = "Utensílio: " + comando;
+                                    }
+                                    console.log(comando);
+                                    if (utterActive) {
+                                        var voice = window.speechSynthesis.getVoices().find(k => k.lang.slice(0, 2) == "pt");
+                                        var utter = new SpeechSynthesisUtterance(mensagem);
+                                        utter.voice = voice;
+                                        utter.volume = 1;
+                                        window.speechSynthesis.speak(utter);
+                                        console.log(mensagem);
+                                    }
+                                    console.log('Confidence: ' + event.results[0][0].confidence);
+                                }
+                                recognition.onend = function () {
+                                    if (recognitionActive) {
+                                        recognition.start();
+                                    }
+                                };
+                            } catch (e) {
+                                console.log(e);
+                                $("#microfone").hide();
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-success d-block mx-auto" id="audio"><i class='fas fa-volume-up'></i></button>
+                </div>
+                <div class="col">
+                    <button data-toggle="modal" data-target="#comentarioModel" class="btn btn-warning d-block mx-auto" id="comentario"><i class="far fa-sticky-note"></i></button>
+                </div>
+                <div class="col">
+                    <button data-toggle="modal" data-target="#temporizadorModel" type="button" class="btn btn-primary d-block mx-auto" id="temporizador"><i class="fas fa-hourglass-start"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -541,7 +573,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="ajudaMedia" style="height:335px" class="carousel slide mb-2" data-ride="carousel" data-interval="0">
+                    <div id="ajudaMedia" style="height:335px" class="carousel slide mb-2 mx-auto" data-ride="carousel" data-interval="0">
                         <div class="carousel-inner">
                             <div class="carousel-item active" id="ajudaImagemItem">
                                 <img class="img-fluid rounded mx-auto d-block" id="ajudaImagem" />
@@ -670,7 +702,7 @@
                 </button>
             </div>
             <audio src="~/audio/analog-watch-alarm_daniel-simion.mp3" id="temporizadorAlarm" preload="auto"></audio>
-            <div class="modal-body form-group row">
+            <div class="modal-body form-group row m-3">
                 <input id="temporizadorTempo" class="form-control col text-center" type="number" step="1" />
                 <label for="temporizadorTempo" class="col-2 col-form-label">minutos</label>
             </div>
