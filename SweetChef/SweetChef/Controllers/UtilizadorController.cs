@@ -342,7 +342,7 @@ namespace SweetChef.Controllers
                     o.Favorito = false;
                     o.Blacklist = false;
                 }
-                return Ok(o);
+                return Ok(new { o.Favorito, o.Rating, o.Blacklist});
             }
             catch (Exception e)
             {
@@ -365,7 +365,7 @@ namespace SweetChef.Controllers
                 {
                     return NotFound("Receita não existe");
                 }
-                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                Opiniao o = _context.Opiniao.Find(idReceita,idUt);
                 bool exists = true;
                 if (o == null)
                 {
@@ -526,7 +526,7 @@ namespace SweetChef.Controllers
             result.Sort((i1, i2) => i2.numerodeVezes.CompareTo(i1.numerodeVezes));
             return Ok(result);
         }
-
+        
         [HttpGet("tagsUsadas")]
         public ActionResult GetTagsUsadas()
         {
