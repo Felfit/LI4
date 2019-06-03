@@ -98,7 +98,11 @@
             dataFinal.setDate(dataFinal.getDate() + 7);
             dataFinal = dataFinal.yyyymmdd();
             $.getJSON(`/api/Utilizador/ementa/?idUt=@ViewData["idUser"]&dataInicial=${$("input").val()}&dataFinal=${dataFinal}`, (data) => {
-                $("#resultadoEmentaSemanal").html("");
+                if (data.length != 0)
+                {
+                    $("#resultadoEmentaSemanal").html("");
+                    $("#listabutton").show();
+                }
                 let datas = Object.create(null);
                 for (const ementa of data) {
                     const receita = ementa.receita;
@@ -170,7 +174,8 @@
 </form>
 <div class="container">
     <div id="resultadoEmentaSemanal" class="row">
-
+        <br />
+        Não há receitas na ementa semanal
     </div>
 </div>
 
@@ -206,6 +211,6 @@
     </div>
 </template>
 
-<div class="container">
+<div id="listabutton" class="container" hidden>
     <a asp-area="" asp-controller="Home" asp-action="ListaCompras" class="btn btn-primary mt-3">Ver lista de compras da semana</a>
 </div>
