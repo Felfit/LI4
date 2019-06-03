@@ -3,16 +3,35 @@
 }
 <h2>@ViewData["ReceitaNome"]</h2>
 <script>
-    $.getJSON("api/Utilizador/opiniao/@ViewData["ReceitaId"]", (data) => {
-        $("[name=rating]").val(data.rating);
-        $("[name=favorito]").prop("checked", data.favorito);
-        $("[name=blacklisted]").prop("checked", data.blacklisted);
+    $(function () {
+        $.getJSON("/api/Utilizador/opiniao/@ViewData["ReceitaId"]", (data) => {
+            $("[name=rating]").val(data.rating);
+            $("[name=favorito]").prop("checked", data.favorito);
+            $("[name=blacklisted]").prop("checked", data.blacklisted);
+        });
+        $("#feedbackForm").on("submit", function () {
+            $.post("/api/Utilizador/execucao", $("#execucaoForm").serialize(), () => {
+                $.ajax({
+                    url: "/api/Utilizador/opiniao/@ViewData["ReceitaId"]",
+                    method: "PUT",
+                    content: $("#feedbackForm").serialize()
+                }).then(() => {
+                    location.href = "@Url.Action("Cozinhar", "Home")";
+                });
+            });
+            return false;
+        });
     });
 </script>
 <p>Duração esperada: @ViewData["ReceitaDuracao"] min</p>
 <p>Duração efetiva: @ViewData["tempo"] min</p>
-<a class="btn btn-danger my-2 text-white" id="voltar" href="@Url.Action("PassoAPasso","Home", new { id = ViewData["ReceitaId"], ultimoPasso = true, tempo = ViewData["tempo"]})"><i class='fas fa-arrow-left'></i> Voltar</a>
-<form method="put" action="/api/Utilizador/opiniao/@ViewData["ReceitaId"]">
+<a class="btn btn-danger my-2 text-white" id="voltar" href="@Url.Action("PassoAPasso","Home", new { id = ViewData["ReceitaId"], ultimoPasso = true, tempo = ViewData["tempo"], data = ViewData["data"]})"><i class='fas fa-arrow-left'></i> Voltar</a>
+<form id="execucaoForm">
+    <input hidden="hidden" name="idReceita" value="@ViewData["ReceitaId"]"/>
+    <input type="hidden" name="data" value="@ViewData["data"]"/>
+    <input type="hidden" name="duracao" value="@ViewData["tempo"]"/>
+</form>
+<form id="feedbackForm">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="favorito">
             Avaliação

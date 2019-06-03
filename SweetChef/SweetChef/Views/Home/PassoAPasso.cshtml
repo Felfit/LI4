@@ -8,6 +8,7 @@
             height: 100% !important;
             margin-top: 0 !important;
             margin-bottom: 0 !important;
+            overflow-y: hidden;
         }
     }
 
@@ -79,11 +80,15 @@
     .collapse-header, .modal-li > li {
         cursor: pointer;
     }
+
+    footer {
+        display:none;
+    }
 </style>
 
 <script>
     class Receita {
-        constructor(receita, tempo, ultimoPasso) {
+        constructor(receita, tempo, data, ultimoPasso) {
             this.info = receita.info;
             this.ingredientes = receita.ingredientes;
             this.utensilios = receita.utensilios;
@@ -92,6 +97,7 @@
             this.passoAtualIndice = ultimoPasso ? this.numPassos - 1 : 0;
             this.passoAtual = this.passos[this.passoAtualIndice];
             this.tempo = tempo === undefined ? Date.now() : Date.now() - tempo;
+            this.data = data === undefined ? new Date().toISOString() : data;
         }
 
         continuar() {
@@ -181,7 +187,7 @@
 
     function inicializarPasso() {
         if (receita.passoAtualIndice == receita.numPassos) {
-            location.href = "@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })?tempo=" + (Date.now() - receita.tempo);
+            location.href = `@Url.Action("Feedback", "Home", new { id = ViewData["ReceitaId"] })?tempo=${Date.now() - receita.tempo}&data=${receita.data}`;
             return;
         }
         if (receita.passoAtualIndice == -1) {
@@ -288,7 +294,8 @@
 
     $(function () {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-            window.receita = new Receita(data, location.arguments()["tempo"], location.arguments()["ultimoPasso"]);
+            let args = location.arguments();
+            window.receita = new Receita(data, args["tempo"], args["data"], args["ultimoPasso"]);
             inicializarPagina();
             inicializarProgressBar();
             trocarConteudo();

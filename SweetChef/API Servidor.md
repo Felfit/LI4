@@ -78,7 +78,11 @@
 * api/Utilizador/restricoesAlimentar
     * Passa no form idUt, idReceita, data, duracao
     * Define as restrições elementares
-
+* api/Utilizador/execucao
+    * Guarda info de uma execução.
+      * int idReceita 
+      * DateTime data 
+      * int duracao
 ###PUT
 * api/Utilizador/opiniao/{idReceita}/?arguments
   * Chamar put para atualizar um campo. Precisa existir

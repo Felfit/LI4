@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace SweetChef.Controllers
 {
     [Route("api/[controller]")]
@@ -20,7 +21,6 @@ namespace SweetChef.Controllers
     public class UtilizadorController : ControllerBase
     {
         //private readonly UtilizadorContext _contexts;
-
         private readonly SweetContext _context;
 
         // TODO: Corrigir erro
@@ -61,7 +61,7 @@ namespace SweetChef.Controllers
             }
         }
         //Create Execução
-        [HttpPost("restricaoAlimentar")]
+        [HttpPost("execucao")]
         public ActionResult PostExecucao([FromForm] int idReceita, [FromForm] DateTime data, [FromForm] int duracao)
         {
             try
@@ -513,7 +513,7 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+        /*
         // POST: api/Utilizador
         [HttpPost]
         [AllowAnonymous]
@@ -529,14 +529,14 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+        */
         // POST: api/Utilizador/autenticar
         [HttpPost]
         [Route("autenticar")]
         [AllowAnonymous]
         public async Task<IActionResult> PostAsync([FromForm] string email, [FromForm] string password)
         {
-            if(email == null || password == null)
+            if (email == null || password == null)
             {
                 return BadRequest(new
                 {
@@ -547,7 +547,7 @@ namespace SweetChef.Controllers
             Utilizador utilizador = new Utilizador()
             {
                 Email = email,
-                Password = password
+                Password = Myhelper.HashPassword(password)
             };
 
             try
@@ -576,23 +576,25 @@ namespace SweetChef.Controllers
         public async Task<IActionResult> Registar([FromForm] Utilizador ut)
         {
             try
-            {
-                Utilizador u= _context.Utilizador.Where(c => c.Email == ut.Email).FirstOrDefault();
+            {   
+                Utilizador u = _context.Utilizador.Where(c => c.Email == ut.Email).FirstOrDefault();
                 if (u != null)
                     return Redirect("/?email=" + ut.Email);
                 ut.Id = 0;
+                ut.Password = Myhelper.HashPassword(ut.Password);
+                System.Diagnostics.Debug.WriteLine(ut.Password);
                 _context.Utilizador.Add(ut);
                 _context.SaveChanges();
                 List<Claim> claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, ut.Id.ToString()),
-                };
+            {
+                new Claim(ClaimTypes.Name, ut.Id.ToString()),
+            };
                 ClaimsIdentity cIdentity = new ClaimsIdentity(claims, "login");
                 ClaimsPrincipal principal = new ClaimsPrincipal(cIdentity);
                 await HttpContext.SignInAsync(principal);
 
                 //Request.HttpContext.
-                return Redirect("/Home/Cozinhar/");
+                return Redirect("/Home/Tutorial/");
             }
             catch
             {
