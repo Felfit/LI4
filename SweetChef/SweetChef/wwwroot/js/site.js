@@ -3,7 +3,17 @@
 
 // Write your JavaScript code.
 $(function () {
-    $(".dropdown-placeholder + .dropdown-menu .dropdown-item").on("click", function () {
-        $(this).parent().prev(".dropdown-placeholder").text($(this).text())
-    })
+    $(".dropdown-placeholder + .dropdown-menu .dropdown-item input").on("change", function () {
+        let valores = [];
+        $(this).parents(".dropdown-placeholder + .dropdown-menu").find("input").each(function() {
+            if ($(this).prop("checked")) {
+                valores.push($(this).siblings("label").text().trim());
+            }
+        });
+        let placeholder = $(this).parents(".dropdown-placeholder + .dropdown-menu").siblings(".dropdown-placeholder");
+        if (!placeholder.data("default")) {
+            placeholder.data("default", placeholder.text());
+        }
+        placeholder.text(valores.join(",") || placeholder.data("default"));
+    });
 });
