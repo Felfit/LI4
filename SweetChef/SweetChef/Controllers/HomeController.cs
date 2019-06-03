@@ -123,6 +123,7 @@ namespace SweetChef.Controllers
             }
             ViewData["Id"] = id;
             ViewData["Nome"] = ingrediente.Nome;
+            ViewData["Img"] = ingrediente.ImageLink;
             ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();
@@ -137,6 +138,7 @@ namespace SweetChef.Controllers
             }
             ViewData["Id"] = id;
             ViewData["Nome"] = utensilio.Nome;
+            ViewData["Img"] = utensilio.ImageLink;
             ViewData["NomeUtilizador"] = GetNomeUtilizador();
 
             return View();

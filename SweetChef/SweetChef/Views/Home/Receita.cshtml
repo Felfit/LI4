@@ -112,12 +112,12 @@
 
             // ingredientes
             for (const ingrediente of data.ingredientes) {
-                $("#ingredientes").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}">${ingrediente.nome} <small>${ingrediente.quantidade} ${ingrediente.unidade}</small></li>`);
+                $("#ingredientes").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}"><a href="#produto">${ingrediente.nome}</a> <small>${ingrediente.quantidade} ${ingrediente.unidade}</small></li>`);
             }
 
             //utensilios
             for (const utensilio of data.utensilios) {
-                $("#utensilios").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${utensilio.id}" data-tipo="utensilio" data-nome="${utensilio.nome}">${utensilio.nome}</li>`);
+                $("#utensilios").append(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${utensilio.id}" data-tipo="utensilio" data-nome="${utensilio.nome}"><a href="#produto">${utensilio.nome}</a></li>`);
             }
 
             // preparação
@@ -246,15 +246,15 @@
             <tbody>
                 <tr>
                     <th scope="row">Energia</th>
-                    <td><span id="energiaVal"></span> Kcal</td>
+                    <td><span id="energiaVal">...</span> Kcal</td>
                 </tr>
                 <tr>
                     <th scope="row">Gordura</th>
-                    <td><span id="gorduraVal"></span> g</td>
+                    <td><span id="gorduraVal">...</span> g</td>
                 </tr>
                 <tr>
                     <th scope="row">Hidratos de carbono</th>
-                    <td><span id="hidratosVal"></span> g</td>
+                    <td><span id="hidratosVal">...</span> g</td>
                 </tr>
             </tbody>
         </table>
