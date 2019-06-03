@@ -2,7 +2,6 @@
     ViewData["Title"] = "Ementa Semanal";
 }
 <h2>@ViewData["Title"]</h2>
-<p>Selecione a data das receitas que pretende visualizar</p>
 
 <style>
     .dropdown-placeholder.dropdown-toggle::after {
@@ -117,7 +116,7 @@
                     });
                     if (!datas[ementaData]) {
                         let groupTemplate = $($("#groupTemplate").html());
-                        groupTemplate.find("h2").text(new Date(ementaData).toLocaleDateString("pt-PT"));
+                        groupTemplate.find("h3").text(new Date(ementaData).toLocaleDateString("pt-PT"));
                         window.group = groupTemplate;
                         groupTemplate.find(".ementaRow").attr("id", `ementa${new Date(ementaData).getTime()}`);
                         groupTemplate.appendTo("#resultadoEmentaSemanal");
@@ -145,18 +144,39 @@
             return false;
         });
     });
+    var d = new Date();
+
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+
+    var output = d.getFullYear() + '-' +
+        (month<10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+
+    $(document).ready(function () {
+        $('#dataInput').val(output);
+        $('#dataForm').submit();
+
+    });
+
+
 </script>
 
-<form class="form-inline">
-    <input type="date" name="semana" class="form-control mr-1" />
+<p hidden>Selecione a data das receitas que pretende visualizar</p>
+
+<form id="dataForm" class="form-inline" hidden>
+    <input id="dataInput" type="date" name="semana" class="form-control mr-1" />
     <input type="submit" value="Procurar" class="btn btn-primary" />
 </form>
-<div id="resultadoEmentaSemanal">
+<div class="container">
+    <div id="resultadoEmentaSemanal" class="row">
 
+    </div>
 </div>
+
 <template id="groupTemplate">
     <div class="group-data mt-2">
-        <h2></h2>
+        <h3></h3>
         <div class="container-fluid horizontal-scroll py-2">
             <div class="row flex-row flex-nowrap ementaRow">
             </div>
