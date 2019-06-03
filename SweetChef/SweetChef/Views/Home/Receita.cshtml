@@ -8,7 +8,9 @@
 
     function toggleFavorita() {
         $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
+            console.log(dataFav);
             if (dataFav.favorito) {
+                console.log(1);
                 $.ajax({
                     url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
                     type: 'PUT',
@@ -19,6 +21,7 @@
                     }
                 });
             } else {
+                console.log(2);
                 $.ajax({
                     url: '/api/Utilizador/opiniao/@ViewData["ReceitaId"]',
                     type: 'PUT',

@@ -9,30 +9,39 @@
 
     // etiquetas
     $(function () {
-        // Preferida
-        $.getJSON("/api/utilizador/configuracao/preferida", (data) => {
+        $.getJSON("/api/Tag", (data) => {
             for (const etiqueta of data) {
 
                 let element = $($("#checkboxTemplate").html());
-                window.etiqueta = element;
                 element.find(".textTemplate").text(etiqueta.nome);
+                element.find(".checkTemplate").addClass("preferidaCheck");
                 element.find(".checkTemplate").attr("id", "etiquetaPref" + etiqueta.id);
-                element.find(".checkTemplate").addClass("preferida");
                 element.find(".labelTemplate").attr("for", "etiquetaPref" + etiqueta.id);
                 element.appendTo("#etiquetasMenuPref");
 
                 element = $($("#checkboxTemplate").html());
-                window.etiqueta = element;
                 element.find(".textTemplate").text(etiqueta.nome);
+                element.find(".checkTemplate").addClass("excluidaCheck");
                 element.find(".checkTemplate").attr("id", "etiquetaExcl" + etiqueta.id);
                 element.find(".labelTemplate").attr("for", "etiquetaExcl" + etiqueta.id);
                 element.appendTo("#etiquetasMenuExc");
             }
 
-            $(".preferida").on("change", function () {
+            $.getJSON("/api/utilizador/configuracao/preferidas", (data) => {
+                for (const { tagid } of data) {
+                    $("#etiquetaPref" + tagid).prop("checked", true);
+                }
+            });
+
+            $.getJSON("/api/utilizador/configuracao/excluidas", (data) => {
+                for (const { tagid } of data) {
+                    $("#etiquetaExcl" + tagid).prop("checked", true);
+                }
+            });
+
+            $(".preferidaCheck").on("change", function () {
+                let id = Number($(this).attr("id").slice(12));
                 if ($(this).prop("checked")) {
-                    id = Number($(this).attr("id").slice(12))
-                    console.log("ID: " + id)
                     $.ajax({
                         url: "/api/utilizador/configuracao/preferida?preferida=" + id,
                         type: 'POST',
@@ -43,6 +52,27 @@
                 } else {
                     $.ajax({
                         url: "/api/utilizador/configuracao/preferida?preferida=" + id,
+                        type: 'DELETE',
+                        fail: function () {
+                            $(this).prop("checked", true);
+                        }
+                    });
+                }
+            });
+
+            $(".excluidaCheck").on("change", function () {
+                let id = Number($(this).attr("id").slice(12));
+                if ($(this).prop("checked")) {
+                    $.ajax({
+                        url: "/api/utilizador/configuracao/excluida?excluido=" + id,
+                        type: 'POST',
+                        fail: function () {
+                            $(this).prop("checked", false);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: "/api/utilizador/configuracao/excluida?excluido=" + id,
                         type: 'DELETE',
                         fail: function () {
                             $(this).prop("checked", true);
@@ -63,33 +93,18 @@
                 element.find(".labelTemplate").attr("for", "ingrediente" + ingrediente.id);
                 element.appendTo("#ingredientesMenu");
             }
-        });
 
-        // excluido
-        $.getJSON("/api/utilizador/configuracao/excluido", (data) => {
-            for (const etiqueta of data) {
+            $.getJSON("/api/Utilizador/configuracao/restricoes", (data) => {
+                for (const { ingredienteid } of data) {
+                    $("#ingrediente" + ingredienteid).prop("checked", true);
+                }
+            });
 
-                let element = $($("#checkboxTemplate").html());
-                window.etiqueta = element;
-                element.find(".textTemplate").text(etiqueta.nome);
-                element.find(".checkTemplate").attr("id", "etiquetaPref" + etiqueta.id);
-                element.find(".labelTemplate").attr("for", "etiquetaPref" + etiqueta.id);
-                element.appendTo("#etiquetasMenuPref");
-
-                element = $($("#checkboxTemplate").html());
-                window.etiqueta = element;
-                element.find(".textTemplate").text(etiqueta.nome);
-                element.find(".checkTemplate").attr("id", "etiquetaExcl" + etiqueta.id);
-                element.find(".labelTemplate").attr("for", "etiquetaExcl" + etiqueta.id);
-                element.appendTo("#etiquetasMenuExc");
-            }
-
-            $(".checkTemplate").on("change", function () {
+            $(".ingrediente").on("change", function () {
+                let id = Number($(this).attr("id").slice(11));
                 if ($(this).prop("checked")) {
-                    id = Number($(this).attr("id").slice(12))
-                    console.log("ID: " + id)
                     $.ajax({
-                        url: "/api/utilizador/configuracao/preferida?preferida=" + id,
+                        url: "/api/utilizador/configuracao/restricao?restricao=" + id,
                         type: 'POST',
                         fail: function () {
                             $(this).prop("checked", false);
@@ -97,7 +112,7 @@
                     });
                 } else {
                     $.ajax({
-                        url: "/api/utilizador/configuracao/preferida?preferida=" + id,
+                        url: "/api/utilizador/configuracao/restricao?restricao=" + id,
                         type: 'DELETE',
                         fail: function () {
                             $(this).prop("checked", true);
@@ -105,19 +120,6 @@
                     });
                 }
             });
-        });
-
-        $.getJSON("/api/ingrediente", (data) => {
-            for (const ingrediente of data) {
-
-                let element = $($("#checkboxTemplate").html());
-                window.ingrediente = element;
-                element.find(".textTemplate").text(ingrediente.nome);
-                element.find(".checkTemplate").attr("id", "ingrediente" + ingrediente.id);
-                element.find(".checkTemplate").addClass("ingrediente");
-                element.find(".labelTemplate").attr("for", "ingrediente" + ingrediente.id);
-                element.appendTo("#ingredientesMenu");
-            }
         });
     });
 </script>
