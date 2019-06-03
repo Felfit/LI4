@@ -29,7 +29,7 @@
                     }
                 });
             }
-        });
+        })
     }
 
     function atualizarMinhaClass() {
@@ -52,7 +52,6 @@
 
     $(() => {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-
             // porções
             if (data.info.porcoes == 1) {
                 $("#porcoes").text("1 porção");
@@ -76,18 +75,28 @@
             $.getJSON("/api/Receita/opinioes/@ViewData["ReceitaId"]", (data) => {
                 $("#mediaClass").text("⭐".repeat(Math.round(data.media)) + "(" + data.media + ")");
                 $("#numClass").text(data.numRatings + " avaliações");
+            }).fail(() => {
+                $("#mediaClass").text("-");
+                $("#numClass").text("sem avaliações");
             });
 
 
             $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
                 // favorita
+                console.log(dataFav.favorito)
                 if (dataFav.favorito) {
                     $("#favorito").addClass("fas fa-star");
                 } else {
                     $("#favorito").addClass("far fa-star");
                 }
                 // minha classificação
-                 $("#minhaClass").text("⭐".repeat(dataFav.rating));
+                if (dataFav.rating == null) {
+                    $("#minhaClass").text("-");
+                } else {
+                    $("#minhaClass").text("⭐".repeat(dataFav.rating));
+                }
+            }).fail(() => {
+                $("#favorito").addClass("far fa-star");
             });
 
             // descrição
@@ -304,14 +313,14 @@
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <div class="m-2">
+                    <div class="m-2 col">
                         <input type="number" min="0" max="5" class="form-control" id="inputMinhaClass">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" onclick="atualizarMinhaClass()">Guardar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success" onclick="atualizarMinhaClass()">Guardar</button>
             </div>
         </div>
     </div>
