@@ -4,30 +4,28 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
+<script>
+    var listaCompras = $.getJSON("/api/utilizador/listacompras", (data) => {
+        for (var k = 0; k < data.length; k++){
+            $("#ListaBody").append("<tr><th>" 
+                + data[k].ingrediente.nome + "</th><td>"
+                + data[k].quantidade + "</td><td>"
+                + data[k].ingrediente.unidade.nome + "</td></tr>");
+        }
+    });
+
+    
+</script>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Ingredientes</th>
             <th scope="col">Quantidade</th>
-            <th scope="col">Preço</th>
+            <th scope="col">Unidade</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
+    <tbody id="ListaBody">     
     </tbody>
 </table>
 

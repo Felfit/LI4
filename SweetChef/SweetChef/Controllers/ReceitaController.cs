@@ -357,6 +357,7 @@ namespace SweetChef.Controllers
                                                 Include("Passo.PassoIngrediente.Ingrediente.Unidade").
                                                 Include("UtensilioReceita.Utensilio").
                                                 Include("Passo.UtensilioPasso.Utensilio").
+                                                Include("TagReceita.Tag").
                                                 Where( p => p.Id == id).
                                                 FirstOrDefault();
                 if (receita == null)
@@ -379,7 +380,8 @@ namespace SweetChef.Controllers
                             ToList();
                     passos.Add(new { info = p, ingredientes = ings, utensilios = ut });
                 }
-                return Ok(new { info = receita,ingredientes,utensilios,passos});
+                var tags = receita.TagReceita.Select(t => new { t.Tag.Id , nome = t.Tag.Tag1 }).ToList();
+                return Ok(new { info = receita,ingredientes,utensilios,passos,tags});
             }
             catch (Exception e)
             {
@@ -406,5 +408,11 @@ namespace SweetChef.Controllers
             return Ok(new { media, numRatings });
         }
 
+        [HttpPost("tagReceita/")]
+        public ActionResult tagReceita([FromQuery] TagReceita t){
+            _context.TagReceita.Add(t);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
