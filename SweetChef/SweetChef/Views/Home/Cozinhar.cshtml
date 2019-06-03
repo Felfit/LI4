@@ -84,14 +84,26 @@
         $.getJSON("/api/Tag", (data) => {
             for (const etiqueta of data) {
                 let etiquetaElement = $($("#etiquetaTemplate").html());
-                window.etiqueta = etiquetaElement;
                 etiquetaElement.find(".etiquetaNome").text(etiqueta.nome);
                 etiquetaElement.find(".checkEtiqueta").attr("id", "etiqueta" + etiqueta.id);
                 etiquetaElement.find(".checkEtiqueta").attr("value", etiqueta.id);
-                etiquetaElement.find(".labelEtiqueta").attr("for", "etiqueta" + etiqueta.id);
+                etiquetaElement.find(".labelEtiqueta, .etiquetaNome").attr("for", "etiqueta" + etiqueta.id);
 
                 etiquetaElement.appendTo("#etiquetasMenu");
             }
+            $(".dropdown-placeholder + .dropdown-menu .dropdown-item input").on("change", function () {
+                let valores = [];
+                $(this).parents(".dropdown-placeholder + .dropdown-menu").find("input").each(function () {
+                    if ($(this).prop("checked")) {
+                        valores.push($(this).siblings("label").text().trim());
+                    }
+                });
+                let placeholder = $(this).parents(".dropdown-placeholder + .dropdown-menu").siblings(".dropdown-placeholder");
+                if (!placeholder.data("default")) {
+                    placeholder.data("default", placeholder.text());
+                }
+                placeholder.text(valores.join(", ").trim() || placeholder.data("default"));
+            });
         });
 
         $("#inicial").click((e) => {
@@ -217,9 +229,9 @@
 
     <!-- template etiqueta -->
     <template id="etiquetaTemplate">
-        <label class="form-check-label labelEtiqueta form-check dropdown-item">
+        <label class="form-check dropdown-item labelEtiqueta">
             <input class="form-check-input checkEtiqueta" type="checkbox" name="tags">
-            <span class="etiquetaNome"></span>
+            <label class="etiquetaNome"></label>
         </label>
     </template>
 
@@ -246,24 +258,24 @@
                     Dificuldade
                 </button>
                 <div class="dropdown-menu w-100" aria-labelledby="dropdownDificuldade">
-                    <div class="form-check dropdown-item">
+                    <label class="form-check dropdown-item" for="checkFacil">
                         <input class="form-check-input" type="checkbox" value="1" id="checkFacil" name="dif">
                         <label class="form-check-label" for="checkFacil">
                             Fácil
                         </label>
-                    </div>
-                    <div class="form-check dropdown-item">
+                    </label>
+                    <label class="form-check dropdown-item" for="checkMedio">
                         <input class="form-check-input" type="checkbox" value="2" id="checkMedio" name="dif">
                         <label class="form-check-label" for="checkMedio">
                             Médio
                         </label>
-                    </div>
-                    <div class="form-check dropdown-item">
+                    </label>
+                    <label class="form-check dropdown-item" for="checkDificil">
                         <input class="form-check-input" type="checkbox" value="3" id="checkDificil" name="dif">
                         <label class="form-check-label" for="checkDificil">
                             Difícil
                         </label>
-                    </div>
+                    </label>
                 </div>
             </div>
         </div>
