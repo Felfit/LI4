@@ -365,7 +365,7 @@ namespace SweetChef.Controllers
                 {
                     return NotFound("Receita não existe");
                 }
-                Opiniao o = _context.Opiniao.Find(idUt, idReceita);
+                Opiniao o = _context.Opiniao.Find(idReceita,idUt);
                 bool exists = true;
                 if (o == null)
                 {
