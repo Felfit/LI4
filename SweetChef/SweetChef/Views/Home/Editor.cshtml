@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Editor</h2>
 <script>
 
     function showStep(i) {
@@ -75,8 +74,8 @@
                 showStep(location.arguments()["passo"]);
             }
         });
-        
-        
+
+
         $(document).ready(function () {
             $("select.ingredSelect").change(function () {
                 var k = $(this).children("option:selected").val();
@@ -105,7 +104,7 @@
                 showStep(i);
             });
         });
-        
+
     }
     else {
         $(document).ready(function () {
@@ -116,95 +115,106 @@
         console.log("R");
     }
 
-    
+
 </script>
 
+<h2>Editor de Receita</h2>
 <div class="container">
     <div id="RecipeEditor" class="container">
-            <div class="col">
-                <form method="post" id="ReceitaForm" action="/api/Receita/update">
-                    <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
-                    <div class="form-group">
-                        Nome:
-                        <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
+        <div class="col">
+            <form method="post" id="ReceitaForm" action="/api/Receita/update">
+                <input name="id" id="idReceita" value="@ViewData["ReceitaId"]" hidden />
+                <div class="form-group">
+                    Nome:
+                    <input name="Nome" id="NomeReceita" class="form-control" type="text" required />
+                </div>
+                <div class="form-group">
+                    Descrição:
+                    <textarea name="Descricao" id="DescricaoReceita" class="form-control" type="text" required></textarea>
+                </div>
+                <div class="form-group">
+                    Tempo de preparação:
+                    <input id="TempodepreparacaoReceita" class="form-control" type="number" name="tempodepreparacao" required />
+                </div>
+                <div class="form-group">
+                    Tempo de Espera:
+                    <input id="TempodeesperaReceita" class="form-control" type="number" name="tempodeespera" required />
+                </div>
+                <div class="form-group">
+                    Imagem:
+                    <input name="ImagemLink" class="form-control" id="ImagemLinkReceita" type="url" />
+                </div>
+                <div class="form-group">
+                    Video:
+                    <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
+                </div>
+                <label>Dificuldade:</label>
+                <div class="form-group row">
+                    <div class="form-check m-3">
+                        <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
+                        <label class="form-check-label" for="DificuldadeReceita3">
+                            Facil
+                        </label>
                     </div>
-                    <div class="form-group">
-                        Descrição:
-                        <textarea name="Descricao" id="DescricaoReceita" class="form-control" type="text" required ></textarea>
+                    <div class="form-check m-3">
+                        <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
+                        <label class="form-check-label" for="DificuldadeReceita3">
+                            Medio
+                        </label>
                     </div>
-                    <div class="form-group">
-                        Tempo de preparação:
-                        <input id="TempodepreparacaoReceita" class="form-control" type="number" name="tempodepreparacao"  required/>
+                    <div class="form-check m-3">
+                        <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
+                        <label class="form-check-label" for="DificuldadeReceita3">
+                            Dificil
+                        </label>
                     </div>
-                    <div class="form-group">
-                        Tempo de Espera:
-                        <input id="TempodeesperaReceita" class="form-control" type="number" name="tempodeespera" required/>
-                    </div>
-                    <div class="form-group">
-                        Imagem:
-                        <input name="ImagemLink" class="form-control" id="ImagemLinkReceita" type="url" />
-                    </div>
-                    <div class="form-group">
-                        Video:
-                        <input name="VideoLink" class="form-control" id="VideoLinkReceita" type="url" />
-                    </div>
-                    <label>Dificuldade:</label>
-                    <div class="form-group row">
-                        <div class="form-check m-3">
-                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita1" value="1" required />
-                            <label class="form-check-label" for="DificuldadeReceita3">
-                                Facil
-                            </label>
+                </div>
+                <div class="form-group">
+                    Porções:
+                    <input name="Porcoes" class="form-control" id="PorcoesReceita" type="number" required />
+                </div>
+                <div class="form-group">
+                    Nutricao:
+                    <div class="row">
+                        <div class="col">
+                            Energia:
+                            <input name="Energia" id="EnergiaReceita" class="form-control" type="number" required />
                         </div>
-                        <div class="form-check m-3">
-                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita2" value="2" required />
-                            <label class="form-check-label" for="DificuldadeReceita3">
-                                Medio
-                            </label>
+                        <div class="col">
+                            Gordura:
+                            <input name="Gordura" id="GorduraReceita" class="form-control" type="number" required />
                         </div>
-                        <div class="form-check m-3">
-                            <input class="form-check-input" type="radio" name="Dificuldade" id="DificuldadeReceita3" value="3" required />
-                            <label class="form-check-label" for="DificuldadeReceita3">
-                                Dificil
-                            </label>
+                        <div class="col">
+                            Hidratos de Carbono:
+                            <input name="HidratosCarbono" id="HidratosCarbonoReceita" class="form-control" type="number" required />
                         </div>
                     </div>
-                    <div class="form-group">
-                        Porções:
-                        <input name="Porcoes" class="form-control" id="PorcoesReceita" type="number" required />
-                    </div>
-                    <div class="form-group">
-                        Nutricao:
-                        <div class="row">
-                            <div class="col">
-                                Energia:
-                                <input name="Energia" id="EnergiaReceita" class="form-control" type="number" required />
-                            </div>
-                            <div class="col">
-                                Gordura:
-                                <input name="Gordura" id="GorduraReceita" class="form-control" type="number" required />
-                            </div>
-                            <div class="col">
-                                Hidratos de Carbono:
-                                <input name="HidratosCarbono" id="HidratosCarbonoReceita" class="form-control" type="number" required />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-primary value="Adicionar">
-                    </div>
-</form>
-            </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary value="Adicionar">
+                </div>
+            </form>
         </div>
-
+        <br />
+        <h3>Adicionar Tag</h3>
+        <div class="container">
+            <form>
+                <input name="id" id="Receitaid" value="@ViewData["ReceitaId"]" hidden />
+                <div class="form-group">
+                    Nome:
+                    <input name="Tagid" id="NomeReceita" class="form-control" type="text" required />
+                </div>
+            </form>
+        </div>
+    </div>
     <br />
 
     <div id="PassosEdr" class="container">
-        <h2>Passos</h2>
+        <h3>Passos</h3>
+        <br />
         <div class="col">
             <form method="POST" id="PassoForm" action="/api/Receita/passo">
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Selecionar Passo:</label>
                     <select class="form-control step" id="stepSelect">
                         <option>Criar Novo</option>
                     </select>
@@ -217,7 +227,7 @@
                 </div>
                 <div class="form-group">
                     Descricao:
-                    <textarea type="text" name="Descricao" id="DescricaoPasso" class="form-control" required ></textarea>
+                    <textarea type="text" name="Descricao" id="DescricaoPasso" class="form-control" required></textarea>
                 </div>
                 <div class="form-group">
                     Imagem:
@@ -272,7 +282,7 @@
                     <input value="@ViewData["ReceitaId"]" type="number" name="PassoReceitaid" hidden />
                     <div class="form-group" id="IngIdClass">
                         Id do Ingrediente:
-                        <input type="number" name="Ingredienteid" id="IngredienteIdEdit"class="form-control" required />
+                        <input type="number" name="Ingredienteid" id="IngredienteIdEdit" class="form-control" required />
                     </div>
                     <div class="form-group">
                         Quantidade:

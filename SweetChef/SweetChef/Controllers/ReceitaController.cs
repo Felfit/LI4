@@ -421,11 +421,11 @@ namespace SweetChef.Controllers
             return Ok(new { media, numRatings });
         }
 
-        [HttpPost("tagReceita/")]
+        [HttpPost("tagReceita")]
         public ActionResult tagReceita([FromQuery] TagReceita t){
             _context.TagReceita.Add(t);
             _context.SaveChanges();
-            return Ok();
+            return Redirect("/Home/Editor/" + t.Receitaid);
         }
     }
 }
