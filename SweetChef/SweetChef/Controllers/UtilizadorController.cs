@@ -190,6 +190,24 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpGet("configuracao/preferidas")]
+        public ActionResult GetConfiguracaoPreferidas()
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                var likes = _context.Likes.Where(x => x.Utilizadorid == idUt).ToList();
+                
+                return Ok(likes);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpDelete("configuracao/preferida")]
         public ActionResult RemoveConfiguracaoPreferida([FromQuery] int preferida)
         {
@@ -235,6 +253,25 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("configuracao/restricoes")]
+        public ActionResult GetConfiguracaoRestricoes()
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                var restricoes = _context.RestricoesAlimentares.Where(x => x.Utilizadorid == idUt).ToList();
+
+                return Ok(restricoes);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpDelete("configuracao/restricao")]
         public ActionResult RemoveConfiguracaoExcluidas([FromQuery] int restricao)
         {
@@ -281,6 +318,25 @@ namespace SweetChef.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("configuracao/excluidas")]
+        public ActionResult GetConfiguracaoExcluidas()
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                var dislikes = _context.Dislikes.Where(x => x.Utilizadorid == idUt).ToList();
+
+                return Ok(dislikes);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpDelete("configuracao/excluida")]
         public ActionResult RemoveConfiguracaoRestricao([FromQuery] int excluido)
         {
