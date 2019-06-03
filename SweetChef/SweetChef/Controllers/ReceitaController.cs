@@ -216,13 +216,23 @@ namespace SweetChef.Controllers
         {
             try
             {
-                var receitas = _context.Receita.
-                                Include("TagReceita.Tag").ToList().
-                                Where(x => (!dur.HasValue || x.Tempodepreparacao + x.Tempodeespera <= dur.Value)
-                                           && (!dif.HasValue || x.Dificuldade == dif.Value)
-                                           && (tags.Count == 0 || ContainsTag(x.TagReceita, tags))
-                                           && (x.Nome.Equals(str) || str==null));
-     
+                var receitas = _context.Receita.AsQueryable();
+                if (str != null)
+                    receitas = receitas.Where(x => (x.Nome.Equals(str))); 
+                if (dur.HasValue)
+                    receitas = receitas.Where(x => (x.Tempodepreparacao + x.Tempodeespera <= dur.Value));
+                if(dif.HasValue)
+                    receitas = receitas.Where(x => x.Dificuldade == dif.Value);
+                if (tags.Count != 0)
+                {
+                    foreach (int i in tags)
+                    {
+                        var receitasTags = _context.TagReceita.
+                                           Where(tr => (tr.Tagid == i)).
+                                           Select(r => r.Receita);
+                        receitas = receitas.Intersect(receitasTags);
+                    }
+                }
                 return Ok(receitas);
             }
             catch (Exception e)
