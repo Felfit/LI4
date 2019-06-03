@@ -29,7 +29,7 @@
                     }
                 });
             }
-        });
+        })
     }
 
     function atualizarMinhaClass() {
@@ -52,8 +52,6 @@
 
     $(() => {
         $.getJSON("/api/Receita/@ViewData["ReceitaId"]", (data) => {
-            console.log(data)
-
             // porções
             if (data.info.porcoes == 1) {
                 $("#porcoes").text("1 porção");
@@ -85,6 +83,7 @@
 
             $.getJSON("/api/utilizador/opiniao/@ViewData["ReceitaId"]", (dataFav) => {
                 // favorita
+                console.log(dataFav.favorito)
                 if (dataFav.favorito) {
                     $("#favorito").addClass("fas fa-star");
                 } else {
@@ -96,6 +95,8 @@
                 } else {
                     $("#minhaClass").text("⭐".repeat(dataFav.rating));
                 }
+            }).fail(() => {
+                $("#favorito").addClass("far fa-star");
             });
 
             // descrição

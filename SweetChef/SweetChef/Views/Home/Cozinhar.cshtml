@@ -94,6 +94,13 @@
             }
         });
 
+        $("#inicial").click((e) => {
+            e.preventDefault();
+            $(".inicial").removeClass("d-none");
+            $("#inicial").addClass("d-none");
+            $("#semResultados").addClass("d-none");
+            $("#pesquisaGroup").addClass("d-none");
+        })
 
 
         const dificuldadeTexto = [, "Fácil", "Médio", "Difícil"];
@@ -106,15 +113,14 @@
         // receitas
         $("#pesquisa").on("submit", function () {
             $.getJSON("/api/Receita/filtradas?" + $(this).serialize(), (data) => {
+                $("#pesquisaRow").html("");
+
                 if (data.length == 0) {
-                    $("#favoritosGroup").text("Nenhum resultado encontrado)
+                    $("#semResultados").removeClass("d-none");
                     return;
-                } else {
-                    $("#favoritosGroup").show();
-                    $("#favoritosGroup").html("");
                 }
+
                 for (const receita of data) {
-                    console.log(receita)
                     let receitaElement = gerarReceita();
                     window.receita = receitaElement;
                     receitaElement.find(".receitaNome").text(receita.nome);
@@ -123,23 +129,21 @@
                     receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
                     receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
                     receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
-                    receitaElement.appendTo("#favoritosRow");
+                    receitaElement.appendTo("#pesquisaRow");
                 }
-                $(".receitasPlaceholder").remove();
+                $("#semResultados").addClass("d-none");
+                $("#pesquisaGroup").removeClass("d-none");
+                $(".inicial").addClass("d-none");
+                $("#inicial").removeClass("d-none");
             });
             return false;
         });
-        
+
 
 
         // favoritas
         $.getJSON("/api/Utilizador/favoritas", (data) => {
-            if (data.length == 0) {
-                $("#favoritosGroup").hide();
-                return;
-            }
-            for (const receita  of data) {
-                console.log(receita)
+            for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
                 receitaElement.find(".receitaNome").text(receita.nome);
@@ -150,15 +154,11 @@
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                 receitaElement.appendTo("#favoritosRow");
             }
-            $(".receitasPlaceholder").remove();
+            $("#favoritosGroup").removeClass("d-none");
         });
 
         // sugestões
         $.getJSON("/api/Receita/recomendadas", (data) => {
-            if (data.length == 0) {
-                $("#sugestoesGroup").hide();
-                return;
-            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -170,15 +170,11 @@
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                 receitaElement.appendTo("#sugestoesRow");
             }
-            $(".receitasPlaceholder").remove();
+            $("#sugestoesGroup").removeClass("d-none");
         });
 
         // descoberta
         $.getJSON("/api/Receita/descoberta", (data) => {
-            if (data.length == 0) {
-                $("#descobertasGroup").hide();
-                return;
-            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -190,15 +186,11 @@
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                 receitaElement.appendTo("#descobertasRow");
             }
-            $(".receitasPlaceholder").remove();
+            $("#descobertasGroup").removeClass("d-none");
         });
 
         // tendencias
         $.getJSON("/api/Receita/tendencias", (data) => {
-            if (data.length == 0) {
-                $("#tendenciasGroup").hide();
-                return;
-            }
             for (const receita of data) {
                 let receitaElement = gerarReceita();
                 window.receita = receitaElement;
@@ -210,7 +202,7 @@
                 receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
                 receitaElement.appendTo("#tendenciasRow");
             }
-            $(".receitasPlaceholder").remove();
+            $("#tendenciasGroup").removeClass("d-none");
         });
     });
 </script>
@@ -223,7 +215,15 @@
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Procurar <i class="fas fa-search"></i></button>
     </div>
 
+    <!-- template etiqueta -->
+    <template id="etiquetaTemplate">
+        <label class="form-check-label labelEtiqueta form-check dropdown-item">
+            <input class="form-check-input checkEtiqueta" type="checkbox" name="tags">
+            <span class="etiquetaNome"></span>
+        </label>
+    </template>
 
+    <!-- opções de pesquisa -->
     <div class="row">
         <!-- dropdown Etiqueta -->
         <div class="col-6 col-md-4 col-lg-3">
@@ -233,12 +233,7 @@
                 </button>
                 <div class="dropdown-menu w-100 overflow-auto" style="height: 10em" aria-labelledby="dropdownEtiqueta" id="etiquetasMenu">
 
-                    <template id="etiquetaTemplate">
-                        <label class="form-check-label labelEtiqueta form-check dropdown-item">
-                        <input class="form-check-input checkEtiqueta" type="checkbox" name="tags">
-                        <span class="etiquetaNome"></span>
-                        </label>
-                    </template>
+                    <!-- preenchido com template etiqueta -->
 
                 </div>
             </div>
@@ -275,7 +270,7 @@
 
         <!-- toggle inicial -->
         <div class="col-6 col-md-4 col-lg-2">
-            <a href="#" class="btn btn-secondary btn-sm active my-2" role="button" aria-pressed="true">Favoritos e Sugestões</a>
+            <button id="inicial" class="btn btn-secondary btn-sm my-2 d-none">Mostrar página inicial</button>
         </div>
 
     </div>
@@ -285,6 +280,7 @@
 
 <hr />
 
+<!-- template receita -->
 <template id="receitaTemplate">
     <div class="receita">
         <div class="card">
@@ -307,123 +303,63 @@
     </div>
 </template>
 
-<div id="favoritosGroup" class="mb-2">
+
+<!-- favoritos -->
+<div id="favoritosGroup" class="mb-2 d-none inicial">
     <h2>Favoritos <i class="fas fa-star text-warning"></i></h2>
     <div class="container-fluid horizontal-scroll py-2">
         <div class="row flex-row flex-nowrap" id="favoritosRow">
 
             <!-- preenchido com receitaTemplate -->
 
-            <div class="receitasPlaceholder">
-                <div class="receita">
-                    <div class="card">
-                        <img class="card-img-top receitaImagem bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                            <div class="row text-black-50 text-center">
-                                <div class="col receitaDificuldade">
-                                    <i class="fas fa-signal"></i>
-                                </div>
-                                <div class="col">
-                                    <i class="far fa-clock"></i>
-                                </div>
-                                <a class="stretched-link receitaLink"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-
-<div id="sugestoesGroup" class="mb-2">
+<!-- sugestoes -->
+<div id="sugestoesGroup" class="mb-2 d-none inicial">
     <h2>Sugestões  <i class="fas fa-lightbulb text-primary"></i></h2>
     <div class="container-fluid horizontal-scroll py-2">
         <div class="row flex-row flex-nowrap" id="sugestoesRow">
 
             <!-- preenchido com receitaTemplate -->
 
-            <div class="receitasPlaceholder">
-                <div class="receita">
-                    <div class="card">
-                        <img class="card-img-top receitaImagem bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                            <div class="row text-black-50 text-center">
-                                <div class="col receitaDificuldade">
-                                    <i class="fas fa-signal"></i>
-                                </div>
-                                <div class="col">
-                                    <i class="far fa-clock"></i>
-                                </div>
-                                <a class="stretched-link receitaLink"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<div id="descobertasGroup" class="mb-2">
+<!-- descobertas -->
+<div id="descobertasGroup" class="mb-2 d-none inicial">
     <h2>Descobertas <i class="fas fa-globe-europe text-success"></i></h2>
     <div class="container-fluid horizontal-scroll py-2">
         <div class="row flex-row flex-nowrap" id="descobertasRow">
 
             <!-- preenchido com receitaTemplate -->
 
-            <div class="receitasPlaceholder">
-                <div class="receita">
-                    <div class="card">
-                        <img class="card-img-top receitaImagem bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                            <div class="row text-black-50 text-center">
-                                <div class="col receitaDificuldade">
-                                    <i class="fas fa-signal"></i>
-                                </div>
-                                <div class="col">
-                                    <i class="far fa-clock"></i>
-                                </div>
-                                <a class="stretched-link receitaLink"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<div id="tendenciasGroup" class="mb-2">
+<!-- tendencias -->
+<div id="tendenciasGroup" class="mb-2 d-none inicial">
     <h2>Tendências <i class="fas fa-fire text-danger"></i></h2>
     <div class="container-fluid horizontal-scroll py-2">
         <div class="row flex-row flex-nowrap" id="tendenciasRow">
 
             <!-- preenchido com receitaTemplate -->
 
-            <div class="receitasPlaceholder">
-                <div class="receita">
-                    <div class="card">
-                        <img class="card-img-top receitaImagem bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-truncate receitaNome"></h5>
-                            <div class="row text-black-50 text-center">
-                                <div class="col receitaDificuldade">
-                                    <i class="fas fa-signal"></i>
-                                </div>
-                                <div class="col">
-                                    <i class="far fa-clock"></i>
-                                </div>
-                                <a class="stretched-link receitaLink"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
+
+<!-- resultados da pesquisa -->
+<div id="pesquisaGroup" class="mb-2 d-none">
+    <span id="semResultados" class="d-none">Nenhum resultado encontrado</span>
+    <div class="container-fluid horizontal-scroll py-2">
+        <div class="row flex-row flex-nowrap" id="pesquisaRow">
+
+            <!-- preenchido com receitaTemplate -->
+
         </div>
     </div>
 </div>
