@@ -82,7 +82,11 @@
     }
 
     footer {
-        display:none;
+        display: none;
+    }
+
+    .list-group-item.active a {
+        color: white;
     }
 </style>
 
@@ -151,6 +155,18 @@
             });
     }
 
+    function destacarUsados(passoAtual) {
+        classDestaque = "active";
+        $("#ingredientes li").removeClass(classDestaque);
+        $("#utensilios li").removeClass(classDestaque);
+        for (const { id } of passoAtual.ingredientes) {
+            $(`#ingredientes li[data-id=${id}]`).addClass(classDestaque);
+        }
+        for (const { id } of passoAtual.utensilios) {
+            $(`#utensilios li[data-id=${id}]`).addClass(classDestaque);
+        }
+    }
+
     Number.prototype.clamp = function (min, max) {
         return this <= min ? min : this >= max ? max : this;
     };
@@ -163,12 +179,12 @@
         $("#nomeReceita").text(receita.info.nome);
         for (const utensilio of receita.utensilios) {
             $(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${utensilio.id}" data-tipo="utensilio" data-nome="${utensilio.nome}"></li>`)
-                .text(utensilio.nome)
+                .append($('<a href="#produto"></a>').text(utensilio.nome))
                 .appendTo("#utensilios");
         }
         for (const ingrediente of receita.ingredientes) {
             $(`<li class="list-group-item px-2 py-1" data-toggle="modal" data-target="#produto" data-id="${ingrediente.id}" data-tipo="ingrediente" data-nome="${ingrediente.nome}"></li>`)
-                .text(ingrediente.nome)
+                .append($('<a href="#produto"></a>').text(ingrediente.nome))
                 .append($("<small></small>").text(" " + ingrediente.quantidade + " " + ingrediente.unidade))
                 .appendTo("#ingredientes");
         }
@@ -194,6 +210,9 @@
             location.href = "@Url.Action("Receita", "Home", new { id = ViewData["ReceitaId"] })";
             return;
         }
+
+        destacarUsados(receita.passoAtual);
+
         $("#passoDescricao").text(receita.passoAtual.info.descricao);
         if (receita.passoAtual.info.imagemLink || receita.passoAtual.info.videoLink) {
             $("#passoMedia").show();

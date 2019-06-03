@@ -25,7 +25,9 @@
     <a class="btn btn-primary mb-2" href="https://www.continente.pt/pt-pt/public/Pages/searchresults.aspx?k=@ViewData["Nome"]" target="_blank">Encomendar</a>
     <div class="row">
         <div class="col-lg-4">
-            <img class="img-fluid" src="~/images/utensilio/@(ViewData["Id"]).jpg" onerror="this.style.display = 'none'"/>
+            @if (ViewData["Img"] != null) {
+                <img class="img-fluid" src="@(ViewData["Img"])" onerror="this.style.display = 'none'" />
+            }
         </div>
         <div class="col-lg-8">
             <h3>Onde posso comprar?</h3>
