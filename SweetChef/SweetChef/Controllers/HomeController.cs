@@ -168,7 +168,7 @@ namespace SweetChef.Controllers
             }
             ViewData["ReceitaId"] = id;
             ViewData["ReceitaNome"] = receita.Nome;
-            ViewData["ReceitaDuracao"] = receita.Tempodeespera + receita.Tempodepreparacao;
+            ViewData["ReceitaDuracao"] = receita.Tempodepreparacao;
             ViewData["tempo"] = tempo / 60000;
             ViewData["data"] = data;
             ViewData["NomeUtilizador"] = GetNomeUtilizador();
