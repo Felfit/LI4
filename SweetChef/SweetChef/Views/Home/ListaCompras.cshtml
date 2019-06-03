@@ -1,35 +1,44 @@
 ﻿@{
-    ViewData["Title"] = "Sobre os meus cozinhados";
+    ViewData["Title"] = "Lista de Compras";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+<style>
+    
+    @@media print {
+      #printPageButton {
+        display: none;
+      }
+      #titlepage {
+        display: none;
+      }
+    }
+
+</style>
+
+<h2 id="titlepage">@ViewData["Title"]</h2>
+
+<script>
+    var listaCompras = $.getJSON("/api/utilizador/listacompras", (data) => {
+        for (var k = 0; k < data.length; k++){
+            $("#ListaBody").append("<tr><th>" 
+                + data[k].ingrediente.nome + "</th><td>"
+                + data[k].quantidade + "</td><td>"
+                + data[k].ingrediente.unidade.nome + "</td></tr>");
+        }
+    });
+
+    
+</script>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Ingredientes</th>
             <th scope="col">Quantidade</th>
-            <th scope="col">Preço</th>
+            <th scope="col">Unidade</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
-        <tr>
-            <th scope="row">Arroz</th>
-            <td>199kg</td>
-            <td>1000€</td>
-        </tr>
+    <tbody id="ListaBody">     
     </tbody>
 </table>
 
-<button type="button" class="btn btn-primary">Encomendar <i class="fas fa-shopping-cart"></i></button>
-<button type="button" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+<button type="button" id="printPageButton" class="btn btn-primary" onclick="window.print();">Imprimir <i class="fas fa-print"></i></button>

@@ -212,16 +212,30 @@ namespace SweetChef.Controllers
         }
 
         [HttpGet("filtradas")]
-        public ActionResult GetReceitasFiltradas([FromQuery] int? dif, [FromQuery]int? dur, [FromQuery] List<int> tags)
+        public ActionResult GetReceitasFiltradas([FromQuery] string str, [FromQuery] List<int> dif, [FromQuery]int? dur, [FromQuery] List<int> tags)
         {
             try
             {
-                var receitas = _context.Receita.
-                                Include("TagReceita.Tag").ToList().
-                                Where(x => (!dur.HasValue || x.Tempodepreparacao + x.Tempodeespera <= dur.Value)
-                                           && (!dif.HasValue || x.Dificuldade == dif.Value)
-                                           && (tags.Count == 0 || ContainsTag(x.TagReceita, tags)));
-     
+                var receitas = _context.Receita.AsQueryable();
+                if (str != null)
+                    receitas = receitas.Where(x => (x.Nome.Equals(str))); 
+                if (dur.HasValue)
+                    receitas = receitas.Where(x => (x.Tempodepreparacao + x.Tempodeespera <= dur.Value));
+                if(dif.Count != 0)
+                {
+                    foreach(int i in dif)
+                        receitas = receitas.Where(x => x.Dificuldade == i);
+                }
+                if (tags.Count != 0)
+                {
+                    foreach (int i in tags)
+                    {
+                        var receitasTags = _context.TagReceita.
+                                           Where(tr => (tr.Tagid == i)).
+                                           Select(r => r.Receita);
+                        receitas = receitas.Intersect(receitasTags);
+                    }
+                }
                 return Ok(receitas);
             }
             catch (Exception e)
@@ -356,6 +370,7 @@ namespace SweetChef.Controllers
                                                 Include("Passo.PassoIngrediente.Ingrediente.Unidade").
                                                 Include("UtensilioReceita.Utensilio").
                                                 Include("Passo.UtensilioPasso.Utensilio").
+                                                Include("TagReceita.Tag").
                                                 Where( p => p.Id == id).
                                                 FirstOrDefault();
                 if (receita == null)
@@ -378,7 +393,8 @@ namespace SweetChef.Controllers
                             ToList();
                     passos.Add(new { info = p, ingredientes = ings, utensilios = ut });
                 }
-                return Ok(new { info = receita,ingredientes,utensilios,passos});
+                var tags = receita.TagReceita.Select(t => new { t.Tag.Id , nome = t.Tag.Tag1 }).ToList();
+                return Ok(new { info = receita,ingredientes,utensilios,passos,tags});
             }
             catch (Exception e)
             {
@@ -405,5 +421,11 @@ namespace SweetChef.Controllers
             return Ok(new { media, numRatings });
         }
 
+        [HttpPost("tagReceita")]
+        public ActionResult tagReceita([FromQuery] TagReceita t){
+            _context.TagReceita.Add(t);
+            _context.SaveChanges();
+            return Redirect("/Home/Editor/" + t.Receitaid);
+        }
     }
 }

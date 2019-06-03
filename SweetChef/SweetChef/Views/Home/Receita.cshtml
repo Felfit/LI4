@@ -181,6 +181,10 @@
     <div class="col text-center">
         <button type="button" class="m-3 btn btn-outline-warning btn-lg" onclick="toggleFavorita()"><i id="favorito" class=""></i><br /></button>
     </div>
+    <!-- Botão Editor -->
+    <div class="col text-center">
+        <a  href="/Home/Editor/@ViewData["ReceitaId"]" class="m-3 btn btn-outline-warning btn-lg" >✏️<br /></a>
+    </div>
 </div>
 
 <hr />
@@ -202,7 +206,7 @@
                 <!-- Vídeo -->
                 <div class="carousel-item d-none" id="videoContainer">
                     <div class="col embed-responsive embed-responsive-16by9">
-                        <iframe id="receitaVideo" class="rounded embed-responsive-item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <video id="receitaVideo" class="rounded embed-responsive-item" allowfullscreen controls></video>
                     </div>
                 </div>
             </div>

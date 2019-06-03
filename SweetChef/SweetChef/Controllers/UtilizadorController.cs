@@ -167,55 +167,92 @@ namespace SweetChef.Controllers
         }
 
 
-        //Update à configuração.
-        //Remove todas as entradas daquele utilizador nas tabelas respetivas e adiciona as novas.
+       
         //Basicamente se não me passa a lista quer dizer que não quer cenas
-        [HttpPut("configuracao")]
-        public ActionResult UpdateConfiguracao([FromForm] List<int> restricoes, [FromForm] List<int> likes, [FromForm] List<int> dislikes)
+        [HttpPost("configuracao/preferida")]
+        public ActionResult AddConfiguracaoPreferida([FromQuery] int preferida)
         {
             try
             {
                 var sidut = ControllerContext.HttpContext.User.Identity.Name;
                 int idUt = Int32.Parse(sidut);
-                _context.RemoveRange(_context.RestricoesAlimentares.Where(x => x.Utilizadorid == idUt));
-                if (restricoes.Count != 0)
-                {
-                    foreach (int id in restricoes)
-                    {
-                        RestricoesAlimentares ra = new RestricoesAlimentares();
-                        ra.Utilizadorid = idUt;
-                        ra.Ingredienteid = id;
-                        _context.RestricoesAlimentares.Add(ra);
-                       
-                    }
-                }
-
-                _context.RemoveRange(_context.Likes.Where(x => x.Utilizadorid == idUt));
-                if (likes.Count != 0)
-                 {
-                     foreach (int id in likes)
-                     {
-                         Likes l = new Likes();
-                         l.Utilizadorid = idUt;
-                         l.Tagid = id;
-                         _context.Likes.Add(l);
-                     }
-                 }
-
-                _context.RemoveRange(_context.Dislikes.Where(x => x.Utilizadorid == idUt));
-                if (dislikes.Count != 0)
-                 { 
-                     foreach (int id in dislikes)
-                     {
-                         Dislikes dl = new Dislikes();
-                         dl.Utilizadorid = idUt;
-                         dl.Tagid = id;
-                         _context.Dislikes.Add(dl);
-                     }
-                 }
+                Likes l = new Likes();
+                l.Utilizadorid = idUt;
+                l.Tagid = preferida;
+                _context.Likes.Add(l);
                 _context.SaveChanges();
+                return Ok(l);
+             }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
-                return Ok("Chages where made");
+        [HttpDelete("configuracao/preferida")]
+        public ActionResult RemoveConfiguracaoPreferida([FromQuery] int preferida)
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                Likes l = _context.Likes.Find(idUt, preferida);
+                if(l == null)
+                {
+                    return NotFound(preferida);
+                }
+                else
+                {
+                    _context.Likes.Remove(l);
+                    _context.SaveChanges();
+                    return Ok(l);
+                }    
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpPost("configuracao/restricao")]
+        public ActionResult UpdateConfiguracaoPreferidas([FromQuery] int restricao)
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                RestricoesAlimentares r = new RestricoesAlimentares();
+                r.Utilizadorid = idUt;
+                r.Ingredienteid = restricao;
+                _context.RestricoesAlimentares.Add(r);
+                _context.SaveChanges();
+                return Ok(r);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpDelete("configuracao/restricao")]
+        public ActionResult RemoveConfiguracaoExcluidas([FromQuery] int restricao)
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                RestricoesAlimentares r = _context.RestricoesAlimentares.Find(idUt, restricao);
+                if (r == null)
+                {
+                    return NotFound(restricao);
+                }
+                else
+                {
+                    _context.RestricoesAlimentares.Remove(r);
+                    _context.SaveChanges();
+                    return Ok(r);
+                }
             }
             catch (Exception e)
             {
@@ -224,6 +261,52 @@ namespace SweetChef.Controllers
             }
         }
 
+        [HttpPost("configuracao/excluida")]
+        public ActionResult UpdateConfiguracaoExcluidas([FromQuery] int excluido)
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                Dislikes l = new Dislikes();
+                l.Utilizadorid = idUt;
+                l.Tagid = excluido;
+                _context.Dislikes.Add(l);
+                _context.SaveChanges();
+                return Ok(l);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpDelete("configuracao/excluida")]
+        public ActionResult RemoveConfiguracaoRestricao([FromQuery] int excluido)
+        {
+            try
+            {
+                var sidut = ControllerContext.HttpContext.User.Identity.Name;
+                int idUt = Int32.Parse(sidut);
+                Dislikes l = _context.Dislikes.Find(idUt, excluido);
+                if (l == null)
+                {
+                    return NotFound(excluido);
+                }
+                else
+                {
+                    _context.Dislikes.Remove(l);
+                    _context.SaveChanges();
+                    return Ok(l);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Print(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        
         [HttpGet("closestStore/{lat},{lon}")]
         public ActionResult ClosestStore(float lat, float lon) {
             GeoCoordinate usrPos = new GeoCoordinate(latitude : lat,longitude : lon);
@@ -481,13 +564,14 @@ namespace SweetChef.Controllers
             var result = _context.EmentaSemanal.
                 Where(es => es.Data >= DateTime.Today && es.Data < DateTime.Today.AddDays(7)).
                 SelectMany(es => es.Receita.ReceitaIngrediente).
+                Include(r => r.Ingrediente).
+                ThenInclude(i => i.Unidade).
                 GroupBy(ri => ri.Ingredienteid).
                 Select(cri => new {
                     quantidade = cri.Sum(s => s.Quantidade),
-                    ingrediente = cri.FirstOrDefault().Ingrediente,
-                    unidade = cri.FirstOrDefault().Ingrediente.Unidade.Nome
+                    ingrediente = cri.FirstOrDefault().Ingrediente
                 }).
-                ToList();
+                ToArray();
             return Ok(result);
         }
 
