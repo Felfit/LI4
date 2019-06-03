@@ -104,6 +104,34 @@
         }
 
         // receitas
+        $("#pesquisa").on("submit", function () {
+            $.getJSON("/api/Receita/filtradas?" + $(this).serialize(), (data) => {
+                if (data.length == 0) {
+                    $("#favoritosGroup").text("Nenhum resultado encontrado)
+                    return;
+                } else {
+                    $("#favoritosGroup").show();
+                    $("#favoritosGroup").html("");
+                }
+                for (const receita of data) {
+                    console.log(receita)
+                    let receitaElement = gerarReceita();
+                    window.receita = receitaElement;
+                    receitaElement.find(".receitaNome").text(receita.nome);
+                    receitaElement.find(".receitaImagem").attr("src", receita.imagemLink);
+                    receitaElement.find(".receitaDificuldade").addClass("text-" + dificuldadeColor[receita.dificuldade]);
+                    receitaElement.find(".receitaDificuldadeTexto").text(dificuldadeTexto[receita.dificuldade]);
+                    receitaElement.find(".receitaTempo").text(receita.tempodepreparacao);
+                    receitaElement.find(".receitaLink").attr("href", `@Url.Action("Receita", "Home")/${receita.id}`);
+                    receitaElement.appendTo("#favoritosRow");
+                }
+                $(".receitasPlaceholder").remove();
+            });
+            return false;
+        });
+        
+
+
         // favoritas
         $.getJSON("/api/Utilizador/favoritas", (data) => {
             if (data.length == 0) {
@@ -145,6 +173,7 @@
             $(".receitasPlaceholder").remove();
         });
 
+        // descoberta
         $.getJSON("/api/Receita/descoberta", (data) => {
             if (data.length == 0) {
                 $("#descobertasGroup").hide();
@@ -164,6 +193,7 @@
             $(".receitasPlaceholder").remove();
         });
 
+        // tendencias
         $.getJSON("/api/Receita/tendencias", (data) => {
             if (data.length == 0) {
                 $("#tendenciasGroup").hide();
@@ -187,9 +217,9 @@
 
 
 <!-- Procurar Receita -->
-<form method="get">
+<form id="pesquisa">
     <div class="form-inline my-2 my-lg-0 form-row">
-        <input name="query" class="form-control mx-sm-2 col-9 col-sm-6 col-md-4 col-lg-3" type="search" placeholder="Receita" aria-label="Search">
+        <input name="str" class="form-control mx-sm-2 col-9 col-sm-6 col-md-4 col-lg-3" type="search" placeholder="Receita" aria-label="Search">
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Procurar <i class="fas fa-search"></i></button>
     </div>
 

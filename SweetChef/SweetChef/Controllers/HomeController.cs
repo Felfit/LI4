@@ -34,7 +34,6 @@ namespace SweetChef.Controllers
 
         public IActionResult Cozinhar()
         {
-            ViewData["tags"] = _context.Tag.Select(t => new { t.Id, Nome = t.Tag1 }).ToArray();
             ViewData["NomeUtilizador"] = GetNomeUtilizador();
             return View();
         }
