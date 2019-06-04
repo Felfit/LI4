@@ -74,10 +74,10 @@ INSERT INTO Duvida
 	VALUES
 	('Gema', null, 'https://sitedoovo.com.br/wp-content/uploads/2019/02/gema-do-ovo.jpg', null, 'A gema está situada centralmente no interior do ovo e possui uma forma esférica. É nela que se concentra a parte mais gordurosa e calórica do ovo'),
 	('Clara', null, 'https://www.mundoboaforma.com.br/wp-content/uploads/2015/07/Eggwhite-614x330.jpg', null, 'A clara trata-se de uma substância aquosa e viscosa, praticamente transparente e sem odor próprio. A clara é rica em proteínas e é de alta digestão.'),
-	('Separar gema da clara', 'https://www.youtube.com/watch?v=tx72s86URhA', null, null, null),
+	('Separar gema da clara', '\videos\ajudas\gemaClara.mp4', null, null, null),
 	('Mistura homogénea', null, null, null, 'Misturas homogêneas são aquelas em que não se consegue perceber a diferença entre duas ou mais substâncias. Exemplos destas misturas são a água salgada e o ar'),
 	('Barrar', null, 'https://4men.pt/wp-content/uploads/2019/01/0f95b97c47b9affa49e5bb97f55d5cbc-754x394.jpg', null, 'Cobrir, normalmente, um objeto sólido com algum tipo de mistura pegajosa'),
-	('Bolacha ralada', 'https://www.youtube.com/embed/OD9Rp-UJNG4?start=12&end=25', null, null, null),
+	('Bolacha ralada', '\videos\ajudas\esmaga.mp4', null, null, null),
 	('Alternativo a grãos de café', null, 'https://st.depositphotos.com/3695467/5158/i/950/depositphotos_51584001-stock-photo-grated-chocolate.jpg', null, 'Como alternativa aos grãos de café ou até em conjunto pode ser utilizado chocolate ralado que também ficará delicioso.'),
 	('Levar ao frigorifico', null, null, null, 'É necessário colocar o bolo no frigorífico, isto para lhe conferir consistência. De outro modo o bolo iria-se desfazer facilmente');
 
